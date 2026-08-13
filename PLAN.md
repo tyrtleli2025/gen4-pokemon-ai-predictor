@@ -67,10 +67,18 @@ Four external references anchor the whole project — nothing here is guessed:
    that uses the AI's actual max-roll KO check rather than the player-facing
    damage spread.
 
-One known discrepancy to resolve empirically: the two AI sources disagree on
+~~One known discrepancy to resolve empirically: the two AI sources disagree on
 which side of a coin flip triggers the 4×-effectiveness bonus in Evaluate
-Attacks (176/256 vs 80/256, which sum to 256 — one source has it backwards).
-The scrape says 176/256; the gist says 80/256.
+Attacks (176/256 vs 80/256).~~ **Resolved — bparkpk's 176/256 is correct.**
+The pokeplatinum decomp's `IfRandomLessThan <val>, <label>` jumps when
+`rand % 256 < val`, so the score on the fall-through path has probability
+`(256 − val)/256`; the gist read the jump threshold as the success probability
+and inverted it. See `aicalc/flags/_scraped/DECOMP_NOTES.md`.
+
+A fifth reference, used **only** to disambiguate nesting in bparkpk's flat prose:
+the **pret/pokeplatinum decomp** (clone as a sibling of this repo). It is vanilla
+Platinum, so it never overrides bparkpk on values or conditions — disagreements
+are recorded in `DECOMP_NOTES.md` instead.
 
 ## Build order
 
