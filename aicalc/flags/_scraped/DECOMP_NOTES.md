@@ -91,6 +91,43 @@ confined to `baton_pass`; the other flags match exactly, so this is more likely 
 transcription slip than a Kaizo change. Worth settling with the save-state
 resampling planned in PLAN.md.
 
+## Confirmed-correct oddities (not transcription errors)
+
+Some scraped conditions look wrong at a glance but are verbatim-correct vanilla
+AI behavior. Checked here so they aren't "fixed" during encoding by mistake.
+
+### Bide/Metal Burst check "Stall ability or holding a Shiny Stone" — genuine game bug
+
+`dedup.md`'s `basic` block for Bide/Metal Burst reads: "If the target's ability
+is Stall, or the target is holding a Shiny Stone: Score -10 ... If the user's
+ability is Stall, or the user is holding a Shiny Stone: No scoring change and
+terminate." Shiny Stone is an evolution item with no documented battle effect,
+which made this look like a scrape/OCR error. It is not — `ABILITY_STALL` and
+`ITEM_SHINY_STONE` are both real constants, and `script.s:1160-1176`
+(`Basic_CheckMetalBurst`) contains this exact check, with the decomp's own
+authors flagging it:
+
+```asm
+// If the target's ability is Stall or they are holding a Shiny Stone, score -10.
+// BUG: This should use the command LoadHeldItemEffect to check for the Lagging Tail
+// effect.
+LoadBattlerAbility AI_BATTLER_DEFENDER
+IfLoadedEqualTo ABILITY_STALL, ScoreMinus10
+IfHeldItemEqualTo AI_BATTLER_DEFENDER, ITEM_SHINY_STONE, ScoreMinus10
+```
+
+So this is a genuine vanilla Platinum AI bug, not a bparkpk transcription
+error: the intended check was almost certainly the **Lagging Tail** held-item
+effect (Lagging Tail makes the holder always move last, same idea as the Stall
+ability — the sensible pairing for a "does the target/user effectively move
+last" check ahead of Bide/Metal Burst's speed-order logic at line 1179).
+Instead the code checks literally for the item Shiny Stone, which does nothing
+in battle, so that branch is realistically unreachable in normal play. Encode
+it as scraped — do not "correct" it to Lagging Tail, since bparkpk's job is to
+describe what the game actually does, bug included. Worth flagging as a
+candidate for `data/ai_changes.csv`-style Kaizo fixes; nothing there yet
+mentions it, so treat it as present in Kaizo until shown otherwise.
+
 ## Structural facts worth reusing
 
 - `IfTargetIsPartner Terminate` opens every flag — irrelevant in singles.
