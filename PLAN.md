@@ -106,7 +106,7 @@ Each stage is only started once the stage before it is tested and stable.
       knows-move, etc.); damage-dependent questions (`can_ko`,
       `is_best_damaging_move`, `effectiveness`) stubbed via a hand-supplied
       `DamageBackend` until the damage calculator exists.
-- [ ] **Stage 4 — `script.py` + `dist.py`**: the small DSL (`Chance`, `If`,
+- [x] **Stage 4 — `script.py` + `dist.py`**: the small DSL (`Chance`, `If`,
       `Add`, `Stop`) and its evaluator; `ScoreDist` as an exact
       `{delta: Fraction}` table supporting `mix` and `convolve`.
 - [ ] **Encode flag scripts** (`flags/basic.py`, `evaluate_attacks.py`,

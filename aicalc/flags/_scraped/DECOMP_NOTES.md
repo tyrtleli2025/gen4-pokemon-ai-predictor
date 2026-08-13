@@ -112,4 +112,16 @@ Record each block resolved this way as encoding proceeds, so provenance is audit
 
 | Flag | Block / moves | Ambiguity | Decomp label used | Resolution |
 |---|---|---|---|---|
-| _(none encoded yet — Stage 4 DSL not built)_ | | | | |
+| `setup_first_turn` | `077f03b8` (91 moves) | "first turn of battle" — first turn of the *battle* or of this Pokémon being out? | `SetupFirstTurn_Main` | Whole battle. Gated on `LoadTurnCount` / `IfLoadedNotEqualTo 0`, a global turn counter — so `Field.turn == 1`. |
+| `setup_first_turn` | `077f03b8` | Which side of the 176/256 roll carries the +2? | `SetupFirstTurn_Main` | `IfRandomLessThan 80` jumps to terminate, so +2 is the fall-through at 176/256. Matches bparkpk. |
+| `prio_damage` | `7a96e66c` (182 moves) | bparkpk says "Unconditionally", but unconditional given *what*? | `PrioritizeExtremes_Main` | Not truly unconditional: the routine is guarded by `FlagMoveDamageScore` / `IfLoadedNotEqualTo AI_NO_COMPARISON_MADE`, applying only to effects the AI cannot damage-compare. That guard is what selects these 182 moves, so it lives in the move→block mapping, not the script. |
+| `prio_damage` | `7a96e66c` | Direction of the 156/256 roll. | `PrioritizeExtremes_Main` | `IfRandomLessThan 100` jumps to terminate → +2 at (256−100)/256 = 156/256. Matches bparkpk. |
+
+### Architectural consequence
+
+Neither encoded block needs to classify move effects. The decomp selects moves via
+`BATTLE_EFFECT_*` tables (`SetupFirstTurn_SetupEffects`) or damage-comparison
+guards; we get the same partition for free from the scrape's move→block mapping,
+and it is **Kaizo-correct** where the vanilla tables are not — the vanilla setup
+table lists `BATTLE_EFFECT_CONVERSION`, and Conversion does not exist in Kaizo.
+So flag modules encode only the *conditional logic inside* a block.
