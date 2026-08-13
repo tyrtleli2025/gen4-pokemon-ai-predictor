@@ -86,6 +86,13 @@ Each stage is only started once the stage before it is tested and stable.
       `aicalc/flags/_scraped/dedup.md`, machine-readable in `per_move.json`).
       **236 distinct scoring blocks** to encode: basic 105, expert 114,
       evaluate_attacks 9, baton_pass 6, prio_damage 1, setup_first_turn 1.
+      Coverage verified complete against `data/moves.csv` (every Kaizo move has
+      a scoring page except `Struggle`, which the AI never scores) — join the
+      two sources via `data/move_aliases.json`.
+      Only the six scaffolded flags were extracted; the cached raw HTML also
+      holds `Doubles vs Opponent`, `Doubles vs Ally`, `Risky`, `Check HP`,
+      `Weather` and `Harassment`, so those need no re-fetching — extend the
+      `FLAGS` map in `tools/scrape.py` and re-run the dedup.
 - [x] **Stage 3 — `predicates.py`**: `Context` class answering each derived
       question. Non-damage questions first (first turn, hazards active,
       knows-move, etc.); damage-dependent questions (`can_ko`,

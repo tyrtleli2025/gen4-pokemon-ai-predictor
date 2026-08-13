@@ -1,0 +1,4 @@
+{
+  "_comment": "Moves whose name differs between the two sources. Keys are names used by the scoring site (aicalc/flags/_scraped/per_move.json); values are the names used by the Kaizo spreadsheet (data/moves.csv). Join the two datasets through this map.",
+  "Accelerock": "Rollout"
+}

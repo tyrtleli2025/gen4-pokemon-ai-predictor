@@ -9,6 +9,26 @@ https://docs.google.com/spreadsheets/d/1y95UYKY9HNgZjUlbeZbQ3BWf5IqcFqAkmstC-OSa
 | `move_changes.csv` | Move Changes | Human-readable diff vs. vanilla Platinum |
 | `ai_changes.csv` | AI Changes | Kaizo-specific deviations from vanilla Gen 4 trainer AI |
 | `ability_changes.csv` | Ability Changes | Ability diffs vs. vanilla |
+| `move_aliases.json` | — | Name mismatches between the scoring site and this sheet |
+
+## Reconciling the two sources by move name
+
+The scoring site and this spreadsheet do not always agree on a move's *name*, so
+join them through `move_aliases.json` rather than by string equality.
+
+- **Accelerock (site) = Rollout (sheet)** — the same move. Kaizo repurposed the
+  Rollout slot into Accelerock; the sheet kept the vanilla slot name while the
+  scoring site uses the new one. The sheet's row (Physical, 40 bp, Rock, 100 acc,
+  5 PP, priority +1, no added effect) matches Accelerock exactly. Scoring text for
+  this move therefore lives under `Accelerock` in `per_move.json`.
+
+Everything else reconciles. The only remaining names in the sheet with no scoring
+page are `Struggle` (never scored as a normal AI option, and PP is out of scope)
+and rows 468–470, which are unnamed placeholders whose "name" is just their ID.
+
+Note `SolarBeam` and `Solar-Beam` are two **distinct** moves in Kaizo — the vanilla
+charging SolarBeam, plus a 120 bp Grass special with no charge turn occupying the
+old Skull Bash slot. Both exist in both sources; do not normalise them together.
 
 ## Why this matters for the AI engine
 
