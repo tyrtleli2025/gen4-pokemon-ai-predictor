@@ -1,0 +1,472 @@
+ID Number,Name,Additional Effect,Category,Power,Type,Accuracy,PP,Additional Effect Chance (%),Target(s),Priority,Contact Move,Blocked by Protect,Reflected by Magic Coat,Affected by Snatch,Affected by Mirror Move,Triggers Kings Rock,Hide HP Bars,Remove Target's Shadow,Contest Effect,Contest Type
+0,-,None,Physical,0,Normal,0,0,0,One opponent,0,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,0,0
+1,Pound,None,Physical,40,Normal,100,35,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,5,4
+2,Karate Chop,High crit ratio,Physical,50,Fighting,100,25,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,5,4
+3,DoubleSlap,Hits twice,Physical,30,Normal,90,10,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,7,4
+4,Water Ball,None,Special,100,Water,100,15,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,7,4
+5,Mega Punch,None,Physical,80,Normal,85,20,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,18,4
+6,Pay Day,Pay Day effect,Physical,40,Normal,100,20,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,23,3
+7,Fire Punch,Chance to Burn,Physical,95,Fire,100,15,10,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,17,1
+8,Ice Punch,Chance to Freeze,Physical,95,Ice,100,15,10,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,17,1
+9,ThunderPunch,Chance to Paralyze,Physical,95,Electric,100,15,10,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,17,0
+10,Scratch,None,Physical,40,Normal,100,35,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,5,4
+11,ViceGrip,Whirlpool effect,Physical,90,Water,100,30,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,5,4
+12,Guillotine,OHKO,Physical,1,Normal,30,8,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,9,0
+13,Razor Wind,Charging turn; high crit ratio,Special,80,Normal,100,10,0,Both opponents,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,6,0
+14,Swords Dance,Sharply raises Atk (Status),Status,0,Normal,0,30,0,User,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,11,1
+15,Cut,None,Physical,50,Normal,100,30,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,5,0
+16,Gust,2x Damage on Pokemon using Bounce/Fly,Special,40,Flying,100,35,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,5,3
+17,Wing Attack,None,Physical,60,Flying,100,35,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,5,0
+18,Whirlwind,Whirlwind/ Roar effect,Status,0,Normal,100,20,0,One opponent,-6,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,9,3
+19,Fly,Fly effect,Physical,90,Flying,95,15,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,TRUE,6,3
+20,Mystical Fire,Lowers SpAtk (Attack),Special,75,Fire,0,20,100,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,21,4
+21,Slam,Chance to Paralyze,Physical,120,Normal,100,8,30,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,5,4
+22,Vine Whip,None,Physical,35,Grass,100,15,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,5,0
+23,Stomp,Causes flinch and 2x damage if target has used Minimize,Physical,90,Ground,100,20,30,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,5,4
+24,Double Kick,Hits twice,Physical,30,Fighting,100,30,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,7,0
+25,Mega Kick,None,Physical,140,Normal,90,8,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,TRUE,18,0
+26,Jump Kick,Deals 1/2 user's max HP to user if it misses,Physical,120,Fighting,90,25,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,5,0
+27,Rolling Kick,Chance to Flinch,Physical,60,Fighting,100,15,30,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,5,0
+28,Sand-Attack,Lowers Accuracy (Status),Status,0,Ground,100,5,0,One opponent,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,19,2
+29,Headbutt,Chance to Flinch,Physical,70,Normal,100,15,30,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,5,4
+30,Fire Ball,None,Special,100,Fire,100,25,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,5,0
+31,Fury Attack,Hits target 2-5 times,Physical,15,Normal,100,20,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,7,0
+32,Horn Drill,OHKO,Physical,1,Normal,30,5,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,9,0
+33,Tackle,None,Physical,35,Normal,100,35,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,23,0
+34,Body Slam,Chance to Paralyze,Physical,90,Normal,100,15,30,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,5,4
+35,Wrap,Whirlpool effect,Physical,15,Normal,100,20,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,21,4
+36,Take Down,1/4 damage dealt recoil,Physical,90,Normal,100,20,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,5,4
+37,Thrash,Chance of causing Paralysis; 1/3 damage dealt recoil,Physical,120,Normal,100,20,20,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,7,4
+38,Double-Edge,1/3 damage dealt recoil,Physical,140,Normal,100,8,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,TRUE,9,4
+39,Tail Whip,Lowers Def (Status),Status,0,Normal,100,1,0,Both opponents,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,TRUE,FALSE,19,2
+40,Poison Sting,Chance to Poison,Physical,40,Poison,100,35,30,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,23,4
+41,Twineedle,Hits twice; chance to poison,Physical,50,Bug,100,20,30,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,7,0
+42,Pin Missile,Hits target 2-5 times,Physical,25,Bug,100,15,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,7,0
+43,Leer,Lowers Def (Status),Status,0,Normal,100,30,0,Both opponents,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,19,0
+44,Bite,Chance to Flinch,Physical,60,Dark,100,25,30,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,5,4
+45,Growl,Lowers Atk (Status),Status,0,Normal,100,40,0,Both opponents,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,TRUE,FALSE,19,2
+46,Roar,Whirlwind/ Roar effect,Status,0,Normal,100,20,0,One opponent,-6,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,19,0
+47,Sing,Causes Sleep,Status,0,Normal,70,8,0,Both opponents and ally,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,19,2
+48,Supersonic,Guaranteed Confusion (Status),Status,0,Normal,70,20,0,Both opponents,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,19,3
+49,SonicBoom,Inflicts 20 damage,Special,1,Normal,100,20,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,5,0
+50,Disable,Disables last move used for 4-7 turns,Status,0,Normal,100,20,0,One opponent,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,19,3
+51,Acid,Lowers SpDef (Attack),Special,40,Poison,100,30,10,Both opponents,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,5,3
+52,Ember,Chance to Burn,Special,40,Fire,100,25,10,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,5,1
+53,Flamethrower,Chance to Burn,Special,95,Fire,100,15,10,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,17,1
+54,Mist,Prevents lowering of stats,Status,0,Ice,0,3,0,User's side of field,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,13,1
+55,Water Gun,None,Special,40,Water,100,25,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,23,1
+56,Hydro Pump,None,Special,120,Water,85,8,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,TRUE,17,1
+57,Surf,2x Damage on Pokemon using Dive,Special,95,Water,100,15,0,Both opponents and ally,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,17,1
+58,Ice Beam,Chance to Freeze,Special,95,Ice,100,10,10,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,17,1
+59,Blizzard,Always hits in Hail,Special,120,Ice,70,5,20,Both opponents,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,17,1
+60,Psybeam,Chance to Confuse,Special,65,Psychic,100,20,10,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,17,1
+61,BubbleBeam,Lowers Spd (Attack),Special,65,Water,100,20,10,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,2,1
+62,Aurora Beam,Always hits,Special,60,Ice,0,20,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,17,1
+63,Hyper Beam,"1/2 damage dealt recoil, fixed AI",Special,180,Normal,100,8,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,TRUE,22,0
+64,Peck,None,Physical,40,Flying,100,35,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,5,0
+65,Drill Peck,High crit ratio,Physical,80,Flying,100,20,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,5,0
+66,Submission,Whirlpool effect,Physical,90,Fighting,100,8,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,5,0
+67,Low Kick,Inflicts greater damage on heavier targets,Physical,1,Fighting,100,20,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,5,4
+68,Counter,2x last amount of damage received,Physical,1,Fighting,100,20,0,Automatic,-5,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,15,4
+69,Seismic Toss,Deals damage equal to user's level,Physical,1,Fighting,100,20,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,TRUE,5,4
+70,Strength,None,Physical,80,Normal,100,15,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,5,4
+71,Absorb,Damages target; heals user up to 50% of damage dealt,Special,60,Dark,100,25,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,20,3
+72,Mega Drain,Damages target; heals user up to 50% of damage dealt,Special,40,Grass,100,15,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,20,3
+73,Leech Seed,Leech Seed effect,Status,0,Grass,0,10,0,One opponent,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,21,3
+74,Growth,Raises SpAtk,Status,0,Normal,0,5,0,User,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,11,1
+75,Razor Leaf,High crit ratio,Physical,60,Grass,100,25,0,Both opponents,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,5,0
+76,SolarBeam,Charging turn unless in Harsh Sunlight,Special,120,Grass,100,10,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,6,0
+77,PoisonPowder,Guaranteed Poison,Status,0,Poison,100,35,0,One opponent,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,TRUE,FALSE,19,3
+78,Stun Spore,Guaranteed Paralysis,Status,0,Grass,90,30,0,One opponent,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,TRUE,FALSE,19,3
+79,Sleep Powder,Causes Sleep,Status,0,Grass,75,15,0,One opponent,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,TRUE,FALSE,19,3
+80,Petal Dance,Chance to Confuse,Special,100,Grass,100,20,20,Both opponents,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,21,1
+81,String Shot,Lowers Spd (Status),Status,0,Bug,100,40,0,Both opponents,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,19,3
+82,Dragon Rage,Deals 40 damage,Special,1,Dragon,100,10,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,5,0
+83,Fire Spin,Whirlpool effect,Special,90,Fire,100,15,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,21,1
+84,ThunderShock,Chance to Paralyze,Special,40,Electric,100,30,10,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,5,0
+85,Thunderbolt,Chance to Paralyze,Special,95,Electric,100,15,10,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,17,0
+86,Thunder Wave,Guaranteed Paralysis,Status,0,Electric,100,20,0,One opponent,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,19,0
+87,Thunder,Always hits in rain; chance to Paralyze,Special,120,Electric,70,10,30,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,17,0
+88,Rock Throw,None,Physical,50,Rock,100,15,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,5,4
+89,Earthquake,2x Damage on Pokemon using Dig,Physical,100,Ground,100,10,0,Both opponents and ally,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,18,4
+90,Fissure,OHKO,Physical,1,Ground,30,5,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,9,4
+91,Dig,None,Physical,60,Ground,100,10,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,6,3
+92,Toxic,Badly Poisons,Status,0,Poison,100,10,0,One opponent,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,19,3
+93,Confusion,Chance to Confuse,Special,50,Psychic,100,25,30,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,5,3
+94,Psychic,Lowers SpDef (Attack),Special,90,Psychic,100,10,10,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,17,3
+95,Hypnosis,Causes Sleep,Status,0,Psychic,70,20,0,One opponent,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,19,3
+96,Meditate,Raises Atk,Status,0,Psychic,0,1,0,User,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,11,1
+97,Agility,Sharply raises Spd (Status),Status,0,Psychic,0,1,0,User,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,TRUE,1,0
+98,Quick Attack,Priority +1,Physical,40,Normal,100,30,0,One opponent,1,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,1,0
+99,Rage,Pursuit effect,Physical,70,Fighting,100,20,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,11,0
+100,Teleport,Flees from wild single battle,Status,0,Psychic,0,20,0,User,1,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,1,0
+101,Night Shade,Deals damage equal to user's level,Special,1,Ghost,100,15,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,5,3
+102,Mimic,Copies user-selected move,Status,0,Normal,0,10,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,12,2
+103,Screech,Sharply lowers Def (Status),Status,0,Normal,100,5,0,Both opponents,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,TRUE,FALSE,10,3
+104,Double Team,Raises Evasion,Status,0,Normal,0,6,0,User,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,1,0
+105,Recover,Restores up to 50% max HP,Status,0,Normal,0,10,0,User,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,8,3
+106,Harden,Raises Def,Status,0,Normal,0,5,0,User,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,13,4
+107,Minimize,Sharply raises Evasion (Status),Status,0,Normal,0,3,0,User,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,13,2
+108,SmokeScreen,Lowers Accuracy (Status),Status,0,Normal,100,5,0,Both opponents and ally,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,10,3
+109,Confuse Ray,Guaranteed Confusion (Status),Status,0,Ghost,100,10,0,One opponent,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,10,3
+110,Withdraw,Raises Def,Status,0,Water,0,5,0,User,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,13,2
+111,Rock Ball,None,Special,100,Rock,100,15,0,One opponent,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,13,2
+112,Barrier,Sharply raises Def (Status),Status,0,Psychic,0,5,0,User,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,13,0
+113,Light Screen,1/2 damage from Special attacks,Status,0,Psychic,0,2,0,User's side of field,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,13,1
+114,Haze,Resets stat changes,Status,0,Ice,0,30,0,Entire field,0,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,13,1
+115,Reflect,1/2 damage from Physical attacks,Status,0,Psychic,0,2,0,User's side of field,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,13,3
+116,Focus Energy,Sharply raises crit ratio,Status,0,Normal,0,5,0,User,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,11,0
+117,Bide,Damage= 1.5x damage dealt by the target's last attack,Physical,1,Dark,0,10,0,One opponent,-1,FALSE,TRUE,FALSE,FALSE,FALSE,TRUE,TRUE,FALSE,15,4
+118,Metronome,Metronome effect,Status,0,Normal,0,40,0,Automatic,0,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,14,2
+119,Mirror Move,Mirror Move effect,Status,0,Flying,0,20,0,Automatic,0,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,15,3
+120,Selfdestruct,Selfdestruct/ Explosion effect,Physical,200,Normal,100,5,0,Both opponents and ally,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,9,1
+121,Egg Bomb,None,Physical,100,Grass,100,10,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,5,4
+122,Lick,Chance to Paralyze,Physical,80,Ghost,100,15,30,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,16,4
+123,Smog,Chance to Poison,Special,60,Poison,100,20,50,Both opponents,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,5,4
+124,Sludge,Chance to Poison,Special,70,Poison,100,20,30,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,18,4
+125,Bone Club,Chance to Flinch,Physical,65,Rock,100,20,10,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,5,4
+126,Fire Blast,Chance to Burn,Special,120,Fire,85,5,10,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,17,1
+127,Waterfall,Chance to Flinch,Physical,80,Water,100,15,20,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,TRUE,5,4
+128,Clamp,Whirlpool effect,Physical,120,Water,75,10,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,5,4
+129,Swift,Always hits,Special,60,Normal,0,20,0,Both opponents,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,17,0
+130,Solar-Beam,None,Special,120,Grass,100,15,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,6,4
+131,Hail Ball,None,Special,100,Ice,100,10,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,7,0
+132,Constrict,None,Special,100,Ice,100,15,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,21,4
+133,Amnesia,Sharply raises SpDef (Status),Status,0,Psychic,0,3,0,User,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,11,2
+134,Kinesis,Sharply lowers Accuracy (Status),Status,0,Psychic,100,15,0,Both opponents,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,TRUE,FALSE,11,3
+135,Softboiled,Restores up to 50% max HP,Status,0,Normal,0,25,0,User,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,8,1
+136,Hi Jump Kick,Deals 1/2 user's max HP to user if it misses,Physical,150,Fighting,90,20,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,5,0
+137,Glare,Guaranteed Paralysis,Status,0,Dark,100,30,0,One opponent,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,19,4
+138,Dream Eater,Damages sleeping target; heals user up to 50% of damage dealt,Special,100,Psychic,100,15,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,20,3
+139,Poison Gas,Badly Poisons,Status,0,Poison,85,40,0,Both opponents and ally,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,5,3
+140,Hurricane,Always hits in rain; chance to Confuse,Special,120,Flying,70,8,10,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,7,4
+141,Leech Life,Damages target; heals user up to 50% of damage dealt,Physical,80,Bug,100,15,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,20,3
+142,Lovely Kiss,Causes Sleep,Status,0,Normal,90,10,0,One opponent,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,19,1
+143,Sky Attack,Chance of causing Paralysis; 1/3 damage dealt recoil,Physical,120,Flying,100,5,20,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,6,0
+144,Transform,Transform effect,Status,0,Normal,0,10,0,One opponent,1,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,23,3
+145,Bubble,Lowers Spd (Attack),Special,40,Water,100,30,20,Both opponents,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,2,2
+146,Dizzy Punch,Chance to Confuse,Physical,100,Normal,100,10,50,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,16,1
+147,Spore,Causes Sleep,Status,0,Grass,100,15,0,One opponent,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,10,1
+148,Flash,Lowers Accuracy (Status),Status,0,Normal,100,5,0,One opponent,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,TRUE,10,1
+149,Triple Axel,Hits the target up to 3 times; increases power by 10 with each hit,Physical,40,Ice,100,15,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,5,3
+150,HP Water,None,Special,70,Water,100,20,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,30,1
+151,Acid Armor,Sharply raises Def (Status),Status,0,Poison,0,1,0,User,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,11,4
+152,Crabhammer,High crit ratio,Physical,120,Water,100,10,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,18,4
+153,Explosion,Selfdestruct/ Explosion effect,Physical,250,Normal,100,5,0,Both opponents and ally,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,9,1
+154,Fury Swipes,Hits target 2-5 times,Physical,30,Normal,90,15,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,7,4
+155,Bonemerang,Hits twice,Physical,60,Rock,100,10,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,7,4
+156,Rest,Causes Sleep and restores all HP,Status,0,Psychic,0,3,0,User,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,8,2
+157,Rock Slide,Chance to Flinch,Physical,75,Rock,100,10,30,Both opponents,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,5,4
+158,Hyper Fang,Chance to Flinch,Physical,95,Normal,100,15,30,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,18,0
+159,Sharpen,Raises Atk,Status,0,Normal,0,3,0,User,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,11,2
+160,HP Ice,None,Special,70,Ice,100,30,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,23,1
+161,Tri Attack,Chance of either Paralyzing; Burning; or Freezing target,Special,95,Normal,100,10,30,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,5,1
+162,Super Fang,Deals damage equal to 1/2 target's current hp,Physical,1,Dark,100,10,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,5,4
+163,Slash,High crit ratio,Physical,70,Normal,100,20,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,5,0
+164,Substitute,Substitute effect,Status,0,Normal,0,2,0,User,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,23,3
+165,Struggle,Struggle effect,Physical,50,Normal,0,1,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,FALSE,TRUE,TRUE,FALSE,5,0
+166,Sketch,Sketch effect,Status,0,Normal,0,1,0,One opponent,0,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,23,3
+167,Triple Kick,Hits the target up to 3 times; increases power by 10 with each hit,Physical,30,Fighting,100,10,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,7,0
+168,Thief,Splash effect,Physical,40,Dark,100,10,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,12,4
+169,Spider Web,Prevents target from switching out or fleeing,Status,0,Bug,0,10,0,Both opponents,1,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,13,3
+170,Mind Reader,Next move used by user guaranteed to hit,Status,0,Normal,0,5,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,20,3
+171,HP Ghost,None,Special,70,Ghost,100,15,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,19,3
+172,Flame Wheel,Thaws user; chance to Burn,Physical,70,Fire,100,25,10,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,7,1
+173,Snore,Can only be used while asleep; chance of causing Flinch,Special,80,Normal,100,15,30,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,5,2
+174,Curse,Curse effect,Status,0,???,0,3,0,One opponent,0,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,21,4
+175,Flail,Higher power the less HP the user has,Physical,1,Normal,100,15,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,15,2
+176,Conversion 2,Conversion2 effect,Status,0,Normal,0,30,0,User,0,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,14,0
+177,Aeroblast,Chance of either Paralyzing; Burning; or Freezing target,Special,120,Flying,100,5,30,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,TRUE,22,0
+178,Cotton Spore,Sharply lowers Spd (Status),Status,0,Grass,100,40,0,Both opponents,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,TRUE,FALSE,1,1
+179,Reversal,Higher power the less HP the user has,Physical,1,Fighting,100,15,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,15,0
+180,Spite,Decreases PP of target's last move used by 4,Status,0,Ghost,100,10,0,One opponent,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,19,4
+181,Powder Snow,Chance to Freeze,Special,40,Ice,100,25,10,Both opponents,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,23,2
+182,Protect,Protect/ Detect effect,Status,0,Normal,0,10,0,User,3,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,16,2
+183,Mach Punch,Priority +1,Physical,40,Fighting,100,15,0,One opponent,1,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,1,0
+184,Scary Face,Sharply lowers Spd (Status),Status,0,Normal,100,10,0,One opponent,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,2,4
+185,Faint Attack,Always hits,Physical,60,Dark,0,20,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,18,3
+186,Sweet Kiss,Guaranteed Confusion (Status),Status,0,Normal,100,10,0,One opponent,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,19,2
+187,Belly Drum,Belly Drum effect,Status,0,Normal,0,1,0,User,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,11,2
+188,Sludge Bomb,Chance to Poison,Special,95,Poison,100,10,30,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,18,4
+189,Mud-Slap,Lowers Accuracy (Attack),Special,20,Ground,100,10,100,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,5,2
+190,Octazooka,Lowers Accuracy (Attack),Special,95,Water,100,10,50,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,4,4
+191,Spikes,Spikes effect,Status,0,Ground,0,20,0,Opponent's side of field,1,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,13,3
+192,Zap Cannon,Chance to Paralyze,Special,120,Electric,50,5,100,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,4,0
+193,Foresight,Ignores type immunities,Status,0,Normal,0,5,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,20,3
+194,Destiny Bond,Destiny Bond effect,Status,0,Ghost,0,5,0,User,0,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,9,3
+195,Perish Song,All users on field faint in 3 turns,Status,0,Normal,0,5,0,Entire field,0,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,10,1
+196,Icy Wind,Lowers Spd (Attack),Special,55,Ice,95,15,100,Both opponents,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,2,1
+197,Detect,Protect/ Detect effect,Status,0,Fighting,0,10,0,User,3,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,16,0
+198,Bone Rush,Hits target 2-5 times,Physical,25,Ground,100,10,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,7,4
+199,Lock-On,Next move used by user guaranteed to hit,Status,0,Normal,0,5,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,20,3
+200,Outrage,"1/2 damage dealt recoil, fixed AI",Physical,140,Dragon,100,15,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,TRUE,7,0
+201,Sandstorm,Causes Sandstorm,Status,0,Rock,0,1,0,Entire field,0,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,13,4
+202,Giga Drain,Damages target; heals user up to 50% of damage dealt,Special,75,Grass,100,15,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,20,3
+203,Endure,Allows user to endure a fatal hit and survive at 1 HP,Status,0,Normal,0,10,0,User,3,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,13,4
+204,Charm,Sharply lowers Atk (Status),Status,0,Normal,100,3,0,One opponent,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,TRUE,FALSE,19,2
+205,Rollout,None,Physical,40,Rock,100,5,0,One opponent,1,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,7,4
+206,False Swipe,False Swipe effect,Physical,40,Normal,100,40,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,16,0
+207,Swagger,Sharply raises target's Atk and causes Confusion,Status,0,Normal,100,15,0,One opponent,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,TRUE,FALSE,19,2
+208,Milk Drink,Restores up to 50% max HP,Status,0,Normal,0,10,0,User,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,8,2
+209,Wild Charge,Chance of causing Paralysis; 1/3 damage dealt recoil,Physical,120,Electric,100,20,20,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,5,0
+210,Fury Cutter,Hits the target up to 3 times; increases power by 10 with each hit,Physical,30,Bug,100,20,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,7,0
+211,Steel Wing,Chance of raising Def,Physical,80,Steel,100,25,10,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,5,0
+212,Mean Look,Prevents target from switching out or fleeing,Status,0,Normal,0,5,0,One opponent,1,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,10,1
+213,Attract,Infatuates target of opposite gender,Status,0,Normal,100,15,0,Both opponents,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,19,2
+214,Sleep Talk,Sleep Talk effect,Status,0,Normal,0,20,0,Automatic,1,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,5,2
+215,Heal Bell,Heal Bell effect,Status,0,Normal,0,1,0,User's side of field,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,8,1
+216,Return,None,Physical,121,Normal,100,20,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,17,2
+217,Present,Present Effect,Physical,1,Normal,100,15,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,16,2
+218,Frustration,None,Physical,121,Normal,100,20,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,18,2
+219,Safeguard,Safeguard effect,Status,0,Normal,0,5,0,User's side of field,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,13,1
+220,Pain Split,Pain Split effect,Status,0,Normal,0,20,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,10,3
+221,Sacred Fire,Thaws user; chance to Burn,Physical,120,Fire,100,5,50,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,22,1
+222,Bulldoze,Lowers Spd (Attack),Physical,60,Ground,100,30,100,Both opponents and ally,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,18,4
+223,DynamicPunch,Chance to Confuse,Physical,120,Fighting,50,5,100,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,18,0
+224,Megahorn,High crit ratio,Physical,120,Bug,85,10,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,TRUE,18,0
+225,DragonBreath,Chance to Paralyze,Special,70,Dragon,100,20,30,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,17,0
+226,Baton Pass,Baton Pass effect,Status,0,Normal,0,40,0,User,1,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,16,2
+227,Encore,Locks target into last move used for 3-7 turns,Status,0,Normal,100,3,0,One opponent,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,20,2
+228,Pursuit,Pursuit effect,Physical,70,Dark,100,15,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,20,3
+229,HP Fire,None,Special,70,Fire,100,15,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,17,0
+230,Sweet Scent,Lowers Evasion (Status),Status,0,Normal,100,2,0,Both opponents,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,19,2
+231,Iron Tail,Lowers Def (Attack),Physical,120,Steel,90,15,30,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,18,0
+232,Metal Claw,Chance of raising Atk,Physical,50,Steel,100,35,10,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,18,0
+233,Vital Throw,Always hits,Physical,90,Fighting,0,10,0,One opponent,-1,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,2,0
+234,Morning Sun,Synthesis effect,Status,0,Normal,0,5,0,User,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,8,1
+235,Synthesis,Synthesis effect,Status,0,Grass,0,5,0,User,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,8,3
+236,Moonlight,Synthesis effect,Status,0,Normal,0,5,0,User,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,TRUE,8,1
+237,Hidden Power,Hidden Power effect,Special,1,Normal,100,15,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,23,3
+238,Cross Chop,High crit ratio,Physical,100,Fighting,85,5,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,18,0
+239,Twister,Whirlpool effect,Special,90,Dragon,100,15,0,Both opponents,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,5,0
+240,Rain Dance,Causes Rain,Status,0,Water,0,1,0,Entire field,0,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,13,4
+241,Sunny Day,Causes Harsh Sunlight,Status,0,Fire,0,1,0,Entire field,0,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,13,1
+242,Crunch,Lowers Def (Attack),Physical,95,Dark,100,15,20,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,18,4
+243,Mirror Coat,Mirror Coat effect,Special,1,Psychic,100,20,0,Automatic,-5,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,15,1
+244,Psych Up,Copies all of target's stat boosts,Status,0,Normal,0,10,0,One opponent,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,11,3
+245,ExtremeSpeed,None,Physical,100,Normal,100,8,0,One opponent,2,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,TRUE,1,0
+246,AncientPower,Ancient Power boost,Special,80,Rock,100,10,10,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,18,4
+247,Shadow Ball,Lowers SpDef (Attack),Special,90,Ghost,100,15,20,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,17,3
+248,Future Sight,Future Sight effect,Special,120,Psychic,100,15,0,One opponent,0,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,17,3
+249,Rock Smash,Lowers Def (Attack),Physical,40,Fighting,100,15,50,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,18,4
+250,Whirlpool,Whirlpool effect,Special,90,Water,100,15,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,TRUE,21,1
+251,Beat Up,Beat Up effect,Physical,30,Dark,100,10,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,7,3
+252,Fake Out,Guaranteed Flinch; can only be used turn 1,Physical,40,Normal,100,5,100,One opponent,3,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,17,2
+253,Uproar,Uproar effect,Special,50,Normal,100,10,0,Random,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,10,2
+254,Stockpile,Raises user's Def and SpDef,Status,0,Normal,0,10,0,User,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,11,4
+255,HP Rock,None,Special,70,Rock,100,15,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,18,4
+256,Swallow,Whirlpool effect,Physical,90,Poison,100,10,0,One opponent,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,8,4
+257,Heat Wave,Chance to Burn,Special,100,Fire,100,10,10,Both opponents,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,17,1
+258,Hail,Causes Hail,Status,0,Ice,0,1,0,Entire field,0,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,13,1
+259,Torment,Torment effect,Status,0,Dark,100,15,0,One opponent,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,TRUE,FALSE,16,4
+260,Flatter,Raises target's SpAtk and causes Confusion,Status,0,Dark,100,15,0,One opponent,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,19,3
+261,Will-O-Wisp,Guaranteed Burn; activates Flash Fire,Status,0,Fire,85,15,0,One opponent,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,17,1
+262,Memento,Selfdestruct/ Explosion effect,Special,255,Dark,100,10,0,One opponent,0,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,9,4
+263,Facade,2x power if user is Poisoned; Paralyzed; or Burned.,Physical,80,Normal,100,20,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,15,2
+264,Focus Punch,Focus Punch effect,Physical,150,Fighting,100,20,0,One opponent,-3,TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,6,4
+265,SmellingSalt,2x power if target is Paralyzed; cures target of Paralysis,Physical,90,Normal,100,10,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,16,3
+266,Follow Me,Redirects all moves to user,Status,0,Normal,0,20,0,User,3,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,14,2
+267,Nature Power,Nature Power effect,Status,0,Normal,0,20,0,Automatic,0,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,14,1
+268,Charge,Next move deals 2x damage if it is Electric-type,Status,0,Electric,0,1,0,User,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,11,3
+269,HP Dark,None,Special,70,Dark,100,15,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,16,3
+270,Helping Hand,Ally's attack deals 1.5x damage this turn,Status,0,Normal,0,20,0,Automatic (fails if there is no ally),5,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,20,3
+271,HP Psychic,None,Special,70,Psychic,100,15,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,12,3
+272,Role Play,User copies target's Ability,Status,0,Psychic,0,10,0,One opponent,0,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,23,2
+273,Wish,1/2 of user's max HP is restored at the end of next turn,Status,0,Normal,0,10,0,User,0,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,8,2
+274,Assist,Assist effect,Status,0,Normal,0,35,0,Automatic,0,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,14,2
+275,Ingrain,Ingrain effect,Status,0,Grass,0,1,0,User,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,21,3
+276,Superpower,"1/2 damage dealt recoil, fixed AI",Physical,140,Fighting,100,5,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,18,4
+277,Magic Coat,Reflects status moves back at their user,Status,0,Psychic,0,15,0,Automatic,4,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,15,1
+278,Recycle,User regains a consumed held item,Status,0,Normal,0,15,0,User,0,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,12,3
+279,Revenge,2x Power if user moves after target,Physical,60,Fighting,100,10,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,15,4
+280,Brick Break,Removes Light Screen/ Reflect from target's side of the field,Physical,75,Fighting,100,15,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,5,0
+281,Yawn,Causes Sleep,Status,0,Normal,70,10,100,One opponent,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,19,2
+282,Knock Off,Renders the target's held item unusable,Physical,80,Dark,100,20,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,5,3
+283,Endeavor,Target's HP becomes equal to the user's current HP,Physical,1,???,100,5,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,15,4
+284,Eruption,Chance of causing Burn; 1/3 damage dealt recoil,Special,150,Fire,100,5,20,Both opponents,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,18,1
+285,Skill Swap,User swaps Abilities with the target,Status,0,Psychic,0,2,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,12,3
+286,Imprison,Target is prevented from using moves shared with the user,Status,0,Psychic,0,10,0,User,0,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,20,3
+287,Refresh,Cures user of Burn; Poison; or Paralysis,Status,0,Normal,0,10,0,User,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,23,2
+288,Grudge,Grudge effect,Status,0,Ghost,0,5,0,User,0,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,10,4
+289,Drill Run,High crit ratio,Physical,80,Ground,100,10,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,12,3
+290,Secret Power,Secret Power effect,Physical,85,Normal,100,20,30,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,14,3
+291,Dive,None,Physical,80,Water,100,10,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,6,1
+292,HP Fighting,None,Special,70,Fighting,100,15,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,7,4
+293,Camouflage,Camouflage effect,Status,0,Normal,0,20,0,User,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,13,3
+294,Tail Glow,Sharply raises SpAtk (Status),Status,0,Bug,0,20,0,User,2,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,11,1
+295,Luster Purge,Lowers SpDef (Attack),Special,100,Psychic,100,5,50,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,22,3
+296,Mist Ball,Lowers SpAtk (Attack),Special,100,Psychic,100,5,50,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,22,3
+297,FeatherDance,Sharply lowers Atk (Status),Status,0,Flying,100,3,0,One opponent,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,19,1
+298,Teeter Dance,Guaranteed Confusion (Status),Status,0,Normal,100,20,0,Both opponents and ally,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,14,2
+299,Blaze Kick,Chance of causing Burn; increased Crit ratio,Physical,100,Fire,100,10,20,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,17,1
+300,HP Ground,None,Special,70,Ground,100,15,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,13,2
+301,Ice Ball,Always hits in Hail,Physical,120,Ice,70,5,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,7,1
+302,Needle Arm,None,Physical,80,Grass,100,15,30,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,5,3
+303,Slack Off,Restores up to 50% max HP,Status,0,Normal,0,10,0,User,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,8,2
+304,Hyper Voice,None,Special,110,Normal,100,10,0,Both opponents,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,5,0
+305,Poison Fang,Chance of Badly Poisoning,Physical,90,Poison,100,15,40,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,4,3
+306,Crush Claw,Lowers Def (Attack),Physical,120,Normal,95,10,50,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,5,0
+307,Blast Burn,Chance of causing Burn; 1/3 damage dealt recoil,Special,150,Fire,95,5,30,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,22,1
+308,Hydro Cannon,"1/2 damage dealt recoil, fixed AI",Special,150,Water,95,5,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,TRUE,9,2
+309,Meteor Mash,Chance of raising Atk,Physical,100,Steel,100,10,20,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,18,0
+310,Astonish,Chance to Flinch,Physical,40,Ghost,100,15,30,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,23,3
+311,Weather Ball,Type changes to match weather,Special,50,Normal,100,10,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,4,3
+312,Aromatherapy,Heal Bell effect,Status,0,Grass,0,1,0,User's side of field,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,8,3
+313,Fake Tears,Sharply lowers Spd (Status),Status,0,Dark,100,3,0,One opponent,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,TRUE,FALSE,19,3
+314,Air Cutter,High crit ratio,Special,60,Flying,100,25,0,Both opponents,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,5,0
+315,Overheat,Chance of causing Burn; 1/3 damage dealt recoil,Special,120,Fire,100,5,10,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,TRUE,22,1
+316,Odor Sleuth,Ignores type immunities,Status,0,Normal,0,40,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,20,3
+317,Rock Tomb,Lowers Spd (Attack),Physical,70,Rock,100,10,100,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,2,3
+318,Silver Wind,Ancient Power boost,Special,80,Bug,0,5,10,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,4,1
+319,Metal Sound,Sharply lowers Spd (Status),Status,0,Steel,100,3,0,Both opponents,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,10,3
+320,GrassWhistle,Causes Sleep,Status,0,Grass,70,15,0,One opponent,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,19,3
+321,Tickle,Lowers target's Atk and Def,Status,0,Normal,100,6,0,One opponent,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,TRUE,FALSE,19,2
+322,Cosmic Power,Raises user's Def and SpDef,Status,0,Psychic,0,6,0,User,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,TRUE,11,0
+323,Water Spout,Power= Base power x(user's current HP/ user's max HP),Special,150,Water,100,5,0,Both opponents,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,22,1
+324,Signal Beam,Chance to Confuse,Special,95,Bug,100,15,10,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,4,1
+325,Shadow Punch,Always hits,Physical,95,Ghost,0,20,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,17,3
+326,Extrasensory,Chance to Flinch,Special,90,Psychic,100,30,10,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,17,0
+327,Sky Uppercut,2x Damage on Pokemon using Bounce/Fly,Physical,95,Fighting,100,15,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,TRUE,17,0
+328,Sand Tomb,Whirlpool effect,Physical,90,Ground,100,15,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,21,3
+329,Sheer Cold,Always hits in Hail,Special,70,Ice,50,5,100,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,9,1
+330,Muddy Water,Lowers Accuracy (Attack),Special,95,Water,100,10,30,Both opponents,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,18,4
+331,Bullet Seed,Hits target 2-5 times,Physical,25,Grass,100,30,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,7,0
+332,Aerial Ace,Always hits,Physical,60,Flying,0,20,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,17,0
+333,Icicle Spear,Hits target 2-5 times,Physical,25,Ice,100,30,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,7,1
+334,Iron Defense,Sharply raises Def (Status),Status,0,Steel,0,3,0,User,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,13,4
+335,Block,Prevents target from switching out or fleeing,Status,0,Normal,0,5,0,One opponent,7,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,13,2
+336,Howl,Raises Atk,Status,0,Normal,0,3,0,User,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,11,0
+337,Dragon Claw,High crit ratio,Physical,90,Dragon,100,15,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,17,0
+338,Frenzy Plant,Chance of causing Paralysis; 1/3 damage dealt recoil,Special,150,Grass,95,5,20,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,TRUE,22,0
+339,Bulk Up,Raises user's Atk and Def,Status,0,Fighting,0,3,1,User,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,11,1
+340,Bounce,Chance to Paralyze,Physical,85,Flying,100,5,30,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,6,2
+341,Mud Shot,Lowers Spd (Attack),Special,55,Ground,100,15,100,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,2,4
+342,Poison Tail,Chance of causing Poison; increased crit ratio,Physical,120,Poison,100,5,10,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,4,3
+343,HP Grass,None,Special,70,Grass,100,15,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,12,2
+344,Volt Tackle,Chance of causing Paralysis; 1/3 damage dealt recoil,Physical,150,Electric,100,5,30,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,TRUE,22,0
+345,Magical Leaf,Always hits,Special,60,Grass,0,15,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,17,1
+346,Scald,Thaws user; chance to Burn,Special,80,Water,100,15,30,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,13,2
+347,Calm Mind,Raises user's SpAtk and SpDef,Status,0,Psychic,0,3,0,User,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,11,3
+348,Leaf Blade,High crit ratio,Physical,95,Grass,100,15,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,17,0
+349,Dragon Dance,Raises user's Atk and Spd,Status,0,Dragon,0,1,0,User,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,11,1
+350,Rock Blast,Hits target 2-5 times,Physical,25,Rock,100,8,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,7,4
+351,Shock Wave,Always hits,Special,60,Electric,0,15,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,17,0
+352,Water Pulse,Chance to Confuse,Special,60,Water,0,20,20,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,TRUE,17,1
+353,Doom Desire,Future Sight effect,Special,250,Steel,100,5,0,One opponent,0,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,34,3
+354,Psycho Boost,None,Special,140,Psychic,100,5,100,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,TRUE,22,3
+355,Roost,Roost effect,Status,0,Flying,0,8,0,User,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,8,0
+356,Gravity,Gravity effect,Status,0,Psychic,0,5,0,Entire field,1,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,13,1
+357,Miracle Eye,Causes all moves to ignore changes to the target's Evasiveness,Status,0,Psychic,0,40,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,20,2
+358,Wake-Up Slap,2x power if target is asleep; wakes up target,Physical,60,Fighting,100,10,100,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,16,3
+359,Hammer Arm,Lowers user's Spd,Physical,100,Fighting,100,10,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,2,0
+360,Gyro Ball,Power = min(150; (25 x Target's Current Speed / User's Current Speed) + 1),Physical,1,Steel,100,8,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,15,1
+361,HP Electric,None,Special,70,Electric,100,15,0,One opponent,0,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,8,2
+362,Brine,2x power if target is at or below 1/2 HP,Special,65,Water,100,10,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,4,3
+363,Natural Gift,Natural Gift effect,Physical,1,Normal,100,1,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,18,1
+364,Feint,Can only hit targets that have used Protect/ Detect,Physical,80,Normal,100,10,0,One opponent,2,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,16,1
+365,Pluck,Consumes target's berry,Physical,50,Flying,100,5,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,12,2
+366,Tailwind,2x Spd for user's party for 3 turns,Status,0,Flying,0,30,0,User's side of field,5,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,28,4
+367,Acupressure,Sharply raises a random stat of the target,Status,0,Normal,0,30,0,User or ally,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,11,0
+368,Metal Burst,Damage= 1.5x damage dealt by the target's last attack,Physical,1,Steel,100,10,0,Automatic,-2,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,15,1
+369,U-turn,Switches user out after dealing damage,Physical,80,Bug,100,20,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,16,2
+370,Close Combat,1/4 damage dealt recoil,Physical,120,Fighting,100,5,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,TRUE,22,3
+371,Payback,2x Power if user moves after target,Physical,60,Dark,100,10,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,6,0
+372,Assurance,2x damage if the target has already taken damage this turn,Physical,70,Dark,100,10,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,15,1
+373,Embargo,Prevents the target from using its held item or having items used on it,Status,0,Dark,100,15,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,13,2
+374,Fling,Power and effect determined by held item,Physical,1,Dark,100,10,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,23,4
+375,Psycho Shift,Cures user of any status condition and afflicts the target with it,Status,0,Psychic,100,10,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,16,0
+376,Trump Card,The less PP the move has; the greater its Power,Special,1,Normal,0,1,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,21,0
+377,Aqua Cutter,High crit ratio,Physical,70,Water,100,15,0,Both opponents,0,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,13,2
+378,Wring Out,2x power if target is at or below 1/2 HP,Special,75,Normal,100,5,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,22,3
+379,Power Trick,Swaps the user's Atk stat with its Def stat,Status,0,Psychic,0,10,0,User,0,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,16,0
+380,Gastro Acid,Suppresses the target's Ability,Status,0,Poison,100,10,0,One opponent,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,13,1
+381,Lucky Chant,Prevents opponents from landing critical hits on the user's party for 5 turns,Status,0,Normal,0,30,0,User's side of field,2,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,19,2
+382,Me First,If the target has not moved yet; the user copies their move and uses it with 1.5x power,Status,0,Normal,0,20,0,One opponent (fails if target faints),1,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,1,2
+383,Copycat,User uses the last move that was used in battle,Status,0,Normal,0,20,0,Automatic,1,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,12,0
+384,Power Swap,Swaps the user's Atk and SpAtk buffs with the target's Atk and SpAtk buffs,Status,0,Psychic,0,3,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,16,1
+385,Guard Swap,Swaps the user's Def and SpDef buffs with the target's Def and SpDef buffs,Status,0,Psychic,0,3,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,16,2
+386,Punishment,Power= 60 + (20x # of stat increases of target),Physical,1,Dark,100,5,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,23,3
+387,Last Resort,Fails unless the user has used all of its other moves at least once,Physical,130,Normal,100,5,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,21,2
+388,Worry Seed,Changes the target's Ability to Insomnia,Status,0,Grass,100,10,0,One opponent,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,19,1
+389,Sucker Punch,None,Physical,80,Dark,100,5,0,One opponent,2,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,1,3
+390,Toxic Spikes,Toxic Spikes effect,Status,0,Poison,0,20,0,Opponent's side of field,1,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,TRUE,FALSE,13,3
+391,Heart Swap,Damages target; heals user up to 50% of damage dealt,Special,95,Water,0,10,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,16,1
+392,Aqua Ring,Restores 1/16 of the user's max HP at the end of every turn,Status,0,Water,0,20,0,User,0,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,8,1
+393,Magnet Rise,User's party becomes immune to Ground-type attacks and grounded hazards for 5 turns,Status,0,Electric,0,10,0,User's side of field,1,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,13,2
+394,Flare Blitz,Chance of causing Burn; 1/3 damage dealt recoil,Physical,120,Fire,100,8,10,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,22,3
+395,Force Palm,Chance to Paralyze,Physical,85,Fighting,100,10,30,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,18,0
+396,Aura Sphere,Always hits,Special,90,Fighting,0,10,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,TRUE,17,1
+397,Rock Polish,Sharply raises Spd (Status),Status,0,Rock,0,1,0,User,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,1,4
+398,Poison Jab,Chance to Poison,Physical,80,Poison,100,20,30,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,4,3
+399,Dark Pulse,Chance to Flinch,Special,80,Dark,100,15,20,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,17,0
+400,Night Slash,High crit ratio,Physical,70,Dark,100,15,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,5,1
+401,Aqua Tail,None,Physical,120,Water,85,10,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,5,2
+402,Seed Bomb,None,Physical,80,Grass,100,15,100,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,5,3
+403,Air Slash,Chance to Flinch,Special,75,Flying,100,20,30,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,17,0
+404,X-Scissor,High crit ratio,Physical,80,Bug,100,15,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,17,1
+405,Bug Buzz,Lowers SpDef (Attack),Special,90,Bug,100,10,10,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,4,2
+406,Dragon Pulse,Always hits,Special,90,Dragon,0,10,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,4,3
+407,Dragon Rush,Chance to Flinch,Physical,100,Dragon,100,10,30,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,18,0
+408,Power Gem,None,Special,90,Rock,100,20,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,5,1
+409,Drain Punch,Damages target; heals user up to 50% of damage dealt,Physical,75,Fighting,100,5,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,20,1
+410,Vacuum Wave,Priority +1,Special,40,Fighting,100,30,0,One opponent,1,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,1,3
+411,Focus Blast,Lowers SpDef (Attack),Special,120,Fighting,85,5,10,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,17,0
+412,Energy Ball,Lowers SpDef (Attack),Special,80,Grass,100,10,10,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,17,1
+413,Brave Bird,1/4 damage dealt recoil,Physical,120,Flying,100,15,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,TRUE,18,2
+414,Earth Power,Lowers SpDef (Attack),Special,90,Ground,100,10,10,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,18,3
+415,HP Flying,None,Special,70,Flying,100,15,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,12,0
+416,Giga Impact,"1/2 damage dealt recoil, fixed AI",Physical,180,Normal,100,5,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,TRUE,22,1
+417,Nasty Plot,Sharply raises SpAtk (Status),Status,0,???,0,1,0,User,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,11,2
+418,Bullet Punch,Priority +1,Physical,40,Steel,100,10,0,One opponent,1,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,1,3
+419,Avalanche,Chance of causing Freeze; chance of causing Flinch,Physical,100,Ice,100,10,20,Both opponents,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,15,0
+420,Ice Shard,Priority +1,Physical,40,Ice,100,10,0,One opponent,1,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,1,1
+421,Shadow Claw,Hits target 2-5 times,Physical,25,Ghost,100,15,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,17,2
+422,Thunder Fang,Chance of causing Paralysis; chance of causing Flinch,Physical,90,Electric,100,15,10,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,5,3
+423,Ice Fang,Chance of causing Freeze; chance of causing Flinch,Physical,90,Ice,100,15,10,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,5,0
+424,Fire Fang,Chance of causing Burn; chance of causing Flinch,Physical,90,Fire,100,15,10,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,5,1
+425,Shadow Sneak,Priority +1,Physical,40,Ghost,100,10,0,One opponent,1,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,1,3
+426,Mud Bomb,Lowers Accuracy (Attack),Special,65,Ground,100,10,30,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,18,3
+427,Psycho Cut,High crit ratio,Physical,90,Psychic,100,20,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,17,0
+428,Zen Headbutt,Chance to Flinch,Physical,80,Psychic,100,15,20,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,18,1
+429,Mirror Shot,Lowers Accuracy (Attack),Special,120,Steel,100,10,30,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,17,2
+430,Flash Cannon,Lowers SpDef (Attack),Special,80,Steel,100,10,10,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,17,3
+431,Rock Climb,Chance to Confuse,Physical,90,Rock,100,20,30,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,18,0
+432,Defog,Defog effect,Status,0,Flying,0,1,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,13,1
+433,Trick Room,Trick Room effect,Status,0,Psychic,0,1,0,Entire field,7,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,14,2
+434,Draco Meteor,"1/2 damage dealt recoil, fixed AI",Special,140,Dragon,100,5,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,22,3
+435,Discharge,Chance to Paralyze,Special,80,Electric,100,15,30,Both opponents and ally,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,17,0
+436,Lava Plume,Chance to Burn,Special,80,Fire,100,15,30,Both opponents and ally,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,17,4
+437,Leaf Storm,None,Special,120,Grass,85,5,100,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,TRUE,22,2
+438,Power Whip,High crit ratio,Physical,120,Grass,85,10,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,TRUE,5,1
+439,Rock Wrecker,Hits the target up to 3 times; increases power by 10 with each hit,Physical,40,Rock,100,8,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,TRUE,22,4
+440,Cross Poison,Chance of causing Poison; increased crit ratio,Physical,95,Poison,100,20,20,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,5,0
+441,Gunk Shot,Chance to Poison,Physical,120,Poison,100,8,30,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,TRUE,5,0
+442,Iron Head,Chance to Flinch,Physical,80,Steel,100,15,30,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,18,4
+443,Magnet Bomb,Always hits,Special,100,Steel,0,20,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,5,0
+444,Stone Edge,High crit ratio,Physical,120,Rock,80,5,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,4,4
+445,Captivate,Sharply lowers SpAtk (Status),Status,0,Normal,100,3,0,Both opponents,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,TRUE,FALSE,19,1
+446,Stealth Rock,Stealth Rocks effect,Status,0,Rock,0,20,0,Opponent's side of field,1,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,13,0
+447,Grass Knot,Inflicts greater damage on heavier targets,Special,1,Grass,100,20,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,4,3
+448,Chatter,Chatter effect,Special,120,Flying,100,5,50,Both opponents and ally,0,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,23,3
+449,Judgment,Type= Type of Plate held by user,Special,120,Normal,100,10,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,14,3
+450,Bug Bite,Consumes target's berry,Physical,60,Bug,100,20,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,12,4
+451,Charge Beam,Chance of raising user's SpAtk,Special,50,Electric,100,10,100,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,17,1
+452,Wood Hammer,1/3 damage dealt recoil,Physical,120,Grass,100,15,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,18,4
+453,Aqua Jet,Priority +1,Physical,40,Water,100,5,0,One opponent,1,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,1,1
+454,Attack Order,Chance to Poison,Physical,120,Bug,100,15,30,Both opponents,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,4,3
+455,Defend Order,Raises user's Def and SpDef,Status,0,Bug,0,10,0,User,1,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,11,3
+456,Heal Order,Restores up to 50% max HP,Status,0,Bug,0,10,0,User,0,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,8,3
+457,Head Smash,"1/2 damage dealt recoil, VANILLA AI",Physical,150,Rock,100,5,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,TRUE,22,4
+458,Double Hit,Hits twice,Physical,60,Normal,100,10,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,7,3
+459,Roar of Time,Recharge turn,Special,150,Dragon,100,5,10,Both opponents,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,22,0
+460,Spacial Rend,High crit ratio,Special,120,Dragon,100,5,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,TRUE,4,4
+461,Lunar Dance,Restores up to 50% max HP,Status,0,Psychic,0,10,0,User,1,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,34,1
+462,Crush Grip,Whirlpool effect,Physical,150,Normal,100,5,0,One opponent,0,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,15,4
+463,Magma Storm,Whirlpool effect,Special,120,Fire,100,5,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,TRUE,7,4
+464,Dark Void,Causes Sleep,Status,0,Dark,90,5,0,Both opponents,0,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,TRUE,19,3
+465,Seed Flare,Chance of lowering target's SpDef harshly,Special,120,Grass,100,5,50,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,TRUE,22,0
+466,Ominous Wind,Ancient Power boost,Special,80,Ghost,0,5,10,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,11,3
+467,Shadow Force,Shadow Force effect,Physical,120,Ghost,100,5,0,One opponent,0,TRUE,FALSE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,22,3
+468,468,Lowers SpDef (Attack),Special,60,Fire,0,10,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,16,1
+469,469,None,Special,100,Normal,100,10,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,17,2
+470,470,None,Special,100,Normal,100,10,0,One opponent,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,18,3

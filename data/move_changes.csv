@@ -1,0 +1,339 @@
+,Move Changes                                                                                                                                                                                              
+,"DoubleSlap (Hits twice): 15 bp -> 30 bp, 85 acc -> 90 acc"
+,"Comet Punch -> Water Ball (No Effect, Special): 18 bp -> 100 bp, Normal type -> Water type, 85 acc -> 100 acc"
+,Fire Punch: 75 bp -> 95 bp
+,Ice Punch: 75 bp -> 95 bp
+,ThunderPunch: 75 bp -> 95 bp
+,"ViceGrip (Whirlpool effect): 55 bp -> 90 bp, Normal type -> Water type"
+,Guillotine: 5 pp -> 8 pp
+,Cut: 95 acc -> 100 acc
+,"Bind -> Mystical Fire (Lowers SpAtk (Attack), Special): 15 bp -> 75 bp, Normal type -> Fire type, 75 acc -> 0 acc, 0% chance -> 100% chance"
+,"Slam (Chance to Paralyze): 80 bp -> 120 bp, 75 acc -> 100 acc, 20 pp -> 8 pp, 0% chance -> 30% chance"
+,"Stomp: 65 bp -> 90 bp, Normal type -> Ground type"
+,"Mega Kick: 120 bp -> 140 bp, 75 acc -> 90 acc, 5 pp -> 8 pp"
+,"Jump Kick: 85 bp -> 120 bp, 95 acc -> 90 acc"
+,Rolling Kick: 85 acc -> 100 acc
+,Sand-Attack: 15 pp -> 5 pp
+,"Horn Attack -> Fire Ball: 65 bp -> 100 bp, Normal type -> Fire type"
+,Fury Attack: 85 acc -> 100 acc
+,Tackle: 95 acc -> 100 acc
+,Body Slam: 85 bp -> 90 bp
+,Wrap (Whirlpool effect): 85 acc -> 100 acc
+,Take Down: 85 acc -> 100 acc
+,"Thrash (Chance of causing Paralysis; 1/3 damage dealt recoil): 90 bp -> 120 bp, 0% chance -> 20% chance, targets one opponent"
+,"Double-Edge: 120 bp -> 140 bp, 15 pp -> 8 pp"
+,Tail Whip: 30 pp -> 1 pp
+,Poison Sting: 15 bp -> 40 bp
+,"Twineedle: 25 bp -> 50 bp, 20% chance -> 30% chance"
+,"Pin Missile: 14 bp -> 25 bp, 85 acc -> 100 acc, 20 pp -> 15 pp"
+,"Sing: 55 acc -> 70 acc, 15 pp -> 8 pp, targets both opponents and ally"
+,"Supersonic: 55 acc -> 70 acc, targets both opponents"
+,SonicBoom: 90 acc -> 100 acc
+,Disable: 80 acc -> 100 acc
+,Mist: 30 pp -> 3 pp
+,"Hydro Pump: 80 acc -> 85 acc, 5 pp -> 8 pp"
+,Blizzard: 10% chance -> 20% chance
+,"Aurora Beam (Always hits): 65 bp -> 60 bp, 100 acc -> 0 acc, 10% chance -> 0% chance"
+,"Hyper Beam (1/2 damage dealt recoil, fixed AI): 150 bp -> 180 bp, 90 acc -> 100 acc, 5 pp -> 8 pp"
+,Peck: 35 bp -> 40 bp
+,Drill Peck (High crit ratio)
+,"Submission (Whirlpool effect): 80 bp -> 90 bp, 80 acc -> 100 acc, 25 pp -> 8 pp"
+,"Absorb: 20 bp -> 60 bp, Grass type -> Dark type"
+,Leech Seed: 90 acc -> 0 acc
+,Growth: 40 pp -> 5 pp
+,"Razor Leaf: 55 bp -> 60 bp, 95 acc -> 100 acc"
+,PoisonPowder: 75 acc -> 100 acc
+,Stun Spore: 75 acc -> 90 acc
+,"Petal Dance (Chance to Confuse): 90 bp -> 100 bp, 0% chance -> 20% chance, targets both opponents"
+,String Shot: 95 acc -> 100 acc
+,"Fire Spin (Whirlpool effect): 15 bp -> 90 bp, 70 acc -> 100 acc"
+,Rock Throw: 90 acc -> 100 acc
+,Dig (No Effect): 80 bp -> 60 bp
+,Toxic: 85 acc -> 100 acc
+,Confusion: 10% chance -> 30% chance
+,Hypnosis: 60 acc -> 70 acc
+,Meditate: 40 pp -> 1 pp
+,Agility: 30 pp -> 1 pp
+,"Rage (Pursuit effect): 20 bp -> 70 bp, Normal type -> Fighting type"
+,Teleport: +1 priority
+,"Screech: 85 acc -> 100 acc, 40 pp -> 5 pp, targets both opponents"
+,Double Team: 15 pp -> 6 pp
+,Harden: 30 pp -> 5 pp
+,"Minimize (Sharply raises Evasion, Status): 20 pp -> 3 pp"
+,"SmokeScreen: 20 pp -> 5 pp, targets both opponents and ally"
+,Withdraw: 40 pp -> 5 pp
+,"Defense Curl -> Rock Ball (No Effect, Special): 0 bp -> 100 bp, Normal type -> Rock type, 0 acc -> 100 acc, 40 pp -> 15 pp, targets one opponent"
+,Barrier: 30 pp -> 5 pp
+,Light Screen: 30 pp -> 2 pp
+,Reflect: 20 pp -> 2 pp
+,Focus Energy: 30 pp -> 5 pp
+,"Bide (Damage= 1.5x damage dealt by the target's last attack): Normal type -> Dark type, targets one opponent, -1 priority"
+,Metronome: 10 pp -> 40 pp
+,"Egg Bomb: Normal type -> Grass type, 75 acc -> 100 acc"
+,"Lick: 20 bp -> 80 bp, 30 pp -> 15 pp"
+,"Smog: 20 bp -> 60 bp, 70 acc -> 100 acc, 40% chance -> 50% chance, targets both opponents"
+,Sludge: 65 bp -> 70 bp
+,"Bone Club: Ground type -> Rock type, 85 acc -> 100 acc"
+,Clamp (Whirlpool effect): 35 bp -> 120 bp
+,"Skull Bash -> Solar-Beam (No Effect, Special): 100 bp -> 120 bp, Normal type -> Grass type, 100% chance -> 0% chance"
+,"Spike Cannon -> Hail Ball (No Effect, Special): 20 bp -> 100 bp, Normal type -> Ice type, 15 pp -> 10 pp"
+,"Constrict (No Effect, Special): 10 bp -> 100 bp, Normal type -> Ice type, 35 pp -> 15 pp, 10% chance -> 0% chance"
+,Amnesia: 20 pp -> 3 pp
+,"Kinesis (Sharply lowers Accuracy, Status): 80 acc -> 100 acc, targets both opponents"
+,Softboiled: 10 pp -> 25 pp
+,Hi Jump Kick: 100 bp -> 150 bp
+,"Glare: Normal type -> Dark type, 75 acc -> 100 acc"
+,"Poison Gas (Badly Poisons): 55 acc -> 85 acc, targets both opponents and ally"
+,"Barrage -> Hurricane (Always hits in rain; chance to Confuse, Special): 15 bp -> 120 bp, Normal type -> Flying type, 85 acc -> 70 acc, 20 pp -> 8 pp, 0% chance -> 10% chance"
+,Leech Life: 20 bp -> 80 bp
+,Lovely Kiss: 75 acc -> 90 acc
+,"Sky Attack (Chance of causing Paralysis; 1/3 damage dealt recoil): 140 bp -> 120 bp, 90 acc -> 100 acc, 30% chance -> 20% chance"
+,Transform: +1 priority
+,"Bubble: 20 bp -> 40 bp, 10% chance -> 20% chance"
+,"Dizzy Punch: 70 bp -> 100 bp, 20% chance -> 50% chance"
+,Flash: 20 pp -> 5 pp
+,"Psywave -> Triple Axel (Hits the target up to 3 times; increases power by 10 with each hit): 1 bp -> 40 bp, Psychic type -> Ice type, 80 acc -> 100 acc"
+,"Splash -> HP Water (No Effect, Special): 0 bp -> 70 bp, Normal type -> Water type, 0 acc -> 100 acc, 40 pp -> 20 pp, targets one opponent"
+,Acid Armor: 40 pp -> 1 pp
+,"Crabhammer: 90 bp -> 120 bp, 85 acc -> 100 acc"
+,"Fury Swipes: 18 bp -> 30 bp, 80 acc -> 90 acc"
+,"Bonemerang: 50 bp -> 60 bp, Ground type -> Rock type, 90 acc -> 100 acc"
+,Rest: 10 pp -> 3 pp
+,Rock Slide: 90 acc -> 100 acc
+,"Hyper Fang: 80 bp -> 95 bp, 90 acc -> 100 acc, 10% chance -> 30% chance"
+,Sharpen: 30 pp -> 3 pp
+,"Conversion -> HP Ice (No Effect, Special): 0 bp -> 70 bp, Normal type -> Ice type, 0 acc -> 100 acc, targets one opponent"
+,"Tri Attack: 80 bp -> 95 bp, 20% chance -> 30% chance"
+,"Super Fang: Normal type -> Dark type, 90 acc -> 100 acc"
+,Substitute: 10 pp -> 2 pp
+,"Triple Kick: 10 bp -> 30 bp, 90 acc -> 100 acc"
+,Thief (Splash effect)
+,"Spider Web: targets both opponents, +1 priority"
+,"Nightmare -> HP Ghost (No Effect, Special): 0 bp -> 70 bp"
+,Flame Wheel: 60 bp -> 70 bp
+,Snore: 40 bp -> 80 bp
+,Curse: 10 pp -> 3 pp
+,"Aeroblast (Chance of either Paralyzing; Burning; or Freezing target): 100 bp -> 120 bp, 95 acc -> 100 acc, 0% chance -> 30% chance"
+,"Cotton Spore: 85 acc -> 100 acc, targets both opponents"
+,Mach Punch: 30 pp -> 15 pp
+,Scary Face: 90 acc -> 100 acc
+,Sweet Kiss: 75 acc -> 100 acc
+,Belly Drum: 10 pp -> 1 pp
+,Sludge Bomb: 90 bp -> 95 bp
+,"Octazooka: 65 bp -> 95 bp, 85 acc -> 100 acc"
+,Spikes: +1 priority
+,Foresight: 40 pp -> 5 pp
+,Detect: 5 pp -> 10 pp
+,Bone Rush: 80 acc -> 100 acc
+,"Outrage (1/2 damage dealt recoil, fixed AI): 120 bp -> 140 bp, targets one opponent"
+,Sandstorm: 10 pp -> 1 pp
+,"Giga Drain: 60 bp -> 75 bp, 10 pp -> 15 pp"
+,Charm: 20 pp -> 3 pp
+,"Rollout (No Effect): 30 bp -> 40 bp, 90 acc -> 100 acc, 20 pp -> 5 pp, +1 priority"
+,Swagger: 90 acc -> 100 acc
+,"Spark -> Wild Charge (Chance of causing Paralysis; 1/3 damage dealt recoil): 65 bp -> 120 bp, 30% chance -> 20% chance"
+,"Fury Cutter (Hits the target up to 3 times; increases power by 10 with each hit): 10 bp -> 30 bp, 95 acc -> 100 acc"
+,"Steel Wing: 70 bp -> 80 bp, 90 acc -> 100 acc"
+,Mean Look: +1 priority
+,Attract: targets both opponents
+,"Sleep Talk: 10 pp -> 20 pp, +1 priority"
+,Heal Bell: 5 pp -> 1 pp
+,Return (No Effect): 1 bp -> 121 bp
+,Present: 90 acc -> 100 acc
+,Frustration (No Effect): 1 bp -> 121 bp
+,Safeguard: 25 pp -> 5 pp
+,"Sacred Fire: 100 bp -> 120 bp, 95 acc -> 100 acc"
+,"Magnitude -> Bulldoze (Lowers Spd (Attack)): 1 bp -> 60 bp, 0% chance -> 100% chance"
+,DynamicPunch: 100 bp -> 120 bp
+,Megahorn (High crit ratio)
+,DragonBreath: 60 bp -> 70 bp
+,Baton Pass: +1 priority
+,Encore: 5 pp -> 3 pp
+,"Pursuit: 40 bp -> 70 bp, 20 pp -> 15 pp"
+,"Rapid Spin -> HP Fire (No Effect, Special): 20 bp -> 70 bp, Normal type -> Fire type, 40 pp -> 15 pp"
+,Sweet Scent: 20 pp -> 2 pp
+,"Iron Tail: 100 bp -> 120 bp, 75 acc -> 90 acc"
+,Metal Claw: 95 acc -> 100 acc
+,Vital Throw (Always hits): 70 bp -> 90 bp
+,Cross Chop: 80 acc -> 85 acc
+,"Twister (Whirlpool effect): 40 bp -> 90 bp, 20 pp -> 15 pp, 20% chance -> 0% chance"
+,Rain Dance: 5 pp -> 1 pp
+,Sunny Day: 5 pp -> 1 pp
+,Crunch: 80 bp -> 95 bp
+,"ExtremeSpeed (No Effect): 80 bp -> 100 bp, 5 pp -> 8 pp, +2 priority"
+,"AncientPower: 60 bp -> 80 bp, 5 pp -> 10 pp"
+,Shadow Ball: 80 bp -> 90 bp
+,"Future Sight: 80 bp -> 120 bp, 90 acc -> 100 acc"
+,"Whirlpool: 15 bp -> 90 bp, 70 acc -> 100 acc"
+,Beat Up: 10 bp -> 30 bp
+,"Fake Out: 10 pp -> 5 pp, +3 priority"
+,Stockpile (Raises user's Def and SpDef): 20 pp -> 10 pp
+,"Spit Up -> HP Rock (No Effect): 1 bp -> 70 bp, Normal type -> Rock type, 10 pp -> 15 pp"
+,"Swallow (Whirlpool effect, Physical): 0 bp -> 90 bp, Normal type -> Poison type, 0 acc -> 100 acc, targets one opponent, bypasses Protect"
+,Heat Wave: 90 acc -> 100 acc
+,Hail: 10 pp -> 1 pp
+,Will-O-Wisp: 75 acc -> 85 acc
+,"Memento (Selfdestruct/ Explosion effect, Special): 0 bp -> 255 bp"
+,Facade: 70 bp -> 80 bp
+,SmellingSalt: 60 bp -> 90 bp
+,Charge: 20 pp -> 1 pp
+,"Taunt -> HP Dark (No Effect, Special): 0 bp -> 70 bp, 20 pp -> 15 pp"
+,"Trick -> HP Psychic (No Effect, Special): 0 bp -> 70 bp, 10 pp -> 15 pp"
+,Assist: 20 pp -> 35 pp
+,Ingrain: 20 pp -> 1 pp
+,"Superpower (1/2 damage dealt recoil, fixed AI): 120 bp -> 140 bp"
+,Recycle: 10 pp -> 15 pp
+,Revenge (2x Power if user moves after target): 0 priority
+,"Yawn (Causes Sleep): 0 acc -> 70 acc, 0% chance -> 100% chance"
+,Knock Off: 20 bp -> 80 bp
+,Endeavor: Normal type -> ??? type
+,Eruption (Chance of causing Burn; 1/3 damage dealt recoil): 0% chance -> 20% chance
+,Skill Swap: 10 pp -> 2 pp
+,Refresh: 20 pp -> 10 pp
+,"Snatch -> Drill Run (High crit ratio, Physical): 0 bp -> 80 bp, Dark type -> Ground type, 0 acc -> 100 acc, targets one opponent, 0 priority"
+,Secret Power: 70 bp -> 85 bp
+,Dive (No Effect)
+,"Arm Thrust -> HP Fighting (No Effect, Special): 15 bp -> 70 bp, 20 pp -> 15 pp"
+,Tail Glow: +2 priority
+,Luster Purge: 70 bp -> 100 bp
+,Mist Ball: 70 bp -> 100 bp
+,FeatherDance: 15 pp -> 3 pp
+,"Teeter Dance (Guaranteed Confusion, Status)"
+,"Blaze Kick: 85 bp -> 100 bp, 90 acc -> 100 acc, 10% chance -> 20% chance"
+,"Mud Sport -> HP Ground (No Effect, Special): 0 bp -> 70 bp, 0 acc -> 100 acc, targets one opponent"
+,"Ice Ball (Always hits in Hail): 30 bp -> 120 bp, 90 acc -> 70 acc"
+,Needle Arm (No Effect): 60 bp -> 80 bp
+,Hyper Voice: 90 bp -> 110 bp
+,"Poison Fang: 50 bp -> 90 bp, 30% chance -> 40% chance"
+,Crush Claw: 75 bp -> 120 bp
+,"Blast Burn (Chance of causing Burn; 1/3 damage dealt recoil): 90 acc -> 95 acc, 0% chance -> 30% chance"
+,"Hydro Cannon (1/2 damage dealt recoil, fixed AI): 90 acc -> 95 acc"
+,Meteor Mash: 85 acc -> 100 acc
+,Astonish: 30 bp -> 40 bp
+,Aromatherapy: 5 pp -> 1 pp
+,"Fake Tears (Sharply lowers Spd, Status): 20 pp -> 3 pp"
+,"Air Cutter: 55 bp -> 60 bp, 95 acc -> 100 acc"
+,"Overheat (Chance of causing Burn; 1/3 damage dealt recoil): 140 bp -> 120 bp, 90 acc -> 100 acc, 100% chance -> 10% chance"
+,"Rock Tomb: 50 bp -> 70 bp, 80 acc -> 100 acc"
+,"Silver Wind: 60 bp -> 80 bp, 100 acc -> 0 acc"
+,"Metal Sound (Sharply lowers Spd, Status): 85 acc -> 100 acc, 40 pp -> 3 pp, targets both opponents"
+,GrassWhistle: 55 acc -> 70 acc
+,Tickle: 20 pp -> 6 pp
+,Cosmic Power: 20 pp -> 6 pp
+,Signal Beam: 75 bp -> 95 bp
+,Shadow Punch: 60 bp -> 95 bp
+,Extrasensory: 80 bp -> 90 bp
+,"Sky Uppercut (2x Damage on Pokemon using Bounce/Fly): 85 bp -> 95 bp, 90 acc -> 100 acc"
+,"Sand Tomb (Whirlpool effect): 15 bp -> 90 bp, 70 acc -> 100 acc"
+,"Sheer Cold (Always hits in Hail): 1 bp -> 70 bp, 30 acc -> 50 acc, 0% chance -> 100% chance"
+,Muddy Water: 85 acc -> 100 acc
+,Bullet Seed: 10 bp -> 25 bp
+,Icicle Spear: 10 bp -> 25 bp
+,Iron Defense: 15 pp -> 3 pp
+,Block: +7 priority
+,Howl: 40 pp -> 3 pp
+,Dragon Claw (High crit ratio): 80 bp -> 90 bp
+,"Frenzy Plant (Chance of causing Paralysis; 1/3 damage dealt recoil): 90 acc -> 95 acc, 0% chance -> 20% chance"
+,"Bulk Up: 20 pp -> 3 pp, 0% chance -> 1% chance"
+,Bounce (Chance to Paralyze): 85 acc -> 100 acc
+,Mud Shot: 95 acc -> 100 acc
+,"Poison Tail: 50 bp -> 120 bp, 25 pp -> 5 pp"
+,"Covet -> HP Grass (No Effect, Special): 40 bp -> 70 bp, Normal type -> Grass type, 40 pp -> 15 pp"
+,"Volt Tackle: 120 bp -> 150 bp, 15 pp -> 5 pp, 10% chance -> 30% chance"
+,Magical Leaf: 20 pp -> 15 pp
+,"Water Sport -> Scald (Thaws user; chance to Burn, Special): 0 bp -> 80 bp, 0 acc -> 100 acc, 0% chance -> 30% chance, targets one opponent"
+,Calm Mind: 20 pp -> 3 pp
+,Leaf Blade: 90 bp -> 95 bp
+,Dragon Dance: 20 pp -> 1 pp
+,"Rock Blast: 80 acc -> 100 acc, 10 pp -> 8 pp"
+,Shock Wave: 20 pp -> 15 pp
+,Water Pulse: 100 acc -> 0 acc
+,"Doom Desire: 120 bp -> 250 bp, 85 acc -> 100 acc"
+,Psycho Boost (No Effect): 90 acc -> 100 acc
+,Roost: 10 pp -> 8 pp
+,"Gravity: +1 priority, Effect is permanent"
+,Wake-Up Slap: 0% chance -> 100% chance
+,Hammer Arm: 90 acc -> 100 acc
+,Gyro Ball: 5 pp -> 8 pp
+,"Healing Wish -> HP Electric (No Effect, Special): 0 bp -> 70 bp, Psychic type -> Electric type, 0 acc -> 100 acc, 10 pp -> 15 pp, targets one opponent"
+,Natural Gift: 15 pp -> 1 pp
+,Feint: 50 bp -> 80 bp
+,"Pluck: 60 bp -> 50 bp, 20 pp -> 5 pp"
+,Tailwind: +5 priority
+,Metal Burst: -2 priority
+,U-turn: 70 bp -> 80 bp
+,Close Combat (1/4 damage dealt recoil)
+,Payback: 50 bp -> 60 bp
+,Assurance: 50 bp -> 70 bp
+,Psycho Shift: 90 acc -> 100 acc
+,Trump Card: 5 pp -> 1 pp
+,"Heal Block -> Aqua Cutter (High crit ratio, Physical): 0 bp -> 70 bp, Psychic type -> Water type"
+,Wring Out (2x power if target is at or below 1/2 HP): 1 bp -> 75 bp
+,Lucky Chant: +2 priority
+,Me First: +1 priority
+,Copycat: +1 priority
+,Power Swap: 10 pp -> 3 pp
+,Guard Swap: 10 pp -> 3 pp
+,Sucker Punch (No Effect): +2 priority
+,Toxic Spikes: +1 priority
+,"Heart Swap (Damages target; heals user up to 50% of damage dealt, Special): 0 bp -> 95 bp, Psychic type -> Water type"
+,"Magnet Rise: targets user's side of field, +1 priority"
+,Flare Blitz: 15 pp -> 8 pp
+,Force Palm: 60 bp -> 85 bp
+,Aura Sphere: 20 pp -> 10 pp
+,Rock Polish: 20 pp -> 1 pp
+,"Aqua Tail: 90 bp -> 120 bp, 90 acc -> 85 acc"
+,Seed Bomb: 0% chance -> 100% chance
+,Air Slash: 95 acc -> 100 acc
+,X-Scissor (High crit ratio)
+,Dragon Pulse (Always hits): 100 acc -> 0 acc
+,"Dragon Rush: 75 acc -> 100 acc, 20% chance -> 30% chance"
+,Power Gem: 70 bp -> 90 bp
+,Drain Punch: 60 bp -> 75 bp
+,Focus Blast: 70 acc -> 85 acc
+,Brave Bird (1/4 damage dealt recoil)
+,"Switcheroo -> HP Flying (No Effect, Special): 0 bp -> 70 bp, Dark type -> Flying type, 10 pp -> 15 pp"
+,"Giga Impact (1/2 damage dealt recoil, fixed AI): 150 bp -> 180 bp, 90 acc -> 100 acc"
+,"Nasty Plot: Dark type -> ??? type, 20 pp -> 1 pp"
+,Bullet Punch: 30 pp -> 10 pp
+,"Avalanche (Chance of causing Freeze; chance of causing Flinch): 60 bp -> 100 bp, 0% chance -> 20% chance, targets both opponents, 0 priority"
+,Ice Shard: 30 pp -> 10 pp
+,Shadow Claw (Hits target 2-5 times): 70 bp -> 25 bp
+,"Thunder Fang: 65 bp -> 90 bp, 95 acc -> 100 acc"
+,"Ice Fang: 65 bp -> 90 bp, 95 acc -> 100 acc"
+,"Fire Fang: 65 bp -> 90 bp, 95 acc -> 100 acc"
+,Shadow Sneak: 30 pp -> 10 pp
+,Mud Bomb: 85 acc -> 100 acc
+,Psycho Cut: 70 bp -> 90 bp
+,Zen Headbutt: 90 acc -> 100 acc
+,"Mirror Shot: 65 bp -> 120 bp, 85 acc -> 100 acc"
+,"Rock Climb: Normal type -> Rock type, 85 acc -> 100 acc, 20% chance -> 30% chance"
+,Defog: 15 pp -> 1 pp
+,"Trick Room: 5 pp -> 1 pp, +7 priority, Effect is permanent"
+,"Draco Meteor (1/2 damage dealt recoil, fixed AI): 90 acc -> 100 acc, 100% chance -> 0% chance"
+,"Leaf Storm (No Effect): 140 bp -> 120 bp, 90 acc -> 85 acc"
+,Power Whip (High crit ratio)
+,"Rock Wrecker (Hits the target up to 3 times; increases power by 10 with each hit): 150 bp -> 40 bp, 90 acc -> 100 acc, 5 pp -> 8 pp"
+,"Cross Poison: 70 bp -> 95 bp, 10% chance -> 20% chance"
+,"Gunk Shot: 70 acc -> 100 acc, 5 pp -> 8 pp"
+,Magnet Bomb: 60 bp -> 100 bp
+,Stone Edge: 100 bp -> 120 bp
+,"Captivate (Sharply lowers SpAtk, Status): 20 pp -> 3 pp"
+,Stealth Rock: +1 priority
+,"Chatter: 60 bp -> 120 bp, 0% chance -> 50% chance, targets both opponents and ally"
+,Judgment: 100 bp -> 120 bp
+,"Charge Beam: 90 acc -> 100 acc, 70% chance -> 100% chance"
+,Aqua Jet: 20 pp -> 5 pp
+,"Attack Order (Chance to Poison): 90 bp -> 120 bp, 0% chance -> 30% chance, targets both opponents"
+,Defend Order: +1 priority
+,"Head Smash: 80 acc -> 100 acc, 1/2 recoil (currently fixed AI, will be VANILLA AI again next patch)"
+,"Double Hit: 35 bp -> 60 bp, 90 acc -> 100 acc"
+,"Roar of Time: 90 acc -> 100 acc, targets both opponents"
+,"Spacial Rend: 100 bp -> 120 bp, 95 acc -> 100 acc"
+,Lunar Dance (Restores up to 50% max HP): +1 priority
+,Crush Grip (Whirlpool effect): 1 bp -> 150 bp
+,Magma Storm (Whirlpool effect): 70 acc -> 100 acc
+,"Dark Void: 80 acc -> 90 acc, 10 pp -> 5 pp"
+,"Seed Flare: 85 acc -> 100 acc, 40% chance -> 50% chance"
+,"Ominous Wind: 60 bp -> 80 bp, 100 acc -> 0 acc"
+,"Magic Coat: Bounces Stealth Rock in singles, and sometimes in doubles"

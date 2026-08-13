@@ -45,17 +45,24 @@ def move_probabilities(battle: Battle) -> dict[Action, float]:
 
 ## Data sources
 
-Three external references anchor the whole project — nothing here is guessed:
+Four external references anchor the whole project — nothing here is guessed:
 
 1. **Move-by-move AI scoring** — https://bparkpk.github.io/PKMoveScoring/
    One page per move, listing every flag's scoring procedure for that move,
-   in near-machine-readable form. To be scraped and deduplicated by move
-   *effect* (many moves share identical scoring logic).
-2. **Flag-by-flag AI reference** — the lhearachel gist
-   (`gen4_trainer_ai.md`). Cross-check source; resolves ambiguities
-   (e.g. confirms base score is 100, ties break uniformly at random,
-   "terminate" ends only the current flag's script).
-3. **Damage calculator** — https://hzla.github.io/Dynamic-Calc-Decomps/
+   in near-machine-readable form. Kaizo-specific, and therefore the
+   authoritative source. Scraped and deduplicated — see
+   `aicalc/flags/_scraped/dedup.md`.
+2. **Kaizo game data** — the community Platinum Kaizo spreadsheet, exported to
+   `data/` (move table, move/ability diffs, AI changes). See `data/README.md`.
+   Kaizo rewrites many move *effects*, and the AI scores by effect, so vanilla
+   move knowledge cannot be used anywhere.
+3. **Flag-by-flag AI reference** — the lhearachel gist
+   (`gen4_trainer_ai.md`). Documents *vanilla* Gen 4. Useful for flag
+   structure and for ambiguities (base score is 100, ties break uniformly at
+   random, "terminate" ends only the current flag's script), but its per-move
+   rules are wrong wherever Kaizo changed an effect — 25 vanilla moves don't
+   even exist in Kaizo.
+4. **Damage calculator** — https://hzla.github.io/Dynamic-Calc-Decomps/
    Source for the damage/KO logic. To be ported to Python, in an "AI mode"
    that uses the AI's actual max-roll KO check rather than the player-facing
    damage spread.
@@ -63,25 +70,27 @@ Three external references anchor the whole project — nothing here is guessed:
 One known discrepancy to resolve empirically: the two AI sources disagree on
 which side of a coin flip triggers the 4×-effectiveness bonus in Evaluate
 Attacks (176/256 vs 80/256, which sum to 256 — one source has it backwards).
+The scrape says 176/256; the gist says 80/256.
 
 ## Build order
 
 Each stage is only started once the stage before it is tested and stable.
 
 - [x] **Stage 1 — `state.py`**: `Pokemon`, `Side`, `Field`, `Battle`, `Action`
-      dataclasses. Pure data, no logic beyond `hp_percent()`. *(in progress)*
-- [ ] **Stage 2 — `legal_actions`**: given a `Battle`, list the candidate
+      dataclasses. Pure data, no logic beyond `hp_percent()`.
+- [x] **Stage 2 — `legal_actions`**: given a `Battle`, list the candidate
       `Action`s. Trivial in singles (one per known move); the interface is
       written now so doubles later doesn't require a rewrite.
-- [ ] **Scrape + dedupe the move-scoring site**: produces the authoritative
-      list of AI questions (predicates) and the deduplicated scoring text to
-      encode. Precedes `predicates.py` and `flags/`, since both depend on
-      knowing the actual condition list rather than guessing it.
-- [ ] **Stage 3 — `predicates.py`**: `Context` class answering each derived
+- [x] **Scrape + dedupe the move-scoring site**: all 466 move pages scraped
+      (raw HTML in `scrape_raw/`, deduplicated text in
+      `aicalc/flags/_scraped/dedup.md`, machine-readable in `per_move.json`).
+      **236 distinct scoring blocks** to encode: basic 105, expert 114,
+      evaluate_attacks 9, baton_pass 6, prio_damage 1, setup_first_turn 1.
+- [x] **Stage 3 — `predicates.py`**: `Context` class answering each derived
       question. Non-damage questions first (first turn, hazards active,
       knows-move, etc.); damage-dependent questions (`can_ko`,
-      `is_best_damaging_move`) stubbed via a hand-supplied backend until the
-      damage calculator exists.
+      `is_best_damaging_move`, `effectiveness`) stubbed via a hand-supplied
+      `DamageBackend` until the damage calculator exists.
 - [ ] **Stage 4 — `script.py` + `dist.py`**: the small DSL (`Chance`, `If`,
       `Add`, `Stop`) and its evaluator; `ScoreDist` as an exact
       `{delta: Fraction}` table supporting `mix` and `convolve`.

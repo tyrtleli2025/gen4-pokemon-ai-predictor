@@ -57,3 +57,12 @@ class Battle:
 class Action:
     move: str
     target: str
+
+
+def legal_actions(battle: Battle) -> list[Action]:
+    """Enumerate the AI's candidate actions for the current turn.
+
+    Singles only: one Action per known move, always targeting the player's
+    active Pokemon.
+    """
+    return [Action(move=move, target="player") for move in battle.ai.active.moves]

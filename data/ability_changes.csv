@@ -1,0 +1,356 @@
+Pokémon Name,Ability 1,Ability 2
+BULBASAUR,Overgrow,Overgrow
+IVYSAUR,Overgrow,Overgrow
+VENUSAUR,Chlorophyll,Overgrow
+CHARMANDER,Blaze,Blaze
+CHARMELEON,Blaze,Blaze
+CHARIZARD,Solar Power,Blaze
+SQUIRTLE,Shell Armor,Shell Armor
+WARTORTLE,Shell Armor,Shell Armor
+BLASTOISE,Torrent,Shell Armor
+CATERPIE,Tinted Lens,-
+PIDGEY,Tangled Feet,Tangled Feet
+PIDGEOTTO,Tangled Feet,Tangled Feet
+PIDGEOT,Intimidate,Intimidate
+RATTATA,Guts,Guts
+RATICATE,Guts,Guts
+SPEAROW,Sniper,-
+FEAROW,Sniper,-
+EKANS,Intimidate,Intimidate
+ARBOK,Intimidate,Intimidate
+PIKACHU,Reckless,-
+RAICHU,Lightningrod,-
+SANDSHREW,Hyper Cutter,Rough Skin
+SANDSLASH,Hyper Cutter,Rough Skin
+NIDOQUEEN,Battle Armor,Battle Armor
+NIDOKING,Mold Breaker,Mold Breaker
+CLEFAIRY,Magic Guard,Magic Guard
+CLEFABLE,Magic Guard,Magic Guard
+VULPIX,Flame Body,-
+NINETALES,Magic Guard,-
+JIGGLYPUFF,Aftermath,-
+WIGGLYTUFF,Aftermath,-
+PARAS,Dry Skin,Dry Skin
+PARASECT,Dry Skin,Dry Skin
+VENOMOTH,Tinted Lens,Tinted Lens
+DIGLETT,Arena Trap,Arena Trap
+DUGTRIO,Arena Trap,Arena Trap
+MEOWTH,Super Luck,Limber
+PERSIAN,Super Luck,Limber
+PSYDUCK,Simple,Unaware
+GOLDUCK,Swift Swim,Swift Swim
+MANKEY,Reckless,Reckless
+PRIMEAPE,Reckless,Reckless
+GROWLITHE,Intimidate,Intimidate
+ARCANINE,Intimidate,Intimidate
+POLIWAG,Swift Swim,Swift Swim
+POLIWHIRL,Swift Swim,Swift Swim
+POLIWRATH,Swift Swim,Swift Swim
+ABRA,Magic Guard,Magic Guard
+KADABRA,Magic Guard,Inner Focus
+ALAKAZAM,Magic Guard,Inner Focus
+MACHOP,No Guard,No Guard
+MACHOKE,Huge Power,Huge Power
+MACHAMP,No Guard,No Guard
+TENTACOOL,Rain Dish,Clear Body
+TENTACRUEL,Rain Dish,Clear Body
+GEODUDE,Rock Head,Rough Skin
+GRAVELER,Rock Head,Rough Skin
+GOLEM,Shed Skin,Shell Armor
+PONYTA,Reckless,Reckless
+RAPIDASH,Reckless,Reckless
+SLOWPOKE,Simple,Unaware
+SLOWBRO,Simple,Shell Armor
+MAGNEMITE,Magnet Pull,Magnet Pull
+MAGNETON,Magnet Pull,Magnet Pull
+FARFETCH’D,Scrappy,Super Luck
+DODUO,Tangled Feet,Tangled Feet
+DODRIO,Quick Feet,Tangled Feet
+SEEL,Thick Fat,Thick Fat
+DEWGONG,Swift Swim,Swift Swim
+GRIMER,Aftermath,Aftermath
+MUK,Aftermath,Aftermath
+SHELLDER,Filter,Shell Armor
+CLOYSTER,Filter,Shell Armor
+GENGAR,Shadow Tag,-
+ONIX,Rock Head,Rock Head
+DROWZEE,Bad Dreams,Bad Dreams
+HYPNO,Bad Dreams,Bad Dreams
+KRABBY,Hyper Cutter,Hyper Cutter
+KINGLER,Swift Swim,Hyper Cutter
+VOLTORB,Aftermath,Aftermath
+ELECTRODE,Aftermath,Aftermath
+CUBONE,Lightningrod,Rock Head
+MAROWAK,Lightningrod,Rock Head
+HITMONLEE,Quick Feet,Quick Feet
+HITMONCHAN,Scrappy,Scrappy
+LICKITUNG,Gluttony,Gluttony
+CHANSEY,Natural Cure,Natural Cure
+TANGELA,Chlorophyll,Overgrow
+KANGASKHAN,Scrappy,Scrappy
+HORSEA,Swift Swim,Swift Swim
+SEADRA,Sniper,Sniper
+GOLDEEN,Swift Swim,Swift Swim
+SEAKING,Swift Swim,Swift Swim
+STARYU,Magic Guard,Natural Cure
+STARMIE,Magic Guard,Natural Cure
+MR. MIME,Filter,Filter
+SCYTHER,Hyper Cutter,Hyper Cutter
+JYNX,Snow Cloak,Snow Cloak
+MAGMAR,Flame Body,Flame Body
+TAUROS,Intimidate,Intimidate
+LAPRAS,Serene Grace,Shell Armor
+DITTO,Shadow Tag,-
+EEVEE,Adaptability,Adaptability
+VAPOREON,Hydration,Hydration
+JOLTEON,Static,Rough Skin
+FLAREON,Adaptability,Adaptability
+PORYGON,Download,Download
+AERODACTYL,Rock Head,Rock Head
+SNORLAX,Thick Fat,Thick Fat
+ARTICUNO,Snow Cloak,Snow Warning
+ZAPDOS,Drizzle,Pressure
+MOLTRES,Drought,Pressure
+DRATINI,Shed Skin,Shed Skin
+DRAGONAIR,Drizzle,Shed Skin
+DRAGONITE,Thick Fat,Thick Fat
+MEWTWO,Insomnia,-
+MEW,Simple,Magic Guard
+MEGANIUM,Thick Fat,-
+TOTODILE,Torrent,Torrent
+CROCONAW,Torrent,Torrent
+FERALIGATR,Intimidate,Battle Armor
+SENTRET,Adaptability,Adaptability
+FURRET,Adaptability,Adaptability
+HOOTHOOT,Insomnia,Insomnia
+NOCTOWL,Tinted Lens,Tinted Lens
+LEDYBA,Swarm,Swarm
+LEDIAN,Iron Fist,Iron Fist
+SPINARAK,Intimidate,Insomnia
+ARIADOS,Intimidate,Insomnia
+CHINCHOU,Volt Absorb,Volt Absorb
+LANTURN,Volt Absorb,Volt Absorb
+CLEFFA,Magic Guard,Cute Charm
+TOGEPI,Serene Grace,Serene Grace
+TOGETIC,Serene Grace,Serene Grace
+NATU,Magic Guard,Magic Guard
+XATU,Magic Guard,Magic Guard
+AMPHAROS,No Guard,-
+MARILL,Huge Power,Huge Power
+AZUMARILL,Huge Power,Huge Power
+SUDOWOODO,Rock Head,Rock Head
+POLITOED,Swift Swim,Swift Swim
+HOPPIP,Chlorophyll,Chlorophyll
+SKIPLOOM,Chlorophyll,Chlorophyll
+JUMPLUFF,Chlorophyll,Chlorophyll
+AIPOM,Technician,Technician
+SUNKERN,Solar Power,Solar Power
+SUNFLORA,Solar Power,Solar Power
+YANMA,Compoundeyes,Compoundeyes
+WOOPER,Water Absorb,Water Absorb
+QUAGSIRE,Simple,Simple
+MURKROW,Super Luck,Super Luck
+SLOWKING,Simple,Simple
+GIRAFARIG,Quick Feet,Quick Feet
+PINECO,Rough Skin,-
+FORRETRESS,Heatproof,-
+DUNSPARCE,Serene Grace,Serene Grace
+GLIGAR,Sand Veil,Sand Veil
+STEELIX,Solid Rock,Rock Head
+SNUBBULL,Intimidate,Intimidate
+GRANBULL,Intimidate,Intimidate
+QWILFISH,Swift Swim,Swift Swim
+SCIZOR,Technician,Technician
+SHUCKLE,Solid Rock,Solid Rock
+HERACROSS,Guts,Guts
+SNEASEL,Inner Focus,Inner Focus
+TEDDIURSA,Guts,Quick Feet
+SLUGMA,Drought,Vital Spirit
+MAGCARGO,Drought,Solid Rock
+SWINUB,Snow Cloak,Snow Cloak
+PILOSWINE,Snow Cloak,Snow Cloak
+CORSOLA,Solid Rock,Solid Rock
+REMORAID,Sniper,Sniper
+OCTILLERY,Rock Head,Rock Head
+DELIBIRD,Adaptability,Adaptability
+MANTINE,Swift Swim,Swift Swim
+SKARMORY,Filter,Filter
+HOUNDOUR,Solar Power,Solar Power
+HOUNDOOM,Solar Power,Solar Power
+KINGDRA,Swift Swim,Swift Swim
+PHANPY,Dry Skin,-
+DONPHAN,Battle Armor,-
+PORYGON2,Trace,Trace
+STANTLER,Intimidate,Intimidate
+SMEARGLE,Trace,Trace
+TYROGUE,Scrappy,Scrappy
+HITMONTOP,Technician,Technician
+SMOOCHUM,Snow Cloak,Snow Cloak
+MILTANK,Scrappy,Scrappy
+BLISSEY,Serene Grace,Serene Grace
+LARVITAR,Guts,Guts
+PUPITAR,Shed Skin,Shed Skin
+TYRANITAR,Solid Rock,Battle Armor
+LUGIA,Filter,-
+HO-OH,Magic Guard,-
+MUDKIP,Huge Power,Huge Power
+MARSHTOMP,Torrent,Torrent
+SWAMPERT,Swift Swim,Torrent
+POOCHYENA,Quick Feet,Quick Feet
+MIGHTYENA,Intimidate,Intimidate
+ZIGZAGOON,Gluttony,Gluttony
+LINOONE,Gluttony,Gluttony
+BEAUTIFLY,Tinted Lens,Shield Dust
+DUSTOX,Tinted Lens,Shield Dust
+SEEDOT,Chlorophyll,Chlorophyll
+NUZLEAF,Chlorophyll,Chlorophyll
+SHIFTRY,Chlorophyll,Chlorophyll
+WINGULL,Gluttony,-
+PELIPPER,Unburden,-
+RALTS,Trace,Trace
+KIRLIA,Trace,Trace
+GARDEVOIR,Magic Guard,Trace
+SHROOMISH,Poison Heal,Poison Heal
+BRELOOM,Technician,Technician
+WHISMUR,Scrappy,Soundproof
+LOUDRED,Scrappy,Soundproof
+EXPLOUD,Scrappy,Soundproof
+MAKUHITA,Guts,Guts
+HARIYAMA,Guts,Guts
+AZURILL,Huge Power,Huge Power
+NOSEPASS,Solid Rock,Solid Rock
+SKITTY,Cute Charm,Cute Charm
+DELCATTY,Cute Charm,Cute Charm
+SABLEYE,Clear Body,Clear Body
+MAWILE,Intimidate,Intimidate
+ARON,Rock Head,Rock Head
+LAIRON,Rock Head,Rock Head
+AGGRON,Rock Head,Rock Head
+ELECTRIKE,Lightningrod,Lightningrod
+MANECTRIC,Lightningrod,Lightningrod
+VOLBEAT,Tinted Lens,Tinted Lens
+ILLUMISE,Tinted Lens,Tinted Lens
+ROSELIA,Natural Cure,Natural Cure
+GULPIN,Gluttony,Gluttony
+SWALOT,Gluttony,Gluttony
+SHARPEDO,Tinted Lens,-
+WAILMER,Pressure,Pressure
+WAILORD,Pressure,Pressure
+NUMEL,Drought,Simple
+CAMERUPT,Drought,Solid Rock
+TORKOAL,White Smoke,Shell Armor
+SPINDA,Tangled Feet,Tangled Feet
+TRAPINCH,Arena Trap,Arena Trap
+VIBRAVA,Tinted Lens,Levitate
+FLYGON,Sand Stream,Levitate
+ALTARIA,Serene Grace,-
+ZANGOOSE,Hyper Cutter,Immunity
+SEVIPER,Hyper Cutter,Shed Skin
+BARBOACH,Swift Swim,Swift Swim
+WHISCASH,Hydration,Swift Swim
+CORPHISH,Adaptability,Hyper Cutter
+CRAWDAUNT,Adaptability,Hyper Cutter
+LILEEP,Solid Rock,-
+CRADILY,Solid Rock,-
+ANORITH,Swift Swim,Battle Armor
+ARMALDO,Swift Swim,Hyper Cutter
+MILOTIC,Filter,Marvel Scale
+KECLEON,Adaptability,Color Change
+SHUPPET,Clear Body,Insomnia
+BANETTE,Clear Body,Insomnia
+TROPIUS,Overgrow,Overgrow
+ABSOL,Super Luck,Super Luck
+SNORUNT,Snow Cloak,Snow Cloak
+GLALIE,Solid Rock,Ice Body
+SEALEO,Ice Body,Ice Body
+WALREIN,Filter,Ice Body
+BAGON,Rock Head,Rock Head
+SHELGON,Rock Head,Shell Armor
+SALAMENCE,Intimidate,Intimidate
+REGIROCK,Solid Rock,Clear Body
+REGICE,Filter,Ice Body
+REGISTEEL,Filter,Clear Body
+DEOXYS,Magic Guard,-
+TURTWIG,Overgrow,Shell Armor
+GROTLE,Leaf Guard,Shell Armor
+TORTERRA,Thick Fat,Shell Armor
+CHIMCHAR,Blaze,Blaze
+MONFERNO,Blaze,Blaze
+INFERNAPE,Iron Fist,Blaze
+PIPLUP,Torrent,Torrent
+PRINPLUP,Swift Swim,Torrent
+EMPOLEON,Swift Swim,Torrent
+STARAVIA,Reckless,-
+STARAPTOR,Reckless,-
+KRICKETUNE,Hyper Cutter,-
+SHINX,Rivalry,Rivalry
+LUXIO,Hyper Cutter,Hyper Cutter
+LUXRAY,Tinted Lens,Reckless
+BUDEW,Natural Cure,Natural Cure
+ROSERADE,Natural Cure,Natural Cure
+CRANIDOS,Rock Head,Mold Breaker
+RAMPARDOS,Rock Head,Mold Breaker
+SHIELDON,Solid Rock,Battle Armor
+BASTIODON,Solid Rock,Battle Armor
+BURMY,Snow Cloak,-
+WORMADAM,Snow Cloak,-
+MOTHIM,Tinted Lens,-
+VESPIQUEN,Tinted Lens,Swarm
+PACHIRISU,Adaptability,Adaptability
+SHELLOS,Dry Skin,Dry Skin
+GASTRODON,Dry Skin,Dry Skin
+AMBIPOM,Technician,Technician
+DRIFLOON,Unburden,Unburden
+DRIFBLIM,Unburden,Unburden
+BUNEARY,Scrappy,Scrappy
+LOPUNNY,Scrappy,Scrappy
+HONCHKROW,Super Luck,Super Luck
+GLAMEOW,Limber,Limber
+PURUGLY,Limber,Thick Fat
+STUNKY,Aftermath,Aftermath
+SKUNTANK,Aftermath,Aftermath
+BRONZOR,Levitate,Levitate
+BRONZONG,Drizzle,Levitate
+BONSLY,Rock Head,Rock Head
+MIME JR.,Filter,Filter
+CHATOT,Scrappy,Scrappy
+GIBLE,Sand Veil,Rough Skin
+GABITE,Sand Veil,Shed Skin
+GARCHOMP,Sand Veil,Rough Skin
+MUNCHLAX,Guts,Gluttony
+RIOLU,Adaptability,Adaptability
+LUCARIO,Iron Fist,Adaptability
+HIPPOPOTAS,Sand Stream,Thick Fat
+HIPPOWDON,Sand Stream,Thick Fat
+SKORUPI,Sand Veil,Sniper
+DRAPION,Sand Veil,Hyper Cutter
+CROAGUNK,Dry Skin,Dry Skin
+TOXICROAK,Dry Skin,Dry Skin
+CARNIVINE,Chlorophyll,Levitate
+FINNEON,Swift Swim,Chlorophyll
+LUMINEON,Swift Swim,Chlorophyll
+MANTYKE,Swift Swim,Swift Swim
+SNOVER,Snow Warning,Adaptability
+ABOMASNOW,Snow Warning,Adaptability
+WEAVILE,Technician,Inner Focus
+MAGNEZONE,Levitate,Magnet Pull
+LICKILICKY,Poison Heal,Guts
+RHYPERIOR,Solid Rock,Solid Rock
+TANGROWTH,Magic Guard,Unaware
+ELECTIVIRE,Adaptability,-
+MAGMORTAR,Flame Body,Flame Body
+TOGEKISS,Serene Grace,Serene Grace
+LEAFEON,Magic Guard,Natural Cure
+GLISCOR,Sand Veil,Sand Veil
+MAMOSWINE,Thick Fat,Thick Fat
+PORYGON-Z,Download,Download
+GALLADE,Hyper Cutter,Hyper Cutter
+PROBOPASS,Solid Rock,Solid Rock
+DUSKNOIR,Levitate,-
+MESPRIT,Magic Guard,-
+REGIGIGAS,Clear Body,-
+Deoxys (A),Magic Guard,-
+Deoxys (D),Magic Guard,-
+Deoxys (S),Magic Guard,-
+Wormadam (S),Snow Cloak,-
+Wormadam (T),Snow Cloak,-

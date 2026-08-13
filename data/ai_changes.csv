@@ -1,0 +1,16 @@
+"PLATINUM KAIZO AI CHANGES:
+
+-Dry Skin AI Bug fixed
+-Moves except Head Smash with the ""1/2 recoil"" (Draco Meteor, Hyper Beam, Giga Impact, etc.) effect will now follow the intended recoil routine, instead of having bugged targeting
+-Moves with the ""1/4 recoil"" effect (Brave Bird, Close Combat, Take Down) will now use the following routine:
+
+{ If the opponent resists or is immune to the attack, Score DOWN 1. 
+  if the attacker is slower than the opponent and the attacker's HP > 59%, Score DOWN 1
+  if the attacker is faster than the opponent and the attacker's HP > 40%, Score DOWN 1  }
+
+-""Triple Axel"" and ""Fury Cutter"" both use the Vanilla Triple Kick effect. However, both will be considered ""Risky"" moves. This does NOT apply to Triple Kick or Rock Wrecker.
+NOTE: Hurricane does NOT use the Thunder routine, despite using a similar accuracy check.
+
+Please check individual move index effects/priority, as these can effect the outcomes of the enemy AI.
+
+NOTE: If exported directly from the game, certain moves may read as having effects they do not. This is intentional."

@@ -1,0 +1,32 @@
+{
+  "basic": {
+    "distinct_scoring_blocks": 105,
+    "moves_with_no_procedure": 28,
+    "total_moves": 466
+  },
+  "evaluate_attacks": {
+    "distinct_scoring_blocks": 9,
+    "moves_with_no_procedure": 0,
+    "total_moves": 466
+  },
+  "expert": {
+    "distinct_scoring_blocks": 114,
+    "moves_with_no_procedure": 226,
+    "total_moves": 466
+  },
+  "prio_damage": {
+    "distinct_scoring_blocks": 1,
+    "moves_with_no_procedure": 284,
+    "total_moves": 466
+  },
+  "baton_pass": {
+    "distinct_scoring_blocks": 6,
+    "moves_with_no_procedure": 290,
+    "total_moves": 466
+  },
+  "setup_first_turn": {
+    "distinct_scoring_blocks": 1,
+    "moves_with_no_procedure": 375,
+    "total_moves": 466
+  }
+}
