@@ -21,6 +21,8 @@ class Pokemon:
     status: str | None = None    # 'psn', 'brn', 'par', 'slp', 'frz', 'tox', or None
     boosts: dict[str, int] = field(default_factory=dict)  # stat -> -6..+6
     moves: list[str] = field(default_factory=list)
+    last_move: str | None = None  # move this Pokemon used last turn, or None
+    protect_streak: int = 0       # consecutive turns a Protect-family move has succeeded
 
     def hp_percent(self) -> float:
         """Current HP as a percentage of max HP."""

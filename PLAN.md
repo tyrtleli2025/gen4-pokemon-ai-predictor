@@ -112,6 +112,14 @@ Each stage is only started once the stage before it is tested and stable.
 - [ ] **Encode flag scripts** (`flags/basic.py`, `evaluate_attacks.py`,
       `expert.py`, `setup_first_turn.py`, `prio_damage.py`, `baton_pass.py`):
       populated from the deduplicated scrape, by move effect.
+      Done: `setup_first_turn` (1/1 blocks), `prio_damage` (1/1),
+      `evaluate_attacks` (9/9, 4 distinct shapes), `baton_pass` (6/6).
+      Remaining: `basic` (105 blocks), `expert` (114 blocks).
+      `state.py` gained `Pokemon.last_move` and `Pokemon.protect_streak`, and
+      `predicates.py` gained `last_move`, `used_protect_last`,
+      `protect_streak`, and `user_is_faster` (exact, via `Fraction` — boosts,
+      paralysis, Tailwind, Trick Room) to support `baton_pass`'s
+      Detect/Protect block and future `expert`/`basic` needs.
 - [ ] **Stage 5 — `scoring.py`**: convolve all active flags into one
       `ScoreDist` per action. Validate against the Teddiursa scenario
       (fully deterministic: Smelling Salts wins 100%).

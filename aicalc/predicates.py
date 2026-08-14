@@ -1,8 +1,18 @@
 """Context class answering the AI's derived questions for a Battle/Action pair."""
 from dataclasses import dataclass
+from fractions import Fraction
 from typing import Protocol
 
 from .state import Action, Battle, Pokemon, Side
+
+PROTECT_LIKE_MOVES = {"Protect", "Detect"}
+
+
+def _stage_multiplier(stage: int) -> Fraction:
+    stage = max(-6, min(6, stage))
+    if stage >= 0:
+        return Fraction(2 + stage, 2)
+    return Fraction(2, 2 - stage)
 
 
 class DamageBackend(Protocol):
@@ -63,6 +73,35 @@ class Context:
 
     def hazard_layers(self, side: Side, hazard: str) -> int:
         return side.hazards.get(hazard, 0)
+
+    def last_move(self, pokemon: Pokemon) -> str | None:
+        return pokemon.last_move
+
+    def used_protect_last(self, pokemon: Pokemon) -> bool:
+        return pokemon.last_move in PROTECT_LIKE_MOVES
+
+    def protect_streak(self, pokemon: Pokemon) -> int:
+        return pokemon.protect_streak
+
+    def _effective_speed(self, pokemon: Pokemon, side: Side) -> Fraction:
+        speed = Fraction(pokemon.stats["spe"]) * _stage_multiplier(pokemon.boosts.get("spe", 0))
+        if pokemon.status == "par":
+            speed *= Fraction(1, 4)
+        if side.tailwind:
+            speed *= 2
+        return speed
+
+    def user_is_faster(self) -> bool | None:
+        """True if the AI's Pokemon moves before the target this turn, False
+        if after, None on an exact speed tie. Accounts for boosts, paralysis,
+        Tailwind, and Trick Room.
+        """
+        user_speed = self._effective_speed(self.user, self.user_side)
+        target_speed = self._effective_speed(self.target, self.target_side)
+        if user_speed == target_speed:
+            return None
+        faster = user_speed > target_speed
+        return not faster if self.battle.field.trick_room else faster
 
     def can_ko(self) -> bool:
         if self.damage is None:
