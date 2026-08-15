@@ -199,6 +199,10 @@ BLOCKS = {
     ),
     "bb1d310e": _target_drop("atk", _blocks_10("Hyper Cutter")),   # Charm, FeatherDance
     "7eb55216": _target_drop("def"),                              # Leer, Tail Whip
+    # Kinesis: SUSPECT -- bparkpk says special defence, but both Kaizo's move
+    # table and vanilla Platinum say Kinesis lowers *accuracy*, and the decomp
+    # has no scoring reference to it either way. Kept as scraped pending an
+    # in-game test; see "Unresolved / approximated" in _scraped/DECOMP_NOTES.md.
     "98bef6c9": _target_drop("spd"),                              # Kinesis
     "3c8aebc1": _target_drop("atk", _blocks_10("Hyper Cutter"), guard=SOUNDPROOF),  # Growl
     "fe3f27ef": _target_drop("def", guard=SOUNDPROOF),            # Screech

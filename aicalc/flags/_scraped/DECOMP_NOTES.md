@@ -171,7 +171,28 @@ Record each block resolved this way as encoding proceeds, so provenance is audit
 
 ### Unresolved / approximated in `basic`
 
-- **`98bef6c9` (Kinesis)** — bparkpk's block checks the target's *special defence* at −6, but `data/move_changes.csv` describes Kaizo's Kinesis as "Sharply lowers Accuracy". The two sources disagree about which stat the move even touches. Encoded per bparkpk (special defence) under the precedence rule; worth an empirical check.
+- **`98bef6c9` (Kinesis)** — **flagged as likely wrong; awaiting an in-game test.**
+  bparkpk's block checks the target's *special defence* at −6, but every other
+  signal points at accuracy:
+    - `data/moves.csv` and `move_changes.csv` both give Kaizo's Kinesis as
+      "Sharply lowers Accuracy" (the Kaizo change is only 80→100 acc and
+      targeting, not the stat it drops).
+    - **Vanilla Platinum Kinesis also lowers accuracy**, so there is no
+      version in which special defence is the natural reading.
+  The decomp cannot break the tie: it has *no* scoring-relevant reference to
+  Kinesis at all (the only hits repo-wide are its battle animation, e.g.
+  `KinesisSpoon` / `SPRITE_FUNC_KINESIS`). That is expected, since `Basic_Main`
+  dispatches on the move's **effect constant**, never on move name — and the
+  per-move effect assignment lives in a binary data table the decomp doesn't
+  expose in source, so there's no indirect path either.
+  Currently encoded per bparkpk (special defence) to honour the precedence
+  rule, but unlike the other entries in this section this one has two
+  independent sources against it and zero for it beyond the scrape itself.
+  If the in-game test confirms accuracy, change the stat key in
+  `flags/basic.py` block `98bef6c9` from `"spd"` to `"acc"` — note that
+  accuracy-drop moves elsewhere in this flag use the `_accuracy_drop` shape
+  (which also checks No Guard / Keen Eye), so check whether Kinesis should
+  move to that helper rather than just swapping the stat.
 - **`17698768` vs `b906281e`** — Brine/Clamp/Scald/Surf/Whirlpool check only Water Absorb, while the other Water block checks Water Absorb *or* Dry Skin. Kept verbatim rather than unified, since Kaizo's Dry Skin fix may not cover both groups.
 - **`a035f4c0`** — the Flash Fire clause appears **twice** on the source page. Harmless (the first terminates); reproduced for fidelity.
 - **`ea5a4dc4` (Natural Gift)** — "not holding a berry" is approximated as `item.endswith("Berry")`; a proper berry list from `data/` would be better.
