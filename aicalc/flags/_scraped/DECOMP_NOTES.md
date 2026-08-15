@@ -169,6 +169,45 @@ Record each block resolved this way as encoding proceeds, so provenance is audit
 | `basic` | `31b6163f` (Explosion, Memento, Selfdestruct) | "If the user has other living party members: **no** score change" reads inverted. | Basic Explosion routine | Correct as scraped. Having party left is neutral; being the *last* Pokémon is what's judged — −10 if the target still has party members, −1 if they don't either. |
 | `basic` | `077a7f8f` (Bide, Metal Burst) | Stall / Shiny Stone check. | `Basic_CheckMetalBurst` | See the "Confirmed-correct oddities" section above — a real vanilla bug (intended Lagging Tail), encoded verbatim. |
 
+### Notes on `expert` (114 blocks)
+
+Expert is the only flag that mixes "and continue" with "and terminate"
+throughout, so later clauses frequently compound onto earlier ones. Two
+consequences worth knowing:
+
+- **Ladders cascade.** Power Swap / Guard Swap's tiered checks each terminate
+  on success but fall through on failure into the next-lower tier, which is
+  also satisfied. A target at +4/+4 therefore spreads across every tier
+  (½ at +5, ¼ at +4, ⅛ at +3, …) rather than being one coin flip on +5.
+  Both also bail out entirely if the target's second stat is *exactly* one
+  stage higher than the user's — a quirk that makes +1/+1 score nothing even
+  though it sums to 2.
+- **Counter / Mirror Coat are mirror images** and are encoded from one shared
+  builder: each rewards the opposite damage class, treats the other as a
+  partner-move bonus, and shares the same type-immunity bail-out list.
+
+`expert` is also the first flag needing the **move table** (`aicalc/movedata.py`,
+backed by `data/moves.csv`), since it asks about moves other than the one being
+scored — "was the foe's last move special?", "does the user have a damaging
+move?", "does the foe know a high-crit move?". Names are joined through
+`data/move_aliases.json`.
+
+Three new damage-backend questions were added for it, on the same
+hand-supplied contract as `can_ko`: `has_super_effective_move`,
+`party_member_outdamages`, and `target_last_move_outdamages` (U-turn, Copycat,
+Me First).
+
+**Taunt.** Several blocks (Counter, Mirror Coat, Bide, Metal Burst) test
+whether the foe is Taunted. Taunt does not exist in Kaizo — the slot became
+HP Dark — so `"taunt"` is a valid volatile name that can never become true.
+Encoded faithfully rather than stripped, so the scripts still match the source
+if Kaizo ever restores it.
+
+**Encore's trigger list** is flagged on the source page as a vanilla list, and
+it shows: it contains Conversion, Splash, Nightmare, Trick, Switcheroo, Heal
+Block, Healing Wish, Mud/Water Sport and Spit Up, none of which exist in Kaizo.
+Kept verbatim; those entries simply never match.
+
 ### Unresolved / approximated in `basic`
 
 - **`98bef6c9` (Kinesis)** — **flagged as likely wrong; awaiting an in-game test.**

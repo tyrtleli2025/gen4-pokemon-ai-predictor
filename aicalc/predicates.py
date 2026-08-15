@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from fractions import Fraction
 from typing import Protocol
 
+from . import movedata
 from .state import Action, Battle, Pokemon, Side
 
 PROTECT_LIKE_MOVES = {"Protect", "Detect"}
@@ -23,6 +24,12 @@ class DamageBackend(Protocol):
     def can_ko(self, battle: Battle, action: Action) -> bool: ...
     def is_best_damaging_move(self, battle: Battle, action: Action) -> bool: ...
     def effectiveness(self, battle: Battle, action: Action) -> float: ...
+
+    # Expert-only questions. Same contract: a hand-supplied backend answers
+    # these until calc/ exists.
+    def has_super_effective_move(self, battle: Battle) -> bool: ...
+    def party_member_outdamages(self, battle: Battle) -> bool: ...
+    def target_last_move_outdamages(self, battle: Battle) -> bool: ...
 
 
 @dataclass
@@ -155,3 +162,57 @@ class Context:
         if self.damage is None:
             raise NotImplementedError("no damage backend supplied")
         return self.damage.effectiveness(self.battle, self.action)
+
+    def resisted(self) -> bool:
+        """The Expert flag's recurring "1/2x, 1/4x, or 0x" test."""
+        return self.effectiveness() < 1
+
+    def super_effective(self) -> bool:
+        return self.effectiveness() > 1
+
+    def has_super_effective_move(self) -> bool:
+        if self.damage is None:
+            raise NotImplementedError("no damage backend supplied")
+        return self.damage.has_super_effective_move(self.battle)
+
+    def party_member_outdamages(self) -> bool:
+        if self.damage is None:
+            raise NotImplementedError("no damage backend supplied")
+        return self.damage.party_member_outdamages(self.battle)
+
+    def target_last_move_outdamages(self) -> bool:
+        if self.damage is None:
+            raise NotImplementedError("no damage backend supplied")
+        return self.damage.target_last_move_outdamages(self.battle)
+
+    # --- move-table backed questions (Expert) ------------------------------
+
+    def last_move_category(self, pokemon: Pokemon) -> str | None:
+        """'Physical' / 'Special' / 'Status', or None if no move used yet."""
+        return movedata.category(pokemon.last_move)
+
+    def last_move_was_damaging(self, pokemon: Pokemon) -> bool:
+        return movedata.is_damaging(pokemon.last_move)
+
+    def has_damaging_move(self, pokemon: Pokemon) -> bool:
+        return any(movedata.is_damaging(m) for m in pokemon.moves)
+
+    def knows_high_crit_move(self, pokemon: Pokemon) -> bool:
+        return any(movedata.is_high_crit(m) for m in pokemon.moves)
+
+    def knows_any_move(self, pokemon: Pokemon, *moves: str) -> bool:
+        return any(m in pokemon.moves for m in moves)
+
+    def pp_remaining(self, pokemon: Pokemon, move: str) -> int:
+        """Remaining PP, falling back to the move's full PP when untracked."""
+        if move in pokemon.pp_left:
+            return pokemon.pp_left[move]
+        return movedata.base_pp(move)
+
+    def party_all_healthy(self) -> bool:
+        """Heal Bell / Aromatherapy: nobody on the user's side is statused."""
+        return (not self.is_statused(self.user)
+                and not any(self.user_side.party_statuses))
+
+    def positive_boost_total(self, pokemon: Pokemon) -> int:
+        return sum(v for v in pokemon.boosts.values() if v > 0)

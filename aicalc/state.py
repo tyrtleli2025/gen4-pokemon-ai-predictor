@@ -14,7 +14,11 @@ VOLATILES = frozenset({
     "curse", "perish_song", "torment", "embargo", "gastro_acid",
     "focus_energy", "ingrain", "aqua_ring", "camouflage", "power_trick",
     "magnet_rise", "lock_on", "foresight", "miracle_eye", "imprison",
-    "disable", "encore",
+    "disable", "encore", "yawn",
+    # Taunt does not exist in Kaizo (the slot became HP Dark), but several
+    # Expert blocks still test for it, so the name stays valid and simply
+    # never becomes true.
+    "taunt",
 })
 
 
@@ -38,6 +42,7 @@ class Pokemon:
     turns_active: int = 1         # turns this Pokemon has been on the field (1 = just sent out)
     moves_used: set[str] = field(default_factory=set)  # for Last Resort
     consumed_item: str | None = None  # item already used up, for Recycle/Embargo
+    pp_left: dict[str, int] = field(default_factory=dict)  # move -> remaining PP (Trump Card)
 
     def hp_percent(self) -> float:
         """Current HP as a percentage of max HP."""
@@ -56,6 +61,9 @@ class Side:
     mist: bool = False
     lucky_chant: bool = False
     future_attack: bool = False   # Future Sight / Doom Desire pending on this side
+    #: Status of each *other* living party member, for Heal Bell / Aromatherapy.
+    #: Length need not match party_remaining; absent means "unknown".
+    party_statuses: list[str | None] = field(default_factory=list)
 
 
 @dataclass

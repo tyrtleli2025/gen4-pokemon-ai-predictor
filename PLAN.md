@@ -109,12 +109,14 @@ Each stage is only started once the stage before it is tested and stable.
 - [x] **Stage 4 — `script.py` + `dist.py`**: the small DSL (`Chance`, `If`,
       `Add`, `Stop`) and its evaluator; `ScoreDist` as an exact
       `{delta: Fraction}` table supporting `mix` and `convolve`.
-- [ ] **Encode flag scripts** (`flags/basic.py`, `evaluate_attacks.py`,
+- [x] **Encode flag scripts** (`flags/basic.py`, `evaluate_attacks.py`,
       `expert.py`, `setup_first_turn.py`, `prio_damage.py`, `baton_pass.py`):
-      populated from the deduplicated scrape, by move effect.
-      Done: `setup_first_turn` (1/1 blocks), `prio_damage` (1/1),
-      `evaluate_attacks` (9/9, 4 distinct shapes), `baton_pass` (6/6),
-      `basic` (105/105). Remaining: `expert` (114 blocks) — 122/236 done.
+      **all 236/236 blocks encoded** — setup_first_turn 1, prio_damage 1,
+      evaluate_attacks 9, baton_pass 6, basic 105, expert 114. A test asserts
+      every scraped block id has an encoding, so gaps fail loudly.
+      Damage-dependent questions still route through `DamageBackend`, so a
+      real end-to-end run needs the damage calculator (or a hand-supplied
+      backend).
       `state.py` gained `Pokemon.last_move` and `Pokemon.protect_streak`, and
       `predicates.py` gained `last_move`, `used_protect_last`,
       `protect_streak`, and `user_is_faster` (exact, via `Fraction` — boosts,

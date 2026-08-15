@@ -175,14 +175,15 @@ def test_iron_head_evaluate_attacks_block():
 
 def test_encoded_flags_match_scrape():
     """Every encoded block id must exist in the scrape, and vice versa."""
-    from aicalc.flags import (basic, baton_pass, evaluate_attacks, prio_damage,
-                              setup_first_turn)
+    from aicalc.flags import (basic, baton_pass, evaluate_attacks, expert,
+                              prio_damage, setup_first_turn)
 
     for flag, module in [("setup_first_turn", setup_first_turn),
                          ("prio_damage", prio_damage),
                          ("evaluate_attacks", evaluate_attacks),
                          ("baton_pass", baton_pass),
-                         ("basic", basic)]:
+                         ("basic", basic),
+                         ("expert", expert)]:
         known = set(blocks_for_flag(flag))
         encoded = set(module.BLOCKS)
         assert encoded <= known, f"{flag}: encoded unknown block ids {encoded - known}"
@@ -515,6 +516,175 @@ def test_basic_fling_nested_item_logic():
     assert evaluate(fling, _basic_ctx(u_item="Leftovers")) == ScoreDist.certain(0)
 
 
+class _ExpertDmg(_Dmg):
+    def __init__(self, eff=1, se=False, party_out=False, last_out=False):
+        super().__init__(eff=eff)
+        self.se, self.party_out, self.last_out = se, party_out, last_out
+
+    def has_super_effective_move(self, battle):
+        return self.se
+
+    def party_member_outdamages(self, battle):
+        return self.party_out
+
+    def target_last_move_outdamages(self, battle):
+        return self.last_out
+
+
+def _expert_ctx(eff=1, **kw):
+    battle = _sample_battle()
+    battle.ai.party_remaining = 1
+    battle.player.party_remaining = 1
+    for key, value in kw.items():
+        prefix, _, attr = key.partition("_")
+        obj = {"u": battle.ai.active, "t": battle.player.active,
+               "f": battle.field, "su": battle.ai, "st": battle.player}[prefix]
+        setattr(obj, attr, value)
+    return Context(battle=battle, action=legal_actions(battle)[0],
+                   damage=_ExpertDmg(eff=eff))
+
+
+def test_expert_all_blocks_evaluate():
+    from aicalc.flags import expert
+
+    for eff in (0, 0.5, 1, 2, 4):
+        for bid, script in expert.BLOCKS.items():
+            dist = evaluate(script, _expert_ctx(eff=eff))
+            assert sum(dist.table.values()) == 1, f"{bid} at {eff}x is not a distribution"
+
+
+def test_expert_movedata_backed_predicates():
+    """Expert is the first flag needing the move table."""
+    from aicalc.flags.expert import BLOCKS
+
+    # Reflect rewards the foe having used a physical move last. Hold HP in the
+    # 50-89% band so the full-HP bonus clause doesn't compound onto the result.
+    reflect = BLOCKS[block_id_for("expert", "Reflect")]
+    mid_hp = {"u_current_hp": 100}  # 100/120 = 83%
+    phys = evaluate(reflect, _expert_ctx(t_last_move="Tackle", **mid_hp))
+    spec = evaluate(reflect, _expert_ctx(t_last_move="Surf", **mid_hp))
+    assert phys.table == {0: Fraction(64, 256), 1: Fraction(192, 256)}
+    assert spec == ScoreDist.certain(0)
+
+    # Light Screen is the mirror image.
+    screen = BLOCKS[block_id_for("expert", "Light Screen")]
+    assert evaluate(screen, _expert_ctx(t_last_move="Surf", **mid_hp)).table == {
+        0: Fraction(64, 256), 1: Fraction(192, 256)
+    }
+    assert evaluate(screen, _expert_ctx(t_last_move="Tackle", **mid_hp)) \
+        == ScoreDist.certain(0)
+
+    # At full HP the 128/256 bonus compounds with the category check, so +2
+    # becomes reachable -- this is the "and continue" behaviour Basic lacks.
+    full = evaluate(reflect, _expert_ctx(t_last_move="Tackle"))
+    assert full.probability_of(2) == Fraction(1, 2) * Fraction(192, 256)
+
+    # Lucky Chant keys off the foe knowing a high-crit move (Slash qualifies).
+    chant = BLOCKS[block_id_for("expert", "Lucky Chant")]
+    assert evaluate(chant, _expert_ctx(t_moves=["Slash"])) == ScoreDist.certain(1)
+    assert evaluate(chant, _expert_ctx(t_moves=["Tackle"])).probability_of(1) \
+        == Fraction(64, 256)
+
+
+def test_expert_speed_order_blocks():
+    from aicalc.flags.expert import BLOCKS
+
+    # Hammer Arm: +1 only when moving second.
+    hammer = BLOCKS[block_id_for("expert", "Hammer Arm")]
+    slow = {"atk": 1, "def": 1, "spa": 1, "spd": 1, "spe": 1}
+    fast = {"atk": 1, "def": 1, "spa": 1, "spd": 1, "spe": 999}
+    assert evaluate(hammer, _expert_ctx(u_stats=slow)) == ScoreDist.certain(1)
+    assert evaluate(hammer, _expert_ctx(u_stats=fast)) == ScoreDist.certain(0)
+    # Resisted short-circuits before the speed check.
+    assert evaluate(hammer, _expert_ctx(eff=0.5, u_stats=slow)) == ScoreDist.certain(-1)
+
+    # Agility: -3 when already faster, otherwise a 186/256 shot at +3.
+    agility = BLOCKS[block_id_for("expert", "Agility")]
+    assert evaluate(agility, _expert_ctx(u_stats=fast)) == ScoreDist.certain(-3)
+    assert evaluate(agility, _expert_ctx(u_stats=slow)).table == {
+        0: Fraction(70, 256), 3: Fraction(186, 256)
+    }
+
+
+def test_expert_heal_bell_uses_party_statuses():
+    from aicalc.flags.expert import BLOCKS
+
+    bell = BLOCKS[block_id_for("expert", "Heal Bell")]
+    # Nobody statused -> pointless.
+    assert evaluate(bell, _expert_ctx()) == ScoreDist.certain(-5)
+    # A statused party member makes it worth using.
+    assert evaluate(bell, _expert_ctx(su_party_statuses=["brn"])) == ScoreDist.certain(0)
+    # So does the active Pokemon being statused.
+    assert evaluate(bell, _expert_ctx(u_status="par")) == ScoreDist.certain(0)
+
+
+def test_expert_counter_mirrors_mirror_coat():
+    """Counter and Mirror Coat are mirror images: each rewards the opposite
+    damage class and treats the partner move as a bonus."""
+    from aicalc.flags.expert import BLOCKS
+
+    counter = BLOCKS[block_id_for("expert", "Counter")]
+    mirror = BLOCKS[block_id_for("expert", "Mirror Coat")]
+
+    # Knowing the partner move is a strong bonus in both. Pin the foe's last
+    # move to the class each block dislikes, so the non-bonus path terminates
+    # at -1 instead of falling through to the block's own +4 tail.
+    assert evaluate(counter, _expert_ctx(u_moves=["Counter", "Mirror Coat"],
+                                         t_last_move="Surf")).table == {
+        -1: Fraction(100, 256), 4: Fraction(156, 256)}
+    assert evaluate(mirror, _expert_ctx(u_moves=["Mirror Coat", "Counter"],
+                                        t_last_move="Tackle")).table == {
+        -1: Fraction(100, 256), 4: Fraction(156, 256)}
+
+    # Counter dislikes a special last move; Mirror Coat dislikes a physical one.
+    assert evaluate(counter, _expert_ctx(t_last_move="Surf")) == ScoreDist.certain(-1)
+    assert evaluate(mirror, _expert_ctx(t_last_move="Tackle")) == ScoreDist.certain(-1)
+
+
+def test_expert_swap_ladder():
+    """Power Swap's capped-sum ladder over attack and special attack."""
+    from aicalc.flags.expert import BLOCKS
+
+    swap = BLOCKS[block_id_for("expert", "Power Swap")]
+    # User ahead in a stat -> pointless.
+    assert evaluate(swap, _expert_ctx(u_boosts={"atk": 1})) == ScoreDist.certain(0)
+
+    # The rungs cascade: a failed 50% roll falls through to the next-lower
+    # rung, which is also satisfied, so a sum of 8 spreads across every tier
+    # rather than being a single coin flip on +5.
+    big = evaluate(swap, _expert_ctx(t_boosts={"atk": 4, "spa": 4}))
+    assert big.table == {
+        5: Fraction(1, 2), 4: Fraction(1, 4), 3: Fraction(1, 8),
+        2: Fraction(1, 16), 1: Fraction(1, 32), 0: Fraction(1, 32),
+    }
+
+    # Target +2/+0 -> sum 2 -> only the bottom two rungs are satisfied.
+    small = evaluate(swap, _expert_ctx(t_boosts={"atk": 2}))
+    assert small.table == {2: Fraction(1, 2), 1: Fraction(1, 4), 0: Fraction(1, 4)}
+
+    # Quirk worth pinning: a target ahead in the first stat whose second stat
+    # is *exactly* one stage higher bails out before the ladder entirely, so
+    # +1/+1 scores nothing despite also summing to 2.
+    assert evaluate(swap, _expert_ctx(t_boosts={"atk": 1, "spa": 1})) \
+        == ScoreDist.certain(0)
+
+
+def test_expert_accumulating_block():
+    """Blocks that 'continue' compound, unlike Basic's terminate-only shape."""
+    from aicalc.flags.expert import BLOCKS
+
+    # Spikes: a 50% skip, then +1, then a further 192/256 shot at +1 when the
+    # user also knows a phazing move -- so +2 is reachable.
+    spikes = BLOCKS[block_id_for("expert", "Spikes")]
+    with_roar = evaluate(spikes, _expert_ctx(u_moves=["Spikes", "Roar"]))
+    assert with_roar.probability_of(0) == Fraction(1, 2)
+    assert with_roar.probability_of(2) == Fraction(1, 2) * Fraction(192, 256)
+    assert with_roar.probability_of(1) == Fraction(1, 2) * Fraction(64, 256)
+    # Without a phazing move it can only ever reach +1.
+    plain = evaluate(spikes, _expert_ctx(u_moves=["Spikes"]))
+    assert plain.table == {0: Fraction(1, 2), 1: Fraction(1, 2)}
+
+
 if __name__ == "__main__":
     test_legal_actions_singles()
     test_context_non_damage_predicates()
@@ -537,4 +707,11 @@ if __name__ == "__main__":
     test_basic_curse_branches_on_ghost_type()
     test_basic_state_dependent_blocks()
     test_basic_fling_nested_item_logic()
+    test_expert_all_blocks_evaluate()
+    test_expert_movedata_backed_predicates()
+    test_expert_speed_order_blocks()
+    test_expert_heal_bell_uses_party_statuses()
+    test_expert_counter_mirrors_mirror_coat()
+    test_expert_swap_ladder()
+    test_expert_accumulating_block()
     print("all tests passed")
