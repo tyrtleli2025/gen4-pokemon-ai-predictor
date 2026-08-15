@@ -122,9 +122,17 @@ Each stage is only started once the stage before it is tested and stable.
       `protect_streak`, and `user_is_faster` (exact, via `Fraction` — boosts,
       paralysis, Tailwind, Trick Room) to support `baton_pass`'s
       Detect/Protect block and future `expert`/`basic` needs.
-- [ ] **Stage 5 — `scoring.py`**: convolve all active flags into one
-      `ScoreDist` per action. Validate against the Teddiursa scenario
-      (fully deterministic: Smelling Salts wins 100%).
+- [x] **Stage 5 — `scoring.py`**: convolve all active flags into one
+      `ScoreDist` per action, on top of a base score of 100. Flags are
+      independent (no encoded block reads another flag's score), so the
+      combined distribution is their convolution. A battle carrying a flag we
+      have not encoded (`risky`, `check_hp`, …) raises `UnsupportedFlags`
+      rather than silently under-counting.
+      **Not yet validated against the Teddiursa scenario** — `cases/` is empty,
+      so the named scenario has no data to run against. Currently covered by
+      synthetic tests instead: base score, per-flag convolution, turn
+      sensitivity, no-procedure moves contributing exactly 0, and a
+      deterministic immunity case.
 - [ ] **Stage 6 — `select.py`**: argmax with uniform tie-breaking among equal
       scores. Validate against the Mars/Skarmory scenario (Tailwind 50.20%,
       Stealth Rock 40.79%, Iron Head 9.01%, Pluck 0%).

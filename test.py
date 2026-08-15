@@ -685,6 +685,110 @@ def test_expert_accumulating_block():
     assert plain.table == {0: Fraction(1, 2), 1: Fraction(1, 2)}
 
 
+def _scoring_battle(flags, moves=("Swords Dance", "Tackle")):
+    battle = _sample_battle()
+    battle.ai.active.moves = list(moves)
+    battle.ai.party_remaining = 1
+    battle.player.party_remaining = 1
+    battle.flags = set(flags)
+    return battle
+
+
+def test_scoring_base_score_and_empty_flags():
+    from aicalc.scoring import BASE_SCORE, score_distribution
+    from aicalc.state import Action
+
+    battle = _scoring_battle(flags=set())
+    dist = score_distribution(battle, Action("Swords Dance", "player"), _ExpertDmg())
+    assert dist == ScoreDist.certain(BASE_SCORE)
+
+    # ...and the base can be dropped when only the deltas matter.
+    bare = score_distribution(battle, Action("Swords Dance", "player"), _ExpertDmg(),
+                              include_base=False)
+    assert bare == ScoreDist.certain(0)
+
+
+def test_scoring_convolves_independent_flags():
+    """Two flags that each roll for +2 must compound into 0/+2/+4."""
+    from aicalc.scoring import score_distribution
+    from aicalc.state import Action
+
+    battle = _scoring_battle(flags={"setup_first_turn", "prio_damage"})
+    action = Action("Swords Dance", "player")
+    dist = score_distribution(battle, action, _ExpertDmg(), include_base=False)
+
+    p_setup, p_prio = Fraction(176, 256), Fraction(156, 256)
+    assert dist.table == {
+        0: (1 - p_setup) * (1 - p_prio),
+        2: (1 - p_setup) * p_prio + p_setup * (1 - p_prio),
+        4: p_setup * p_prio,
+    }
+    assert sum(dist.table.values()) == 1
+
+
+def test_scoring_flag_without_procedure_contributes_nothing():
+    """Setup First Turn has no block for Tackle, so it must add exactly 0."""
+    from aicalc.scoring import flag_distribution
+    from aicalc.state import Action
+    from aicalc.flags._blocks import block_id_for
+
+    battle = _scoring_battle(flags={"setup_first_turn"})
+    assert block_id_for("setup_first_turn", "Tackle") is None
+
+    ctx = Context(battle=battle, action=Action("Tackle", "player"), damage=_ExpertDmg())
+    assert flag_distribution("setup_first_turn", ctx) == ScoreDist.certain(0)
+
+
+def test_scoring_is_turn_sensitive():
+    """Setup First Turn only pays out on turn 1 of the whole battle."""
+    from aicalc.scoring import score_distribution
+    from aicalc.state import Action
+
+    battle = _scoring_battle(flags={"setup_first_turn"})
+    action = Action("Swords Dance", "player")
+
+    turn1 = score_distribution(battle, action, _ExpertDmg(), include_base=False)
+    assert turn1.table == {0: Fraction(80, 256), 2: Fraction(176, 256)}
+
+    battle.field.turn = 5
+    later = score_distribution(battle, action, _ExpertDmg(), include_base=False)
+    assert later == ScoreDist.certain(0)
+
+
+def test_scoring_all_actions_and_unsupported_flags():
+    from aicalc.scoring import action_score_distributions, active_flags, UnsupportedFlags
+
+    battle = _scoring_battle(flags={"basic", "evaluate_attacks", "expert"})
+    dists = action_score_distributions(battle, _ExpertDmg())
+    assert {a.move for a in dists} == {"Swords Dance", "Tackle"}
+    for dist in dists.values():
+        assert sum(dist.table.values()) == 1
+
+    # Flags are applied in a stable order regardless of set iteration order.
+    assert active_flags(battle) == ["basic", "evaluate_attacks", "expert"]
+
+    # A flag we have not encoded must refuse loudly rather than under-count.
+    battle.flags = {"basic", "risky"}
+    try:
+        action_score_distributions(battle, _ExpertDmg())
+    except UnsupportedFlags as exc:
+        assert "risky" in str(exc)
+    else:
+        raise AssertionError("expected UnsupportedFlags for an unencoded flag")
+
+
+def test_scoring_deterministic_scenario():
+    """A position where nothing is random: every flag contributes a fixed
+    delta, so the result is a single certain score."""
+    from aicalc.scoring import BASE_SCORE, score_distribution
+    from aicalc.state import Action
+
+    battle = _scoring_battle(flags={"basic"}, moves=("Tackle",))
+    # Target is immune -> Basic scores a flat -10 and terminates.
+    dist = score_distribution(battle, Action("Tackle", "player"), _ExpertDmg(eff=0))
+    assert dist == ScoreDist.certain(BASE_SCORE - 10)
+
+
 if __name__ == "__main__":
     test_legal_actions_singles()
     test_context_non_damage_predicates()
@@ -714,4 +818,10 @@ if __name__ == "__main__":
     test_expert_counter_mirrors_mirror_coat()
     test_expert_swap_ladder()
     test_expert_accumulating_block()
+    test_scoring_base_score_and_empty_flags()
+    test_scoring_convolves_independent_flags()
+    test_scoring_flag_without_procedure_contributes_nothing()
+    test_scoring_is_turn_sensitive()
+    test_scoring_all_actions_and_unsupported_flags()
+    test_scoring_deterministic_scenario()
     print("all tests passed")

@@ -84,8 +84,10 @@ class Battle:
     frontier: bool = False        # Battle Frontier rules; out of scope, kept for one Embargo check
 
 
-@dataclass
+@dataclass(frozen=True)
 class Action:
+    """Frozen so Actions can key the per-action score/probability dicts."""
+
     move: str
     target: str
 
