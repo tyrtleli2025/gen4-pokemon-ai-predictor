@@ -175,12 +175,14 @@ def test_iron_head_evaluate_attacks_block():
 
 def test_encoded_flags_match_scrape():
     """Every encoded block id must exist in the scrape, and vice versa."""
-    from aicalc.flags import baton_pass, evaluate_attacks, prio_damage, setup_first_turn
+    from aicalc.flags import (basic, baton_pass, evaluate_attacks, prio_damage,
+                              setup_first_turn)
 
     for flag, module in [("setup_first_turn", setup_first_turn),
                          ("prio_damage", prio_damage),
                          ("evaluate_attacks", evaluate_attacks),
-                         ("baton_pass", baton_pass)]:
+                         ("baton_pass", baton_pass),
+                         ("basic", basic)]:
         known = set(blocks_for_flag(flag))
         encoded = set(module.BLOCKS)
         assert encoded <= known, f"{flag}: encoded unknown block ids {encoded - known}"
@@ -342,6 +344,177 @@ class _FakeCtx:
         return self._first
 
 
+class _Dmg:
+    def __init__(self, eff=1, ko=False, best=True):
+        self.eff, self.ko, self.best = eff, ko, best
+
+    def can_ko(self, battle, action):
+        return self.ko
+
+    def is_best_damaging_move(self, battle, action):
+        return self.best
+
+    def effectiveness(self, battle, action):
+        return self.eff
+
+
+def _basic_ctx(eff=1, **kw):
+    """A Context over a plain battle, with keyword overrides applied to the
+    user (u_*), the target (t_*), the field (f_*) or the sides (s_*)."""
+    battle = _sample_battle()
+    for key, value in kw.items():
+        prefix, _, attr = key.partition("_")
+        obj = {"u": battle.ai.active, "t": battle.player.active,
+               "f": battle.field, "su": battle.ai, "st": battle.player}[prefix]
+        setattr(obj, attr, value)
+    return Context(battle=battle, action=legal_actions(battle)[0], damage=_Dmg(eff=eff))
+
+
+def test_basic_all_blocks_evaluate():
+    """Every one of the 105 blocks must evaluate to a valid distribution."""
+    from aicalc.flags import basic
+
+    for bid, script in basic.BLOCKS.items():
+        dist = evaluate(script, _basic_ctx())
+        assert sum(dist.table.values()) == 1, f"{bid} is not a distribution"
+
+
+def test_basic_immunity_blocks():
+    from aicalc.flags.basic import BLOCKS
+
+    standard = BLOCKS[block_id_for("basic", "Tackle")]
+    assert evaluate(standard, _basic_ctx(eff=0)) == ScoreDist.certain(-10)
+    assert evaluate(standard, _basic_ctx(eff=1)) == ScoreDist.certain(0)
+    # Wonder Guard: -12 unless the move is super effective...
+    assert evaluate(standard, _basic_ctx(eff=1, t_ability="Wonder Guard")) == ScoreDist.certain(-12)
+    assert evaluate(standard, _basic_ctx(eff=2, t_ability="Wonder Guard")) == ScoreDist.certain(0)
+    # ...and Mold Breaker ignores it entirely.
+    assert evaluate(standard, _basic_ctx(eff=1, t_ability="Wonder Guard",
+                                         u_ability="Mold Breaker")) == ScoreDist.certain(0)
+
+    water = BLOCKS[block_id_for("basic", "Surf")]  # the no-Dry-Skin variant
+    assert evaluate(water, _basic_ctx(t_ability="Water Absorb")) == ScoreDist.certain(-12)
+    assert evaluate(water, _basic_ctx(t_ability="Dry Skin")) == ScoreDist.certain(0)
+
+    water_ds = BLOCKS[block_id_for("basic", "Water Gun")]  # the Dry-Skin variant
+    assert evaluate(water_ds, _basic_ctx(t_ability="Dry Skin")) == ScoreDist.certain(-12)
+
+
+def test_basic_self_boost_caps():
+    from aicalc.flags.basic import BLOCKS
+
+    swords = BLOCKS[block_id_for("basic", "Swords Dance")]
+    assert evaluate(swords, _basic_ctx(u_boosts={"atk": 0})) == ScoreDist.certain(0)
+    assert evaluate(swords, _basic_ctx(u_boosts={"atk": 6})) == ScoreDist.certain(-10)
+    # Simple caps out at +3 instead of +6.
+    assert evaluate(swords, _basic_ctx(u_boosts={"atk": 3})) == ScoreDist.certain(0)
+    assert evaluate(swords, _basic_ctx(u_boosts={"atk": 3},
+                                       u_ability="Simple")) == ScoreDist.certain(-10)
+
+    # Two-stat moves penalise the second stat by -8, not -10.
+    bulk_up = BLOCKS[block_id_for("basic", "Bulk Up")]
+    assert evaluate(bulk_up, _basic_ctx(u_boosts={"atk": 6})) == ScoreDist.certain(-10)
+    assert evaluate(bulk_up, _basic_ctx(u_boosts={"def": 6})) == ScoreDist.certain(-8)
+
+
+def test_basic_explosion_party_logic():
+    """User still has party -> neutral; user is last -> -10 if the target has
+    party left, else -1."""
+    from aicalc.flags.basic import BLOCKS
+
+    boom = BLOCKS[block_id_for("basic", "Explosion")]
+    assert evaluate(boom, _basic_ctx(su_party_remaining=1)) == ScoreDist.certain(0)
+    assert evaluate(boom, _basic_ctx(su_party_remaining=0,
+                                     st_party_remaining=1)) == ScoreDist.certain(-10)
+    assert evaluate(boom, _basic_ctx(su_party_remaining=0,
+                                     st_party_remaining=0)) == ScoreDist.certain(-1)
+    assert evaluate(boom, _basic_ctx(t_ability="Damp")) == ScoreDist.certain(-10)
+
+
+def test_basic_trick_room_speed_tie_is_random():
+    """The only Chance node in the whole flag."""
+    from aicalc.flags.basic import BLOCKS
+
+    tr = BLOCKS[block_id_for("basic", "Trick Room")]
+    # Faster than the target -> flat -10.
+    assert evaluate(tr, _basic_ctx(u_stats={"atk": 1, "def": 1, "spa": 1, "spd": 1, "spe": 200})) \
+        == ScoreDist.certain(-10)
+    # Slower -> no penalty.
+    assert evaluate(tr, _basic_ctx(u_stats={"atk": 1, "def": 1, "spa": 1, "spd": 1, "spe": 1})) \
+        == ScoreDist.certain(0)
+    # Exact tie -> half the time -10.
+    tie = evaluate(tr, _basic_ctx(u_stats={"atk": 1, "def": 1, "spa": 1, "spd": 1, "spe": 70}))
+    assert tie.table == {-10: Fraction(1, 2), 0: Fraction(1, 2)}
+
+
+def test_basic_curse_branches_on_ghost_type():
+    from aicalc.flags.basic import BLOCKS
+
+    curse = BLOCKS[block_id_for("basic", "Curse")]
+    # Ghost user: judged on the target's Curse volatile, never on boosts.
+    ghost = _basic_ctx(u_types=("Ghost",))
+    ghost.target.volatiles.add("curse")
+    assert evaluate(curse, ghost) == ScoreDist.certain(-10)
+    assert evaluate(curse, _basic_ctx(u_types=("Ghost",))) == ScoreDist.certain(0)
+    # Non-Ghost user: behaves as an attack/defence boosting move.
+    assert evaluate(curse, _basic_ctx(u_boosts={"atk": 6})) == ScoreDist.certain(-10)
+    assert evaluate(curse, _basic_ctx(u_boosts={"def": 6})) == ScoreDist.certain(-8)
+
+
+def test_basic_state_dependent_blocks():
+    from aicalc.flags.basic import BLOCKS
+
+    # Fake Out keys off turns on the field, not turn of the battle.
+    fake_out = BLOCKS[block_id_for("basic", "Fake Out")]
+    assert evaluate(fake_out, _basic_ctx(u_turns_active=1)) == ScoreDist.certain(0)
+    assert evaluate(fake_out, _basic_ctx(u_turns_active=2)) == ScoreDist.certain(-10)
+
+    # Recycle needs a *consumed* item, not a held one.
+    recycle = BLOCKS[block_id_for("basic", "Recycle")]
+    assert evaluate(recycle, _basic_ctx()) == ScoreDist.certain(-10)
+    assert evaluate(recycle, _basic_ctx(u_consumed_item="Sitrus Berry")) == ScoreDist.certain(0)
+
+    # Attract needs two known, different genders.
+    attract = BLOCKS[block_id_for("basic", "Attract")]
+    assert evaluate(attract, _basic_ctx(u_gender="M", t_gender="F")) == ScoreDist.certain(0)
+    assert evaluate(attract, _basic_ctx(u_gender="M", t_gender="M")) == ScoreDist.certain(-10)
+    assert evaluate(attract, _basic_ctx(u_gender="M", t_gender=None)) == ScoreDist.certain(-10)
+
+    # Last Resort requires every other known move to have been used.
+    last_resort = BLOCKS[block_id_for("basic", "Last Resort")]
+    assert evaluate(last_resort, _basic_ctx()) == ScoreDist.certain(-10)
+    assert evaluate(last_resort,
+                    _basic_ctx(u_moves_used={"Hyper Beam", "Earthquake"})) == ScoreDist.certain(0)
+
+    # Haze is only worth using if it would undo something.
+    haze = BLOCKS[block_id_for("basic", "Haze")]
+    assert evaluate(haze, _basic_ctx()) == ScoreDist.certain(-10)
+    assert evaluate(haze, _basic_ctx(u_boosts={"atk": -1})) == ScoreDist.certain(0)
+    assert evaluate(haze, _basic_ctx(t_boosts={"atk": 1})) == ScoreDist.certain(0)
+
+
+def test_basic_fling_nested_item_logic():
+    from aicalc.flags.basic import BLOCKS
+
+    fling = BLOCKS[block_id_for("basic", "Fling")]
+    assert evaluate(fling, _basic_ctx()) == ScoreDist.certain(-10)          # no item
+
+    # Poison Barb, target un-poisonable (Steel): the outer branch is taken.
+    # The inner check is on the *user* -- Guts is in its exclusion list, so a
+    # Guts user scores -5 while an unaffected user scores +3.
+    assert evaluate(fling, _basic_ctx(u_item="Poison Barb", t_types=("Steel",),
+                                      u_ability="Guts")) == ScoreDist.certain(-5)
+    assert evaluate(fling, _basic_ctx(u_item="Poison Barb", t_types=("Steel",),
+                                      u_ability="Insomnia")) == ScoreDist.certain(3)
+
+    # Target poisonable -> the outer branch is skipped entirely, no score.
+    assert evaluate(fling, _basic_ctx(u_item="Poison Barb", t_types=("Normal",),
+                                      u_ability="Insomnia")) == ScoreDist.certain(0)
+
+    # An item with no special Fling handling falls through at 0.
+    assert evaluate(fling, _basic_ctx(u_item="Leftovers")) == ScoreDist.certain(0)
+
+
 if __name__ == "__main__":
     test_legal_actions_singles()
     test_context_non_damage_predicates()
@@ -356,4 +529,12 @@ if __name__ == "__main__":
     test_evaluate_attacks_blocks()
     test_evaluate_attacks_suicide_block_compounds_independently()
     test_baton_pass_blocks()
+    test_basic_all_blocks_evaluate()
+    test_basic_immunity_blocks()
+    test_basic_self_boost_caps()
+    test_basic_explosion_party_logic()
+    test_basic_trick_room_speed_tie_is_random()
+    test_basic_curse_branches_on_ghost_type()
+    test_basic_state_dependent_blocks()
+    test_basic_fling_nested_item_logic()
     print("all tests passed")

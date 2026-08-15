@@ -74,6 +74,44 @@ class Context:
     def hazard_layers(self, side: Side, hazard: str) -> int:
         return side.hazards.get(hazard, 0)
 
+    def has_volatile(self, pokemon: Pokemon, volatile: str) -> bool:
+        return volatile in pokemon.volatiles
+
+    def is_statused(self, pokemon: Pokemon) -> bool:
+        return pokemon.status is not None
+
+    def has_any_ability(self, pokemon: Pokemon, *abilities: str) -> bool:
+        return pokemon.ability in abilities
+
+    def mold_breaker(self) -> bool:
+        """True when the user's ability bypasses the target's ability checks."""
+        return self.user.ability == "Mold Breaker"
+
+    def blocked_by_ability(self, *abilities: str) -> bool:
+        """Target has one of these abilities and the user can't ignore it."""
+        return self.target.ability in abilities and not self.mold_breaker()
+
+    def opposite_gender(self) -> bool:
+        """True only when both genders are known and differ. Genderless on
+        either side is never 'opposite'.
+        """
+        u, t = self.user.gender, self.target.gender
+        return u is not None and t is not None and u != t
+
+    def turns_active(self, pokemon: Pokemon) -> int:
+        return pokemon.turns_active
+
+    def used_all_other_moves(self, pokemon: Pokemon) -> bool:
+        """Last Resort's condition: every other known move has been used."""
+        others = {m for m in pokemon.moves if m != self.action.move}
+        return others.issubset(pokemon.moves_used)
+
+    def gravity_active(self) -> bool:
+        return self.battle.field.gravity
+
+    def is_doubles(self) -> bool:
+        return self.battle.doubles
+
     def last_move(self, pokemon: Pokemon) -> str | None:
         return pokemon.last_move
 

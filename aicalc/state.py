@@ -7,6 +7,16 @@ The goal of this script is to describe the situation of a battle, including whic
 """
 from dataclasses import dataclass, field
 
+# Volatile conditions a Pokemon can carry, as used in Pokemon.volatiles.
+# These are the ones the Basic flag actually asks about; add as needed.
+VOLATILES = frozenset({
+    "confused", "infatuated", "trapped", "substitute", "leech_seed",
+    "curse", "perish_song", "torment", "embargo", "gastro_acid",
+    "focus_energy", "ingrain", "aqua_ring", "camouflage", "power_trick",
+    "magnet_rise", "lock_on", "foresight", "miracle_eye", "imprison",
+    "disable", "encore",
+})
+
 
 @dataclass
 class Pokemon:
@@ -23,6 +33,11 @@ class Pokemon:
     moves: list[str] = field(default_factory=list)
     last_move: str | None = None  # move this Pokemon used last turn, or None
     protect_streak: int = 0       # consecutive turns a Protect-family move has succeeded
+    gender: str | None = None     # 'M', 'F', or None for genderless
+    volatiles: set[str] = field(default_factory=set)  # see VOLATILES
+    turns_active: int = 1         # turns this Pokemon has been on the field (1 = just sent out)
+    moves_used: set[str] = field(default_factory=set)  # for Last Resort
+    consumed_item: str | None = None  # item already used up, for Recycle/Embargo
 
     def hp_percent(self) -> float:
         """Current HP as a percentage of max HP."""
@@ -38,13 +53,17 @@ class Side:
     light_screen: bool = False
     tailwind: bool = False
     safeguard: bool = False
+    mist: bool = False
+    lucky_chant: bool = False
+    future_attack: bool = False   # Future Sight / Doom Desire pending on this side
 
 
 @dataclass
 class Field:
-    weather: str | None = None    # 'sun', 'rain', 'sand', 'hail', or None
+    weather: str | None = None    # 'sun', 'rain', 'sand', 'hail', 'fog', or None
     trick_room: bool = False
     turn: int = 1                 # 1 = first turn of the whole battle
+    gravity: bool = False
 
 
 @dataclass
@@ -53,6 +72,8 @@ class Battle:
     player: Side
     field: Field
     flags: set[str] = field(default_factory=set)   # {'basic', 'expert', ...}
+    doubles: bool = False
+    frontier: bool = False        # Battle Frontier rules; out of scope, kept for one Embargo check
 
 
 @dataclass

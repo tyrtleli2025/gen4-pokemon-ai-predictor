@@ -113,8 +113,8 @@ Each stage is only started once the stage before it is tested and stable.
       `expert.py`, `setup_first_turn.py`, `prio_damage.py`, `baton_pass.py`):
       populated from the deduplicated scrape, by move effect.
       Done: `setup_first_turn` (1/1 blocks), `prio_damage` (1/1),
-      `evaluate_attacks` (9/9, 4 distinct shapes), `baton_pass` (6/6).
-      Remaining: `basic` (105 blocks), `expert` (114 blocks).
+      `evaluate_attacks` (9/9, 4 distinct shapes), `baton_pass` (6/6),
+      `basic` (105/105). Remaining: `expert` (114 blocks) — 122/236 done.
       `state.py` gained `Pokemon.last_move` and `Pokemon.protect_streak`, and
       `predicates.py` gained `last_move`, `used_protect_last`,
       `protect_streak`, and `user_is_faster` (exact, via `Fraction` — boosts,
