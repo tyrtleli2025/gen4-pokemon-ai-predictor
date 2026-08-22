@@ -22,7 +22,17 @@ class DamageBackend(Protocol):
     """
 
     def can_ko(self, battle: Battle, action: Action) -> bool: ...
+
+    #: "No different known move would do more damage" -- over the AI's
+    #: *comparable* damage table, not raw damage. TrainerAI_CalcAllDamage
+    #: zeroes out status moves and every move whose effect is in
+    #: sNoDamageCalcMoveEffects (Selfdestruct/Explosion, Dream Eater, charge
+    #: and recharge turns, Focus Punch, Sucker Punch, Superpower,
+    #: Eruption-likes, half-recoil, Spit Up), so those never out-damage
+    #: anything. Alt-power effects use the AI's substitute power (Magnitude
+    #: table, Psywave roll, friendship formula...). See DECOMP_NOTES.md.
     def is_best_damaging_move(self, battle: Battle, action: Action) -> bool: ...
+
     def effectiveness(self, battle: Battle, action: Action) -> float: ...
 
     # Expert-only questions. Same contract: a hand-supplied backend answers

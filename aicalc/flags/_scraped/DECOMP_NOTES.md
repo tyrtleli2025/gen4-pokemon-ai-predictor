@@ -128,6 +128,39 @@ describe what the game actually does, bug included. Worth flagging as a
 candidate for `data/ai_changes.csv`-style Kaizo fixes; nothing there yet
 mentions it, so treat it as present in Kaizo until shown otherwise.
 
+### The damage comparison excludes suicide/charge/etc. moves — `is_best_damaging_move` semantics
+
+Caught via the Roark/Bonsly case (the first hand-supplied backend answered this
+wrong). "A different move the user knows would do more damage" is computed by
+`AICmd_FlagMoveDamageScore` → `TrainerAI_CalcAllDamage` (`trainer_ai.c:2799`),
+which fills a per-move damage table where a move counts as **0** unless it has
+power > 1 and its effect is *not* in `sNoDamageCalcMoveEffects`:
+
+> HALVE_DEFENSE (Selfdestruct/Explosion), RECOVER_DAMAGE_SLEEP (Dream Eater),
+> the charge-turn effects (Razor Wind/Sky Attack/Fly-likes, SolarBeam),
+> RECHARGE_AFTER (Hyper Beam-likes), SPIT_UP, HIT_LAST_WHIFF_IF_HIT (Focus
+> Punch), LOWER_OWN_ATK_AND_DEF (Superpower), DECREASE_POWER_WITH_LESS_USER_HP
+> (Eruption/Water Spout), HIT_FIRST_IF_TARGET_ATTACKING (Sucker Punch),
+> RECOIL_HALF.
+
+Consequences:
+
+- A Selfdestruct that out-damages everything **does not** cause other moves to
+  take Evaluate Attacks' "-1 if outdamaged" — the comparison never sees it.
+- When the *current* move is one of these effects (or is a status move), the
+  command short-circuits to `AI_NO_COMPARISON_MADE` — which is exactly why the
+  scraped suicide block has no "-1 if outdamaged" branch, and what gates
+  `prio_damage`/`baton_pass`.
+- `sAltPowerMoveEffects` moves get substitute powers instead — and this maps
+  one-to-one onto bparkpk's own eval-block notes (Bulldoze "uses Magnitude
+  calculations", Triple Axel "uses Psywave calculations", Return "seen as
+  102BP"), strong evidence the mechanism is intact in Kaizo. Per-move
+  membership must follow the move's **Kaizo** effect from `data/moves.csv`,
+  not its vanilla one.
+
+Any hand-supplied `DamageBackend.is_best_damaging_move` must answer over this
+comparable table, not over raw damage output.
+
 ## Structural facts worth reusing
 
 - `IfTargetIsPartner Terminate` opens every flag — irrelevant in singles.

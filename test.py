@@ -838,22 +838,24 @@ def test_case_roark_bonsly_vs_machop():
     """Regression pin for the first real scenario (cases/roark-bonsly-*.png).
 
     Hand-verified end to end: Stealth Rock sits at 100/101 (Expert's hazard
-    coin flip), Selfdestruct is dragged below by Evaluate Attacks' suicide
-    deprioritise and Expert's high-HP penalty with only Risky's 50% +2
-    pulling it back up, and both attacks sit dominated at a flat 99.
+    coin flip); Brick Break is the AI's *comparable* highest-damage move
+    (Selfdestruct is zeroed out of the damage comparison by
+    sNoDamageCalcMoveEffects) so it keeps a flat 100; Selfdestruct is dragged
+    down by Evaluate Attacks' suicide deprioritise and Expert's high-HP
+    penalty with only Risky's 50% +2 pulling it back up; Accelerock is
+    out-damaged by Brick Break and sits dominated at 99.
     """
     from cases.roark_bonsly_vs_machop import CalcPanelBackend, battle
     from aicalc.scoring import action_score_distributions
     from aicalc.select import action_probabilities
-    from aicalc.state import Action
 
     dists = action_score_distributions(battle, CalcPanelBackend())
     picks = action_probabilities(dists)
     by_move = {a.move: p for a, p in picks.items()}
 
-    assert by_move["Stealth Rock"] == Fraction(234885, 262144)
-    assert by_move["Selfdestruct"] == Fraction(27259, 262144)
-    assert by_move["Brick Break"] == 0
+    assert by_move["Stealth Rock"] == Fraction(540431, 786432)
+    assert by_move["Brick Break"] == Fraction(170624, 786432)
+    assert by_move["Selfdestruct"] == Fraction(75377, 786432)
     assert by_move["Accelerock"] == 0
     assert sum(by_move.values()) == 1
 

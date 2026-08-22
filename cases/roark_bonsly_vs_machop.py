@@ -49,15 +49,24 @@ class CalcPanelBackend:
     """Damage answers read straight off the calculator's right-hand panel.
 
     Selfdestruct: 143.3-169.8% -> KOs on every roll (so certainly on the
-    AI's max-roll check) and out-damages everything else.
-    Brick Break 26.4-32%, Accelerock 11.3-13.2%, Stealth Rock 0%.
+    AI's max-roll check). Brick Break 26.4-32%, Accelerock 11.3-13.2%,
+    Stealth Rock 0%.
+
+    is_best_damaging_move answers over the AI's *comparable* damage table,
+    not raw damage: TrainerAI_CalcAllDamage zeroes out any move whose effect
+    is in sNoDamageCalcMoveEffects -- and Selfdestruct's HALVE_DEFENSE effect
+    is the first entry -- so the comparison sees {Brick Break ~30%,
+    Accelerock ~13%, everything else 0}. Brick Break is the AI's highest
+    damaging move; Selfdestruct's own block never consults the comparison
+    (NO_COMPARISON_MADE short-circuit, which is why its scraped block has no
+    "-1 if outdamaged" branch). See DECOMP_NOTES.md.
     """
 
     def can_ko(self, battle, action):
         return action.move == "Selfdestruct"
 
     def is_best_damaging_move(self, battle, action):
-        return action.move == "Selfdestruct"
+        return action.move == "Brick Break"
 
     def effectiveness(self, battle, action):
         return {

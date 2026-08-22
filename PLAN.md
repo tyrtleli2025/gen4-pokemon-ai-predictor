@@ -143,8 +143,11 @@ Each stage is only started once the stage before it is tested and stable.
       the whole pipeline.
       First real scenario validated end to end with a hand-supplied damage
       backend: `cases/roark_bonsly_vs_machop.py` (screenshot in `cases/`) —
-      Stealth Rock 89.60%, Selfdestruct 10.40%, Brick Break 0%, Accelerock 0%;
-      pinned as a regression test. The Mars/Skarmory scenario (Tailwind
+      Stealth Rock 68.72%, Brick Break 21.70%, Selfdestruct 9.59%,
+      Accelerock 0%; pinned as a regression test and independently
+      hand-computed. (An earlier 89.6/10.4 figure fed the backend a wrong
+      damage-comparison fact — the AI zeroes Selfdestruct out of its
+      highest-damage comparison; see DECOMP_NOTES.md.) The Mars/Skarmory scenario (Tailwind
       50.20%, Stealth Rock 40.79%, Iron Head 9.01%, Pluck 0%) still needs its
       battle data entered to validate against known-good numbers.
 - [ ] **Damage calculator port** (`calc/`): can proceed in parallel with the
