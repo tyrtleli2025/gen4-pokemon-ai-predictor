@@ -1,0 +1,60 @@
+{
+  "format": 1,
+  "name": "Gardenia's Miltank vs Delcatty, turn 1, rain up",
+  "source": "gardenia-miltank-vs-delcatty-turn1.png",
+  "notes": [
+    "Damage answers are hand-supplied from the HZLA calc's damage panel: Body Slam 38.8-47%, ThunderPunch 27-32.9%, Stealth Rock / Milk Drink 0%. Nothing KOs.",
+    "The 1st Turn Setup flag contributes nothing to this moveset even on turn 1: its effect table covers stat stages, screens, Tailwind and status-inducing moves, and hazards are not in it -- Stealth Rock is not a 'setup' move to this AI.",
+    "The comparable-damage table is {Body Slam, ThunderPunch} -- both plain damaging effects -- so Body Slam is the AI's highest damaging move.",
+    "Assumed: it is turn 1 of the whole battle; both trainers have living party members besides the active Pokemon.",
+    "Expected picks hand-verified: Milk Drink at full HP eats -8 (Basic) and -3 (Expert) for a flat 89; ThunderPunch is out-damaged (-1) at 99; Body Slam flat 100; Stealth Rock 100/101 on Expert's coin flip -> 3/4 vs 1/4."
+  ],
+  "battle": {
+    "flags": ["Basic", "Evaluate Atks", "Expert", "1st Turn Setup"],
+    "field": {"weather": "rain", "turn": 1},
+    "ai": {
+      "pokemon": {
+        "species": "Miltank",
+        "level": 26,
+        "ability": "Scrappy",
+        "item": "Lum Berry",
+        "types": ["Normal"],
+        "stats": {"atk": 64, "def": 67, "spa": 33, "spd": 44, "spe": 65},
+        "max_hp": 93,
+        "gender": "F",
+        "moves": ["Stealth Rock", "Milk Drink", "Body Slam", "Thunder Punch"]
+      },
+      "party_remaining": 2
+    },
+    "player": {
+      "pokemon": {
+        "species": "Delcatty",
+        "level": 28,
+        "ability": "Cute Charm",
+        "types": ["Normal"],
+        "stats": {"atk": 58, "def": 55, "spa": 58, "spd": 55, "spe": 76},
+        "max_hp": 85,
+        "gender": "M",
+        "moves": ["Hyper Voice", "Copycat", "Quick Attack"]
+      },
+      "party_remaining": 1
+    }
+  },
+  "damage": {
+    "moves": {
+      "Body Slam": {"can_ko": false, "effectiveness": 1},
+      "Thunder Punch": {"can_ko": false, "effectiveness": 1},
+      "Stealth Rock": {"effectiveness": 1},
+      "Milk Drink": {"effectiveness": 1}
+    },
+    "best_damaging_move": "Body Slam"
+  },
+  "expected": {
+    "pick_probabilities": {
+      "Stealth Rock": "3/4",
+      "Body Slam": "1/4",
+      "Thunder Punch": "0",
+      "Milk Drink": "0"
+    }
+  }
+}

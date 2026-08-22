@@ -845,19 +845,20 @@ def test_case_roark_bonsly_vs_machop():
     penalty with only Risky's 50% +2 pulling it back up; Accelerock is
     out-damaged by Brick Break and sits dominated at 99.
     """
-    from cases.roark_bonsly_vs_machop import CalcPanelBackend, battle
-    from aicalc.scoring import action_score_distributions
-    from aicalc.select import action_probabilities
+    from aicalc.case_loader import load_case
+    from aicalc.select import move_probabilities
 
-    dists = action_score_distributions(battle, CalcPanelBackend())
-    picks = action_probabilities(dists)
-    by_move = {a.move: p for a, p in picks.items()}
+    case = load_case("cases/roark_bonsly_vs_machop.json")
+    by_move = {a.move: p
+               for a, p in move_probabilities(case.battle, case.damage).items()}
 
     assert by_move["Stealth Rock"] == Fraction(540431, 786432)
     assert by_move["Brick Break"] == Fraction(170624, 786432)
     assert by_move["Selfdestruct"] == Fraction(75377, 786432)
     assert by_move["Accelerock"] == 0
     assert sum(by_move.values()) == 1
+    # The file's own expected block must agree with the pins above.
+    assert by_move == case.expected
 
 
 def test_case_gardenia_miltank_vs_delcatty():
@@ -869,11 +870,12 @@ def test_case_gardenia_miltank_vs_delcatty():
     out-damaged at 99; Milk Drink at full HP eats -8 (Basic) and -3 (Expert)
     for a flat 89.
     """
-    from cases.gardenia_miltank_vs_delcatty import CalcPanelBackend, battle
+    from aicalc.case_loader import load_case
     from aicalc.scoring import action_score_distributions
     from aicalc.select import action_probabilities
 
-    dists = action_score_distributions(battle, CalcPanelBackend())
+    case = load_case("cases/gardenia_miltank_vs_delcatty.json")
+    dists = action_score_distributions(case.battle, case.damage)
     by_move = {a.move: d for a, d in dists.items()}
     assert by_move["Milk Drink"] == ScoreDist.certain(89)
     assert by_move["Body Slam"] == ScoreDist.certain(100)
@@ -884,6 +886,176 @@ def test_case_gardenia_miltank_vs_delcatty():
     assert picks["Body Slam"] == Fraction(1, 4)
     assert picks["Milk Drink"] == 0
     assert picks["ThunderPunch"] == 0
+    assert picks == case.expected
+
+
+def _case_doc():
+    """A fresh, minimal, valid format-1 case document."""
+    return {
+        "format": 1,
+        "name": "unit-test case",
+        "battle": {
+            "flags": ["Basic"],
+            "ai": {
+                "pokemon": {
+                    "species": "Ursaring", "level": 40, "ability": "Guts",
+                    "types": ["Normal"],
+                    "stats": {"atk": 100, "def": 80, "spa": 50, "spd": 60, "spe": 70},
+                    "max_hp": 120,
+                    "moves": ["Slash", "Swords Dance"],
+                },
+                "party_remaining": 1,
+            },
+            "player": {
+                "pokemon": {
+                    "species": "Skarmory", "level": 40, "ability": "Filter",
+                    "types": ["Steel", "Flying"],
+                    "stats": {"atk": 60, "def": 140, "spa": 40, "spd": 70, "spe": 70},
+                    "max_hp": 100,
+                },
+                "party_remaining": 1,
+            },
+        },
+        "damage": {
+            "moves": {
+                "Slash": {"can_ko": False, "effectiveness": 0.5},
+                "Swords Dance": {"effectiveness": 1},
+            },
+            "best_damaging_move": "Slash",
+        },
+    }
+
+
+def _expect_case_error(doc, fragment):
+    from aicalc.case_loader import CaseError, load_case_dict
+
+    try:
+        load_case_dict(doc)
+    except CaseError as exc:
+        assert fragment in str(exc), f"error {exc!r} lacks {fragment!r}"
+    else:
+        raise AssertionError(f"expected CaseError mentioning {fragment!r}")
+
+
+def test_canonical_move_names():
+    from aicalc.names import UnknownName, canonical_move
+
+    assert canonical_move("Thunder Punch") == "ThunderPunch"
+    assert canonical_move("self destruct") == "Selfdestruct"
+    assert canonical_move("ThunderPunch") == "ThunderPunch"  # exact passes through
+    try:
+        canonical_move("Thunderpnch")
+    except UnknownName as exc:
+        assert "ThunderPunch" in str(exc)  # suggestion offered
+    else:
+        raise AssertionError("expected UnknownName")
+
+
+def test_canonical_move_solarbeam_collision():
+    from aicalc.names import AmbiguousName, canonical_move
+    from aicalc.flags._blocks import block_id_for
+
+    for spelling in ("Solar Beam", "solarbeam", "SOLAR-BEAM"):
+        try:
+            canonical_move(spelling)
+        except AmbiguousName as exc:
+            assert "Solar-Beam" in str(exc) and "SolarBeam" in str(exc)
+        else:
+            raise AssertionError("expected AmbiguousName")
+
+    # The literal exact names load and are genuinely different moves.
+    assert canonical_move("Solar-Beam") == "Solar-Beam"
+    assert canonical_move("SolarBeam") == "SolarBeam"
+    assert (block_id_for("basic", "Solar-Beam")
+            != block_id_for("basic", "SolarBeam"))
+
+
+def test_flag_names():
+    from aicalc.names import _FLAG_SPELLINGS, UnknownName, canonical_flag
+    from aicalc.scoring import FLAG_MODULES
+
+    assert canonical_flag("Evaluate Atks") == "evaluate_attacks"
+    assert canonical_flag("1st Turn Setup") == "setup_first_turn"
+    assert canonical_flag("prio_damage") == "prio_damage"
+    # The spelling table stays in sync with what scoring actually supports.
+    assert set(_FLAG_SPELLINGS.values()) == set(FLAG_MODULES)
+    try:
+        canonical_flag("Check HP")
+    except UnknownName as exc:
+        assert "Evaluate Atks" in str(exc)  # lists accepted spellings
+    else:
+        raise AssertionError("expected UnknownName")
+
+
+def test_loader_defaults():
+    from aicalc.case_loader import load_case_dict
+
+    case = load_case_dict(_case_doc())
+    ai = case.battle.ai.active
+    assert ai.current_hp == ai.max_hp == 120
+    assert ai.item is None and ai.status is None and ai.gender is None
+    assert ai.turns_active == 1 and ai.protect_streak == 0
+    assert case.battle.field == Field()
+    assert case.battle.player.active.moves == []
+    assert case.battle.ai.hazards == {} and not case.battle.ai.reflect
+    assert case.expected is None and case.notes == ()
+    # Damage backend answers derive from the table.
+    from aicalc.state import Action
+    assert case.damage.is_best_damaging_move(None, Action("Slash", "player"))
+    assert not case.damage.can_ko(None, Action("Slash", "player"))
+    assert case.damage.effectiveness(None, Action("Swords Dance", "player")) == 1
+
+
+def test_loader_rejections():
+    doc = _case_doc(); doc["battle"]["ai"]["pokemon"]["stats"].pop("spd")
+    _expect_case_error(doc, "spd")
+
+    doc = _case_doc(); doc["battle"]["ai"]["pokemon"]["curent_hp"] = 5
+    _expect_case_error(doc, "curent_hp")
+
+    doc = _case_doc(); doc["damage"]["moves"]["Slash"]["effectiveness"] = 0.6
+    _expect_case_error(doc, "0.6")
+
+    doc = _case_doc(); doc["damage"]["moves"].pop("Slash")
+    _expect_case_error(doc, "no entry for AI move")
+
+    doc = _case_doc(); doc["damage"]["moves"]["Earthquake"] = {"can_ko": False, "effectiveness": 1}
+    _expect_case_error(doc, "non-AI move")
+
+    doc = _case_doc(); doc["damage"]["moves"]["Slash"].pop("can_ko")
+    _expect_case_error(doc, "can_ko")
+
+    doc = _case_doc(); doc.pop("damage")
+    _expect_case_error(doc, "damage")
+
+    doc = _case_doc(); doc["battle"]["doubles"] = True
+    _expect_case_error(doc, "doubles")
+
+    doc = _case_doc(); doc["battle"]["ai"]["pokemon"]["ability"] = "Rock Solid"
+    _expect_case_error(doc, "Rock Solid")
+
+    doc = _case_doc(); doc["format"] = 2
+    _expect_case_error(doc, "format")
+
+    doc = _case_doc()
+    doc["expected"] = {"pick_probabilities": {"Slash": "1/2", "Swords Dance": "1/4"}}
+    _expect_case_error(doc, "sum")
+
+
+def test_table_backend_best_tie():
+    from aicalc.case_loader import load_case_dict
+    from aicalc.state import Action
+
+    doc = _case_doc()
+    doc["battle"]["ai"]["pokemon"]["moves"] = ["Slash", "Strength"]
+    doc["damage"]["moves"] = {
+        "Slash": {"can_ko": False, "effectiveness": 1},
+        "Strength": {"can_ko": False, "effectiveness": 1},
+    }
+    doc["damage"]["best_damaging_move"] = ["Slash", "Strength"]
+    case = load_case_dict(doc)
+    assert case.damage.is_best_damaging_move(None, Action("Slash", "player"))
+    assert case.damage.is_best_damaging_move(None, Action("Strength", "player"))
 
 
 if __name__ == "__main__":
@@ -925,4 +1097,10 @@ if __name__ == "__main__":
     test_action_probabilities()
     test_case_roark_bonsly_vs_machop()
     test_case_gardenia_miltank_vs_delcatty()
+    test_canonical_move_names()
+    test_canonical_move_solarbeam_collision()
+    test_flag_names()
+    test_loader_defaults()
+    test_loader_rejections()
+    test_table_backend_best_tie()
     print("all tests passed")

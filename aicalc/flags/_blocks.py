@@ -32,6 +32,12 @@ def _per_move() -> dict[str, dict[str, str]]:
     return json.loads(_SCRAPE.read_text())
 
 
+@lru_cache(maxsize=1)
+def all_moves() -> frozenset[str]:
+    """Every canonical Kaizo move name (the scrape's key set)."""
+    return frozenset(_per_move())
+
+
 @lru_cache(maxsize=None)
 def blocks_for_flag(flag: str) -> dict[str, tuple[str, tuple[str, ...]]]:
     """{block_id: (verbatim text, moves using it)} for one flag."""

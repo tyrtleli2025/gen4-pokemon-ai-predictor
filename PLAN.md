@@ -142,7 +142,7 @@ Each stage is only started once the stage before it is tested and stable.
       `move_probabilities(battle, damage)` is now the single entry point for
       the whole pipeline.
       First real scenario validated end to end with a hand-supplied damage
-      backend: `cases/roark_bonsly_vs_machop.py` (screenshot in `cases/`) —
+      backend: `cases/roark_bonsly_vs_machop.json` (screenshot in `cases/`) —
       Stealth Rock 68.72%, Brick Break 21.70%, Selfdestruct 9.59%,
       Accelerock 0%; pinned as a regression test and independently
       hand-computed. (An earlier 89.6/10.4 figure fed the backend a wrong
@@ -150,6 +150,18 @@ Each stage is only started once the stage before it is tested and stable.
       highest-damage comparison; see DECOMP_NOTES.md.) The Mars/Skarmory scenario (Tailwind
       50.20%, Stealth Rock 40.79%, Iron Head 9.01%, Pluck 0%) still needs its
       battle data entered to validate against known-good numbers.
+- [x] **Scenario files + runner**: scenarios are now declarative JSON in
+      `cases/` (format 1: battle + hand-supplied `damage` facts + optional
+      `expected` pick probabilities), loaded by `aicalc/case_loader.py`
+      (`load_case` / `load_case_dict`, the latter being the future web-UI
+      seam) and run via `python3 -m aicalc.run cases --check`. Move and flag
+      names are auto-canonicalised from display spellings ("Thunder Punch" →
+      `ThunderPunch`) via `aicalc/names.py`; the one genuine collision
+      (Solar-Beam vs SolarBeam, distinct Kaizo moves) errors instead of
+      guessing. Unknown keys, moves, flags, abilities (validated against the
+      Kaizo per-Pokémon ability table) and off-scale effectiveness all fail
+      loudly with JSON-path locations. The `damage` section becomes optional
+      once `calc/` lands.
 - [ ] **Damage calculator port** (`calc/`): can proceed in parallel with the
       above, gated behind the `Context` interface so nothing downstream needs
       to change when it lands.
