@@ -272,6 +272,8 @@ Kept verbatim; those entries simply never match.
 
 | `risky` | `d4faa70a` (61 moves) | Same "Unconditionally" question as `prio_damage`. | `Risky_Main` | Gated on the `Risky_RiskyEffects` effect table (sleep, halve-defense, copy-move, OHKO, high-crit, confusion, call-random-move, Psywave-like) — the gate lives in the move→block mapping. `IfRandomLessThan 128` jumps to terminate → +2 at 128/256 = 50%, matching bparkpk. Kaizo-consistency check: Sheer Cold (no longer OHKO in Kaizo) is correctly absent from the scraped move list, while Triple Axel and Fury Cutter (Risky per `ai_changes.csv`) are correctly present. |
 
+| `expert` | Bulldoze (vs `Expert_SpeedDownOnHit`) | Bulldoze lowers Speed in battle and the attacker-slower bonus (72.7% +2) exists for Icy Wind/Rock Tomb/Mud Shot — why does Bulldoze's page say "(No applicable AI procedures)"? | `Expert_Main` dispatch (`script.s:1681`) | Principled, not an omission. Expert dispatches on effect index: `BATTLE_EFFECT_LOWER_SPEED_HIT → Expert_SpeedDownOnHit`, and Magnitude's effect has **no** Expert handler (its only AI mention is doubles-only TagStrategy). Kaizo's Bulldoze occupies Magnitude's slot and keeps Magnitude's effect index for AI purposes — bparkpk's own eval-page testing note says "Bulldoze uses Magnitude calculations for scoring purposes", and the sibling speed-lower moves' pages all carry the block, so the site knew the routine and excluded Bulldoze deliberately. Net effect: **the AI cannot see Bulldoze's speed drop.** High-stakes (flips the Torterra/Mr. Mime case from Seed Bomb 100% to Bulldoze ~72.7% if wrong) — good save-state resampling candidate. |
+
 ### Architectural consequence
 
 Neither encoded block needs to classify move effects. The decomp selects moves via
