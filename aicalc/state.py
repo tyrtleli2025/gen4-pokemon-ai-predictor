@@ -15,6 +15,9 @@ VOLATILES = frozenset({
     "focus_energy", "ingrain", "aqua_ring", "camouflage", "power_trick",
     "magnet_rise", "lock_on", "foresight", "miracle_eye", "imprison",
     "disable", "encore", "yawn",
+    # Damage-formula state (calc/): Flash Fire boost armed, Charge armed,
+    # and the Sport conditions.
+    "flash_fire", "charge", "mud_sport", "water_sport",
     # Taunt does not exist in Kaizo (the slot became HP Dark), but several
     # Expert blocks still test for it, so the name stays valid and simply
     # never becomes true.
@@ -43,6 +46,8 @@ class Pokemon:
     moves_used: set[str] = field(default_factory=set)  # for Last Resort
     consumed_item: str | None = None  # item already used up, for Recycle/Embargo
     pp_left: dict[str, int] = field(default_factory=dict)  # move -> remaining PP (Trump Card)
+    friendship: int | None = None  # None = unknown; the AI calc assumes 255 (trainer mons)
+    weight_hg: int | None = None   # weight in hectograms, for Low Kick/Grass Knot
 
     def hp_percent(self) -> float:
         """Current HP as a percentage of max HP."""

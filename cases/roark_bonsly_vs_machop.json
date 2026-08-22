@@ -3,26 +3,47 @@
   "name": "Roark's Bonsly vs Machop, turn 1",
   "source": "roark-bonsly-vs-machop-turn1.png",
   "notes": [
-    "Damage answers are hand-supplied from the HZLA calc's damage panel, since the damage calculator port (calc/) does not exist yet.",
+    "Damage facts are computed by the ported AI damage calculator (aicalc/calc/); this file needs no damage section. The screenshot's panel remains the provenance: Selfdestruct 143.3-169.8% (KOs on every roll), Brick Break 26.4-32%, Accelerock 11.3-13.2%.",
     "Selfdestruct: 143.3-169.8% -> KOs on every roll (so certainly on the AI's max-roll check). Brick Break 26.4-32%, Accelerock 11.3-13.2%, Stealth Rock 0%.",
-    "best_damaging_move is over the AI's *comparable* damage table, not raw damage: TrainerAI_CalcAllDamage zeroes out any move whose effect is in sNoDamageCalcMoveEffects -- Selfdestruct's HALVE_DEFENSE effect is the first entry -- so the comparison sees {Brick Break ~30%, Accelerock ~13%}. Selfdestruct's own block never consults the comparison (NO_COMPARISON_MADE short-circuit). See DECOMP_NOTES.md.",
+    "best_damaging_move is over the AI's *comparable* damage table, not raw damage: TrainerAI_CalcAllDamage zeroes out any move whose effect is in sNoDamageCalcMoveEffects -- Selfdestruct's HALVE_DEFENSE effect is the first entry -- so the comparison sees {Brick Break 17, Accelerock 7} and Brick Break wins. Selfdestruct's own block never consults the comparison. See DECOMP_NOTES.md.",
     "Assumed: it is turn 1 of the whole battle; both trainers have living party members besides the active Pokemon.",
     "Expected picks hand-verified: Stealth Rock rides Expert's 50% +1 coin flip; Selfdestruct is dragged down by Evaluate Attacks' suicide deprioritise and Expert's high-HP-while-slower penalty, with only Risky's 50% +2 pulling it back; Accelerock is out-damaged (-1) and dominated."
   ],
   "battle": {
-    "flags": ["Basic", "Evaluate Atks", "Expert", "Risky"],
-    "field": {"weather": "sand", "turn": 1},
+    "flags": [
+      "Basic",
+      "Evaluate Atks",
+      "Expert",
+      "Risky"
+    ],
+    "field": {
+      "weather": "sand",
+      "turn": 1
+    },
     "ai": {
       "pokemon": {
         "species": "Bonsly",
         "level": 15,
         "ability": "Rock Head",
         "item": "Focus Sash",
-        "types": ["Rock"],
-        "stats": {"atk": 33, "def": 41, "spa": 10, "spd": 23, "spe": 12},
+        "types": [
+          "Rock"
+        ],
+        "stats": {
+          "atk": 33,
+          "def": 41,
+          "spa": 10,
+          "spd": 23,
+          "spe": 12
+        },
         "max_hp": 44,
         "gender": "M",
-        "moves": ["Stealth Rock", "Self-Destruct", "Brick Break", "Accelerock"]
+        "moves": [
+          "Stealth Rock",
+          "Self-Destruct",
+          "Brick Break",
+          "Accelerock"
+        ]
       },
       "party_remaining": 2
     },
@@ -31,23 +52,26 @@
         "species": "Machop",
         "level": 16,
         "ability": "Guts",
-        "types": ["Fighting"],
-        "stats": {"atk": 33, "def": 25, "spa": 21, "spd": 21, "spe": 21},
+        "types": [
+          "Fighting"
+        ],
+        "stats": {
+          "atk": 33,
+          "def": 25,
+          "spa": 21,
+          "spd": 21,
+          "spe": 21
+        },
         "max_hp": 53,
         "gender": "M",
-        "moves": ["Karate Chop", "Seismic Toss", "Rock Smash"]
+        "moves": [
+          "Karate Chop",
+          "Seismic Toss",
+          "Rock Smash"
+        ]
       },
       "party_remaining": 1
     }
-  },
-  "damage": {
-    "moves": {
-      "Self-Destruct": {"can_ko": true, "effectiveness": 1},
-      "Brick Break": {"can_ko": false, "effectiveness": 0.5},
-      "Accelerock": {"can_ko": false, "effectiveness": 0.5},
-      "Stealth Rock": {"effectiveness": 0.5}
-    },
-    "best_damaging_move": "Brick Break"
   },
   "expected": {
     "pick_probabilities": {

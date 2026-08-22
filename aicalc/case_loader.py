@@ -8,9 +8,11 @@ Format 1 schema: see PLAN.md and the files in cases/. Design rules:
 * Canonical names only. Every move-name position is run through
   names.canonical_move, so the Battle the engine sees uses the scraped
   spellings ("ThunderPunch"), whatever the file says ("Thunder Punch").
-* The "damage" section hand-supplies the DamageBackend answers until the real
-  damage calculator (calc/) exists. It is structurally optional so old files
-  keep working when that day comes, but its absence is an error for now.
+* Damage facts are computed by the ported AI damage calculator
+  (aicalc/calc/). The optional "damage" section supplies per-fact overrides
+  layered on top of it -- for the two moves whose facts depend on the AI's
+  internal power roll (Bulldoze, Triple Axel), for facts needing data the
+  schema lacks (party movesets, weights), or to pin a fact under test.
 """
 from __future__ import annotations
 
@@ -22,6 +24,7 @@ from functools import lru_cache
 from pathlib import Path
 
 from . import movedata
+from .calc import CalcBackend, OverrideBackend
 from .names import UnknownName, canonical_flag, canonical_move, squash
 from .state import VOLATILES, Battle, Field, Pokemon, Side
 
@@ -51,43 +54,11 @@ class CaseError(ValueError):
 class Case:
     name: str
     battle: Battle
-    damage: "TableBackend | None"
+    damage: object  # a DamageBackend: CalcBackend, possibly override-wrapped
     source: str | None = None
     notes: tuple[str, ...] = ()
     expected: dict[str, Fraction] | None = None  # canonical move -> pick prob
     path: Path | None = None
-
-
-class TableBackend:
-    """DamageBackend answering from a parsed 'damage' section."""
-
-    def __init__(self, effectiveness: dict[str, float], can_ko: dict[str, bool],
-                 best: frozenset[str], has_super_effective: bool,
-                 party_outdamages: bool, last_move_outdamages: bool):
-        self._effectiveness = effectiveness
-        self._can_ko = can_ko
-        self._best = best
-        self._has_super_effective = has_super_effective
-        self._party_outdamages = party_outdamages
-        self._last_move_outdamages = last_move_outdamages
-
-    def can_ko(self, battle, action):
-        return self._can_ko[action.move]
-
-    def is_best_damaging_move(self, battle, action):
-        return action.move in self._best
-
-    def effectiveness(self, battle, action):
-        return self._effectiveness[action.move]
-
-    def has_super_effective_move(self, battle):
-        return self._has_super_effective
-
-    def party_member_outdamages(self, battle):
-        return self._party_outdamages
-
-    def target_last_move_outdamages(self, battle):
-        return self._last_move_outdamages
 
 
 @lru_cache(maxsize=1)
@@ -299,72 +270,71 @@ def _flags(lst, where: str) -> set[str]:
     return out
 
 
-def _damage(obj, where: str, ai_moves: list[str]) -> TableBackend:
+def _damage(obj, where: str, ai_moves: list[str]) -> OverrideBackend:
+    """Per-fact overrides layered on the computed CalcBackend. Every key is
+    optional; a supplied fact always wins over the computed one."""
     obj = _dict(obj, where)
-    _keys(obj, where,
-          required=("moves", "best_damaging_move"),
-          optional=("has_super_effective_move", "party_member_outdamages",
-                    "target_last_move_outdamages"))
+    _keys(obj, where, required=(),
+          optional=("moves", "best_damaging_move", "has_super_effective_move",
+                    "party_member_outdamages", "target_last_move_outdamages"))
 
-    facts = _dict(obj["moves"], f"{where}.moves")
+    facts = _dict(obj.get("moves", {}), f"{where}.moves")
     facts = {_move(m, f"{where}.moves"): entry for m, entry in facts.items()}
-    missing = sorted(set(ai_moves) - set(facts))
     extra = sorted(set(facts) - set(ai_moves))
-    if missing:
-        raise CaseError(f"{where}.moves: no entry for AI move(s) {missing}")
     if extra:
         raise CaseError(f"{where}.moves: entry for non-AI move(s) {extra}")
 
-    effectiveness: dict[str, float] = {}
-    can_ko: dict[str, bool] = {}
+    move_facts: dict[str, dict] = {}
     for move, entry in facts.items():
         entry_where = f"{where}.moves[{move!r}]"
         entry = _dict(entry, entry_where)
-        _keys(entry, entry_where, required=("effectiveness",),
-              optional=("can_ko",))
-        eff = entry["effectiveness"]
-        if eff not in EFFECTIVENESS:
-            raise CaseError(f"{entry_where}.effectiveness: {eff!r} not in "
-                            f"{{0, 0.25, 0.5, 1, 2, 4}}")
-        effectiveness[move] = eff
-        if movedata.is_damaging(move):
-            if "can_ko" not in entry:
-                raise CaseError(f"{entry_where}: 'can_ko' is required for a "
-                                f"damaging move")
-            can_ko[move] = _bool(entry["can_ko"], f"{entry_where}.can_ko")
+        _keys(entry, entry_where, required=(), optional=("can_ko", "effectiveness"))
+        if not entry:
+            raise CaseError(f"{entry_where}: empty override (supply can_ko "
+                            f"and/or effectiveness, or drop the entry)")
+        parsed: dict = {}
+        if "effectiveness" in entry:
+            eff = entry["effectiveness"]
+            if eff not in EFFECTIVENESS:
+                raise CaseError(f"{entry_where}.effectiveness: {eff!r} not in "
+                                f"{{0, 0.25, 0.5, 1, 2, 4}}")
+            parsed["effectiveness"] = eff
+        if "can_ko" in entry:
+            parsed["can_ko"] = _bool(entry["can_ko"], f"{entry_where}.can_ko")
+        move_facts[move] = parsed
+
+    best: frozenset[str] | None = None
+    if "best_damaging_move" in obj:
+        best_raw = obj["best_damaging_move"]
+        if best_raw is None:
+            best_list = []
+        elif isinstance(best_raw, str):
+            best_list = [best_raw]
+        elif isinstance(best_raw, list):
+            best_list = best_raw
         else:
-            can_ko[move] = _bool(entry.get("can_ko", False),
-                                 f"{entry_where}.can_ko")
+            raise CaseError(f"{where}.best_damaging_move: expected a move "
+                            f"name, a list of names, or null")
+        best = frozenset(_move(m, f"{where}.best_damaging_move")
+                         for m in best_list)
+        for move in sorted(best):
+            if move not in ai_moves:
+                raise CaseError(f"{where}.best_damaging_move: {move!r} is not "
+                                f"one of the AI's moves")
+            if not movedata.is_damaging(move):
+                raise CaseError(f"{where}.best_damaging_move: {move!r} is not "
+                                f"a damaging move")
 
-    best_raw = obj["best_damaging_move"]
-    if best_raw is None:
-        best_list = []
-    elif isinstance(best_raw, str):
-        best_list = [best_raw]
-    elif isinstance(best_raw, list):
-        best_list = best_raw
-    else:
-        raise CaseError(f"{where}.best_damaging_move: expected a move name, "
-                        f"a list of names, or null")
-    best = frozenset(_move(m, f"{where}.best_damaging_move") for m in best_list)
-    for move in sorted(best):
-        if move not in ai_moves:
-            raise CaseError(f"{where}.best_damaging_move: {move!r} is not one "
-                            f"of the AI's moves")
-        if not movedata.is_damaging(move):
-            raise CaseError(f"{where}.best_damaging_move: {move!r} is not a "
-                            f"damaging move")
+    def _opt_bool(key):
+        return (_bool(obj[key], f"{where}.{key}") if key in obj else None)
 
-    return TableBackend(
-        effectiveness=effectiveness,
-        can_ko=can_ko,
+    return OverrideBackend(
+        CalcBackend(),
+        move_facts=move_facts,
         best=best,
-        has_super_effective=_bool(obj.get("has_super_effective_move", False),
-                                  f"{where}.has_super_effective_move"),
-        party_outdamages=_bool(obj.get("party_member_outdamages", False),
-                               f"{where}.party_member_outdamages"),
-        last_move_outdamages=_bool(obj.get("target_last_move_outdamages", False),
-                                   f"{where}.target_last_move_outdamages"),
+        has_super_effective=_opt_bool("has_super_effective_move"),
+        party_outdamages=_opt_bool("party_member_outdamages"),
+        last_move_outdamages=_opt_bool("target_last_move_outdamages"),
     )
 
 
@@ -416,10 +386,11 @@ def load_case_dict(doc: dict, *, where: str = "<case>") -> Case:
                        f"{where}.battle.frontier"),
     )
 
-    if "damage" not in doc:
-        raise CaseError(f"{where}: 'damage' section required until the damage "
-                        f"calculator (calc/) exists")
-    damage = _damage(doc["damage"], f"{where}.damage", battle.ai.active.moves)
+    if "damage" in doc:
+        damage = _damage(doc["damage"], f"{where}.damage",
+                         battle.ai.active.moves)
+    else:
+        damage = CalcBackend()
 
     expected = None
     if "expected" in doc:

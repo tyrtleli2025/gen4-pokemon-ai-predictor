@@ -162,9 +162,24 @@ Each stage is only started once the stage before it is tested and stable.
       Kaizo per-Pokémon ability table) and off-scale effectiveness all fail
       loudly with JSON-path locations. The `damage` section becomes optional
       once `calc/` lands.
-- [ ] **Damage calculator port** (`calc/`): can proceed in parallel with the
-      above, gated behind the `Context` interface so nothing downstream needs
-      to change when it lands.
+- [x] **Damage calculator port** (`aicalc/calc/`): the AI-side calc ported
+      statement-for-statement from the pokeplatinum decomp
+      (BattleSystem_CalcMoveDamage, ApplyTypeChart, TrainerAI_CalcDamage,
+      the comparable-damage table) with HZLA's screenshot panels as the
+      oracle — every deterministic panel number in the three cases
+      reproduces exactly, both directions. `CalcBackend` now computes all six
+      `DamageBackend` facts from Battle state; the case-file `damage` section
+      became an optional per-fact override (Bonsly and Miltank run with no
+      damage section at all). The comparable set derives from the scrape
+      (`prio_damage` membership = the AI's NO_COMPARISON set) with a tripwire
+      test. Kaizo Bulldoze/Triple Axel roll power inside the AI's calc, fresh
+      per consultation — roll-dependent facts raise `AmbiguousRandomDamage`
+      naming the override to supply (the Torterra case keeps a one-line
+      override; its pinned 100% Seed Bomb is the majority-roll answer, and
+      the true in-game rate needs save-state resampling). Follow-ups:
+      exact per-consultation Bernoulli modelling (Fraction-valued If),
+      party-roster data for U-turn's expert check, weights for
+      Low Kick/Grass Knot.
 - [ ] **Speed + validation**: tie-count DP to replace naive subset
       enumeration; Monte Carlo oracle for cross-checking; in-game
       save-state resampling to validate the transcribed scripts themselves.

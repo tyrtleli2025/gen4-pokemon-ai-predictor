@@ -161,6 +161,51 @@ Consequences:
 Any hand-supplied `DamageBackend.is_best_damaging_move` must answer over this
 comparable table, not over raw damage output.
 
+## Damage-calc port notes (aicalc/calc/)
+
+Findings from porting TrainerAI_CalcDamage / BattleSystem_CalcMoveDamage /
+BattleSystem_ApplyTypeChart, beyond what the sections above already cover:
+
+- **Two variance orderings.** The battle engine applies the 85–100 roll to
+  base damage *before* the type chart (screenshot roll lists like Karate
+  Chop's `18,18,18,20,...,24` reproduce only under that order), while
+  `TrainerAI_CalcDamage` applies variance *after* `ApplyTypeChart`
+  (`damage * variance / 100`, trainer_ai.c:3105). At the AI's max roll
+  (variance 100) the orders coincide, which is why the panels' max values
+  are valid oracles for the AI path.
+- **The AI's effectiveness buckets have blind spots, ported faithfully.**
+  `AICmd_IfMoveEffectivenessEquals` starts damage at 40, lets the chart (and
+  STAB) scale it, remaps only {120→80, 240→160, 30→20, 15→10}, and compares
+  for exact equality. Plain STAB-neutral lands on 60 → multiplier 1.5 →
+  matches no block's check; Scrappy/Foresight bypassing a Ghost immunity
+  *skips* the immunity rows (neutral), it does not create super-effectiveness;
+  Filter/Expert Belt/Tinted Lens distort damage off the buckets so the AI
+  sees "nothing". `effectiveness_bucket` returns these off-bucket values
+  (1.5, …) so equality checks fail exactly as in-game.
+- **Random power inside the AI calc.** Magnitude (Kaizo Bulldoze) and Psywave
+  (Kaizo Triple Axel) roll on every `TrainerAI_CalcDamage` call with a fresh
+  `BattleSystem_RandNext` — per consultation, not per turn. Facts that the
+  tiers disagree on raise `AmbiguousRandomDamage`; the exact model is a
+  Bernoulli per consultation (a `Chance`-valued predicate), a documented
+  follow-up. Torterra case numbers: Bulldoze AI-side tier damage
+  {7,18,28,39,48,58,79} vs Seed Bomb 43 — 35% of rolls out-damage it.
+- **`BattleSystem_Divide` clamps.** Nonzero dividends never divide to 0 —
+  they clamp to ±1 (battle_lib.c:3599). Ported as `game_divide`.
+- **The self-defender quirk** in `AICmd_IfBattlerDealsMoreDamage`
+  (trainer_ai.c:2188): the target's last move is evaluated with the target as
+  attacker *and* defender (TrainerAI_CalcDamage always defends with
+  `AI_CONTEXT.defender`), and with the AI's own IVs. Ported verbatim.
+- **Vanilla-slot dispatch.** The special-power switch keys on move IDs, so the
+  port dispatches on moves.csv's "ID Number" (the vanilla slot a Kaizo move
+  occupies): 222 Magnitude→Bulldoze, 149 Psywave→Triple Axel, 216 Return
+  (friendship 255 → the "seen as 102BP" note), 218 Frustration (power 0 at
+  255 friendship → falls back to the CSV's 121), 49/69/82/101 fixed damage,
+  360 Gyro Ball, 67/447 weight moves (need `Pokemon.weight_hg`).
+- **Comparable set = `prio_damage` scrape membership.** Kaizo-correct with no
+  effect-index engineering; the tripwire test cross-checks it against
+  moves.csv every run (status ⇒ excluded; comparable at power≤1 ⇒ must have a
+  special dispatch).
+
 ## Structural facts worth reusing
 
 - `IfTargetIsPartner Terminate` opens every flag — irrelevant in singles.

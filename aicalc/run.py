@@ -11,6 +11,7 @@ import sys
 from fractions import Fraction
 from pathlib import Path
 
+from .calc import NeedsManualFact
 from .case_loader import Case, CaseError, load_case
 from .predicates import Context
 from .scoring import action_score_distributions, active_flags, flag_distribution
@@ -101,7 +102,12 @@ def main(argv: list[str] | None = None) -> int:
             print(f"{exc}", file=sys.stderr)
             status = 2
             continue
-        print(report(case))
+        try:
+            print(report(case))
+        except NeedsManualFact as exc:
+            print(f"{path}: {exc}", file=sys.stderr)
+            status = 2
+            continue
         if args.check:
             problems = check(case)
             if problems:

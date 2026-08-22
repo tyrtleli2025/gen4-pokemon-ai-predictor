@@ -70,5 +70,24 @@ def is_high_crit(move: str | None) -> bool:
     return bool(row) and HIGH_CRIT_MARKER in row["Additional Effect"].lower()
 
 
+def power(move: str | None) -> int:
+    row = _row(move) if move else None
+    return int(row["Power"]) if row else 0
+
+
+def move_type(move: str | None) -> str | None:
+    """The move's Kaizo type, e.g. 'Fire' or '???'."""
+    row = _row(move) if move else None
+    return row["Type"] if row else None
+
+
+def vanilla_id(move: str | None) -> int | None:
+    """The vanilla move-slot ID this Kaizo move occupies. The AI's
+    special-power dispatch (Magnitude roll, Psywave roll, Return friendship,
+    weight moves...) keys on this, since repurposed moves keep their slot."""
+    row = _row(move) if move else None
+    return int(row["ID Number"]) if row else None
+
+
 def known(move: str) -> bool:
     return _row(move) is not None

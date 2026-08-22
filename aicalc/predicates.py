@@ -16,6 +16,18 @@ def _stage_multiplier(stage: int) -> Fraction:
     return Fraction(2, 2 - stage)
 
 
+def effective_speed(pokemon: Pokemon, side: Side) -> Fraction:
+    """Current speed with boosts, paralysis and Tailwind (not Trick Room,
+    which inverts order without changing the value). Shared by the speed-order
+    predicate and Gyro Ball's power calculation."""
+    speed = Fraction(pokemon.stats["spe"]) * _stage_multiplier(pokemon.boosts.get("spe", 0))
+    if pokemon.status == "par":
+        speed *= Fraction(1, 4)
+    if side.tailwind:
+        speed *= 2
+    return speed
+
+
 class DamageBackend(Protocol):
     """Hand-supplied answers to damage-dependent questions, until the real
     damage calculator (calc/) exists.
@@ -138,21 +150,13 @@ class Context:
     def protect_streak(self, pokemon: Pokemon) -> int:
         return pokemon.protect_streak
 
-    def _effective_speed(self, pokemon: Pokemon, side: Side) -> Fraction:
-        speed = Fraction(pokemon.stats["spe"]) * _stage_multiplier(pokemon.boosts.get("spe", 0))
-        if pokemon.status == "par":
-            speed *= Fraction(1, 4)
-        if side.tailwind:
-            speed *= 2
-        return speed
-
     def user_is_faster(self) -> bool | None:
         """True if the AI's Pokemon moves before the target this turn, False
         if after, None on an exact speed tie. Accounts for boosts, paralysis,
         Tailwind, and Trick Room.
         """
-        user_speed = self._effective_speed(self.user, self.user_side)
-        target_speed = self._effective_speed(self.target, self.target_side)
+        user_speed = effective_speed(self.user, self.user_side)
+        target_speed = effective_speed(self.target, self.target_side)
         if user_speed == target_speed:
             return None
         faster = user_speed > target_speed

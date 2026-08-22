@@ -1042,17 +1042,13 @@ def test_loader_rejections():
     doc = _case_doc(); doc["damage"]["moves"]["Slash"]["effectiveness"] = 0.6
     _expect_case_error(doc, "0.6")
 
-    doc = _case_doc(); doc["damage"]["moves"].pop("Slash")
-    _expect_case_error(doc, "no entry for AI move")
+    # Damage overrides are now partial (missing entries/facts compute), but
+    # a present entry must be meaningful and name a real AI move.
+    doc = _case_doc(); doc["damage"]["moves"]["Slash"] = {}
+    _expect_case_error(doc, "empty override")
 
     doc = _case_doc(); doc["damage"]["moves"]["Earthquake"] = {"can_ko": False, "effectiveness": 1}
     _expect_case_error(doc, "non-AI move")
-
-    doc = _case_doc(); doc["damage"]["moves"]["Slash"].pop("can_ko")
-    _expect_case_error(doc, "can_ko")
-
-    doc = _case_doc(); doc.pop("damage")
-    _expect_case_error(doc, "damage")
 
     doc = _case_doc(); doc["battle"]["doubles"] = True
     _expect_case_error(doc, "doubles")
@@ -1082,6 +1078,253 @@ def test_table_backend_best_tie():
     case = load_case_dict(doc)
     assert case.damage.is_best_damaging_move(None, Action("Slash", "player"))
     assert case.damage.is_best_damaging_move(None, Action("Strength", "player"))
+
+
+def _reversed_battle(case_path):
+    """The same battlefield with the PLAYER as the calc's attacker side."""
+    from aicalc.case_loader import load_case
+
+    battle = load_case(case_path).battle
+    return Battle(ai=battle.player, player=battle.ai, field=battle.field,
+                  flags=battle.flags)
+
+
+def test_game_divide():
+    from aicalc.calc.divmath import c_div, game_divide
+
+    assert game_divide(0, 100) == 0
+    assert game_divide(24, 100) == 1      # nonzero dividend clamps to 1
+    assert game_divide(-24, 100) == -1
+    assert game_divide(240, 100) == 2
+    assert c_div(-7, 2) == -3             # C truncation, not Python floor
+
+
+def test_ai_damage_screenshot_fixtures():
+    """Every deterministic damage number recorded in the three screenshots'
+    panels, both directions, at the AI's max roll (variance 100)."""
+    from aicalc.case_loader import load_case
+    from aicalc.calc.ai_damage import damage_outcomes
+
+    def ai_max(battle, move):
+        out = damage_outcomes(battle, move, battle.ai.active, battle.ai,
+                              battle.player.active, battle.player)
+        assert len(out) == 1, f"{move} unexpectedly random"
+        return out[0][1]
+
+    roark = load_case("cases/roark_bonsly_vs_machop.json").battle
+    assert ai_max(roark, "Selfdestruct") == 90      # 143.3-169.8% of 53
+    assert ai_max(roark, "Brick Break") == 17       # 26.4-32%
+    assert ai_max(roark, "Accelerock") == 7         # 11.3-13.2%
+
+    miltank = load_case("cases/gardenia_miltank_vs_delcatty.json").battle
+    assert ai_max(miltank, "Body Slam") == 40       # 38.8-47% of 85
+    assert ai_max(miltank, "ThunderPunch") == 28    # 27-32.9%
+
+    torterra = load_case("cases/gardenia_torterra_vs_mrmime.json").battle
+    assert ai_max(torterra, "Seed Bomb") == 43      # 43.9-52.4% of 82
+    assert ai_max(torterra, "Rock Climb") == 32     # 32.9-39%
+    # Bulldoze is 60bp in battle (max 33 = 40.2% on the panel) but the AI
+    # rolls Magnitude tiers for it -- asserted exactly below.
+
+    # Player-direction max rolls, from the screenshots' own roll text.
+    machop_side = _reversed_battle("cases/roark_bonsly_vs_machop.json")
+    assert ai_max(machop_side, "Karate Chop") == 24   # "18-24", 16 rolls listed
+
+    delcatty_side = _reversed_battle("cases/gardenia_miltank_vs_delcatty.json")
+    assert ai_max(delcatty_side, "Hyper Voice") == 58  # "49-58 -- guaranteed 2HKO"
+
+    mrmime_side = _reversed_battle("cases/gardenia_torterra_vs_mrmime.json")
+    assert ai_max(mrmime_side, "Confusion") == 21      # "16-21 -- possible 5HKO"
+    assert ai_max(mrmime_side, "Magical Leaf") == 16   # 14.1-16.1% of 99
+
+    # Bulldoze's AI-side Magnitude tiers, exactly.
+    from fractions import Fraction as F
+    out = damage_outcomes(torterra, "Bulldoze", torterra.ai.active, torterra.ai,
+                          torterra.player.active, torterra.player)
+    assert out == [(F(5, 100), 7), (F(10, 100), 18), (F(20, 100), 28),
+                   (F(30, 100), 39), (F(20, 100), 48), (F(10, 100), 58),
+                   (F(5, 100), 79)]
+
+
+def test_damage_formula_modifiers():
+    """Targeted single-modifier checks against hand-computed values."""
+    from aicalc.calc.damage import calc_move_damage
+
+    def battle_of(atk, dfn, weather=None):
+        return Battle(ai=Side(active=atk, party_remaining=1),
+                      player=Side(active=dfn, party_remaining=1),
+                      field=Field(weather=weather))
+
+    def mon(**kw):
+        base = dict(species="X", level=28, ability="Rock Head", item=None,
+                    types=("Normal",),
+                    stats={"atk": 60, "def": 60, "spa": 60, "spd": 60, "spe": 60},
+                    max_hp=100, current_hp=100)
+        base.update(kw)
+        return Pokemon(**base)
+
+    # Baseline: 60 atk, 90bp Body Slam, L28 -> 60*90*13//60//50 + 2 = 25
+    a, d = mon(), mon()
+    b = battle_of(a, d)
+    assert calc_move_damage(b, "Body Slam", a, d, b.ai, b.player) == 25
+
+    # Burn halves physical damage... unless the attacker has Guts (which
+    # also boosts Attack 1.5x while statused).
+    a2 = mon(status="brn")
+    assert calc_move_damage(b, "Body Slam", a2, d, b.ai, b.player) == 13  # 23//2+2
+    a3 = mon(status="brn", ability="Guts")
+    assert calc_move_damage(b, "Body Slam", a3, d, b.ai, b.player) == 37  # 90 atk, no halving
+
+    # Reflect halves physical; Brick Break ignores it.
+    shielded = Side(active=d, party_remaining=1, reflect=True)
+    assert calc_move_damage(b, "Body Slam", a, d, b.ai, shielded) == 13
+    bb_plain = calc_move_damage(b, "Brick Break", a, d, b.ai, b.player)
+    assert calc_move_damage(b, "Brick Break", a, d, b.ai, shielded) == bb_plain
+
+    # Weather: rain boosts Water 1.5x and halves Fire (before the chart).
+    rain = battle_of(a, d, weather="rain")
+    surf_dry = calc_move_damage(b, "Surf", a, d, b.ai, b.player)
+    surf_rain = calc_move_damage(rain, "Surf", a, d, rain.ai, rain.player)
+    assert surf_rain == ((surf_dry - 2) * 15) // 10 + 2
+    ember_dry = calc_move_damage(b, "Ember", a, d, b.ai, b.player)
+    ember_rain = calc_move_damage(rain, "Ember", a, d, rain.ai, rain.player)
+    assert ember_rain == (ember_dry - 2) // 2 + 2
+
+    # Sandstorm gives Rock-type defenders 1.5x SpD (special moves only).
+    rocky = mon(types=("Rock",))
+    sand = battle_of(a, rocky, weather="sand")
+    clear = battle_of(a, rocky)
+    surf_sand = calc_move_damage(sand, "Surf", a, rocky, sand.ai, sand.player)
+    surf_clear = calc_move_damage(clear, "Surf", a, rocky, clear.ai, clear.player)
+    assert surf_sand < surf_clear
+
+    # Thick Fat halves Fire/Ice power (Mold Breaker pierces it).
+    fat = mon(ability="Thick Fat")
+    assert (calc_move_damage(b, "Ember", a, fat, b.ai, b.player)
+            < calc_move_damage(b, "Ember", a, d, b.ai, b.player))
+    breaker = mon(ability="Mold Breaker")
+    assert (calc_move_damage(b, "Ember", breaker, fat, b.ai, b.player)
+            == calc_move_damage(b, "Ember", breaker, d, b.ai, b.player))
+
+
+def test_effectiveness_buckets():
+    from aicalc.calc.type_chart import effectiveness_bucket
+
+    def battle_of(atk, dfn):
+        return Battle(ai=Side(active=atk, party_remaining=1),
+                      player=Side(active=dfn, party_remaining=1), field=Field())
+
+    def mon(**kw):
+        base = dict(species="X", level=28, ability="Rock Head", item=None,
+                    types=("Normal",),
+                    stats={"atk": 60, "def": 60, "spa": 60, "spd": 60, "spe": 60},
+                    max_hp=100, current_hp=100)
+        base.update(kw)
+        return Pokemon(**base)
+
+    fighter, rock = mon(types=("Fighting",)), mon(types=("Rock",))
+    ghost = mon(types=("Ghost",))
+    b = battle_of(fighter, rock)
+    # STAB-composed values remap onto the true buckets...
+    assert effectiveness_bucket(b, "Karate Chop", fighter, rock) == 2.0
+    # ...but plain STAB lands on 60/40 = 1.5, which matches no bucket check --
+    # exactly the real AI's behaviour.
+    assert effectiveness_bucket(b, "Body Slam", mon(), mon()) == 1.5
+
+    # Ghost immunity to Fighting; Scrappy skips the immunity rows, leaving
+    # the hit NEUTRAL (not super effective) -- with STAB that is the 1.5
+    # blind-spot value again.
+    assert effectiveness_bucket(b, "Karate Chop", fighter, ghost) == 0
+    scrappy = mon(types=("Fighting",), ability="Scrappy")
+    assert effectiveness_bucket(b, "Karate Chop", scrappy, ghost) == 1.5
+    assert effectiveness_bucket(b, "Karate Chop", mon(ability="Scrappy"), ghost) == 1.0
+
+    # Levitate blanks Ground moves; Mold Breaker ignores Levitate.
+    levitator = mon(ability="Levitate")
+    assert effectiveness_bucket(b, "Earthquake", mon(), levitator) == 0
+    assert effectiveness_bucket(b, "Earthquake", mon(ability="Mold Breaker"),
+                                levitator) == 1.0
+
+    # Wonder Guard blanks anything not super effective.
+    guarded = mon(ability="Wonder Guard")
+    assert effectiveness_bucket(b, "Body Slam", mon(), guarded) == 0
+    assert effectiveness_bucket(b, "Karate Chop", mon(), guarded) == 2.0
+
+    # 4x: Fighting vs Normal/Rock dual.
+    dual = mon(types=("Normal", "Rock"))
+    assert effectiveness_bucket(b, "Karate Chop", mon(), dual) == 4.0
+
+
+def test_comparable_set_tripwire():
+    """The scrape-derived comparison set must stay self-consistent with the
+    move data: status moves never compare, and every comparable move either
+    has real power or a special-power dispatch by vanilla slot ID."""
+    from aicalc.calc.ai_damage import comparable
+    from aicalc.flags._blocks import all_moves
+    from aicalc import movedata
+
+    special_ids = {49, 67, 69, 82, 101, 149, 216, 218, 222, 237, 360, 363, 447}
+    for move in sorted(all_moves()):
+        if not movedata.known(move):
+            continue  # Accelerock-style alias rows are checked via moves.csv
+        if movedata.is_status(move):
+            assert not comparable(move), f"{move}: status move in comparison set"
+        if comparable(move) and movedata.power(move) <= 1:
+            assert movedata.vanilla_id(move) in special_ids, \
+                f"{move}: comparable at power<=1 with no special dispatch"
+
+    # Spot checks pinned from DECOMP_NOTES / ai_changes.csv.
+    assert not comparable("Selfdestruct")      # suicide: zeroed out
+    assert not comparable("Head Smash")        # vanilla AI recoil-half
+    assert comparable("Hyper Beam")            # Kaizo "fixed AI" recoil
+    assert comparable("Fly")                   # de-charged in Kaizo
+    assert not comparable("Razor Wind")        # still a charge move
+    assert comparable("Bulldoze")              # alt-power (Magnitude roll)
+
+
+def test_calc_backend_quirks():
+    from aicalc.case_loader import load_case
+    from aicalc.calc import AmbiguousRandomDamage, CalcBackend, NeedsPartyData
+    from aicalc.state import Action
+
+    be = CalcBackend()
+    roark = load_case("cases/roark_bonsly_vs_machop.json").battle
+
+    # Selfdestruct KOs on every roll yet can_ko is False: the KO check is
+    # gated on comparison eligibility and suicide moves are excluded.
+    assert be.can_ko(roark, Action("Selfdestruct", "player")) is False
+
+    # The roll-dependent fact refuses rather than guessing.
+    torterra = load_case("cases/gardenia_torterra_vs_mrmime.json").battle
+    try:
+        be.is_best_damaging_move(torterra, Action("Seed Bomb", "player"))
+    except AmbiguousRandomDamage as exc:
+        assert "Seed Bomb" in str(exc) and "override" in str(exc)
+    else:
+        raise AssertionError("expected AmbiguousRandomDamage")
+
+    # Party data is never silently defaulted.
+    try:
+        be.party_member_outdamages(roark)
+    except NeedsPartyData:
+        pass
+    else:
+        raise AssertionError("expected NeedsPartyData")
+
+
+def test_loader_computed_backend():
+    """A case with no damage section at all loads and computes."""
+    from aicalc.case_loader import load_case_dict
+    from aicalc.calc import CalcBackend
+    from aicalc.state import Action
+
+    doc = _case_doc()
+    del doc["damage"]
+    case = load_case_dict(doc)
+    assert isinstance(case.damage, CalcBackend)
+    # Ursaring's Slash vs Skarmory (Steel/Flying): resisted, best move anyway.
+    assert case.damage.effectiveness(case.battle, Action("Slash", "player")) == 0.5
+    assert case.damage.is_best_damaging_move(case.battle, Action("Slash", "player"))
 
 
 if __name__ == "__main__":
@@ -1130,4 +1373,11 @@ if __name__ == "__main__":
     test_loader_defaults()
     test_loader_rejections()
     test_table_backend_best_tie()
+    test_game_divide()
+    test_ai_damage_screenshot_fixtures()
+    test_damage_formula_modifiers()
+    test_effectiveness_buckets()
+    test_comparable_set_tripwire()
+    test_calc_backend_quirks()
+    test_loader_computed_backend()
     print("all tests passed")
