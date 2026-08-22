@@ -23,6 +23,14 @@ FLAGS = {
     "Prio Damage": "prio_damage",
     "Baton Pass": "baton_pass",
     "Setup First Turn": "setup_first_turn",
+    "Risky": "risky",
+}
+
+# The site's nav links these two pages at typo'd URLs that 404; the real pages
+# live at these hrefs (discovered during the original scrape).
+LINK_FIXES = {
+    "moveJudgment.html": "moveJudgement.html",
+    "moveSkill Swap.html": "moveSkillSwap.html",
 }
 
 UA = "Mozilla/5.0 (research scrape for kaizo-ai-calc; contact: tjli@mit.edu)"
@@ -82,6 +90,7 @@ def main():
     per_move = {}
     failures = []
     for i, (href, display_name) in enumerate(links, 1):
+        href = LINK_FIXES.get(href, href)
         move_id = href[len("move"):-len(".html")]
         raw_path = RAW_DIR / f"{move_id}.html"
         try:

@@ -13,7 +13,7 @@ from __future__ import annotations
 
 from .dist import ScoreDist
 from .flags import (basic, baton_pass, evaluate_attacks, expert, prio_damage,
-                    setup_first_turn)
+                    risky, setup_first_turn)
 from .flags._blocks import block_id_for
 from .predicates import Context, DamageBackend
 from .script import evaluate
@@ -30,6 +30,7 @@ FLAG_MODULES = {
     "setup_first_turn": setup_first_turn,
     "prio_damage": prio_damage,
     "baton_pass": baton_pass,
+    "risky": risky,
 }
 
 

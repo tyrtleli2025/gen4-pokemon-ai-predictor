@@ -97,10 +97,12 @@ Each stage is only started once the stage before it is tested and stable.
       Coverage verified complete against `data/moves.csv` (every Kaizo move has
       a scoring page except `Struggle`, which the AI never scores) — join the
       two sources via `data/move_aliases.json`.
-      Only the six scaffolded flags were extracted; the cached raw HTML also
-      holds `Doubles vs Opponent`, `Doubles vs Ally`, `Risky`, `Check HP`,
-      `Weather` and `Harassment`, so those need no re-fetching — extend the
-      `FLAGS` map in `tools/scrape.py` and re-run the dedup.
+      `Risky` has since been extracted the same way (from cache, no
+      re-fetching): a single block — 50% (128/256) chance of +2 — across 61
+      effect-gated moves. The cached raw HTML still holds `Doubles vs
+      Opponent`, `Doubles vs Ally`, `Check HP`, `Weather` and `Harassment`
+      unextracted; extend the `FLAGS` map in `tools/scrape.py` and re-run the
+      dedup when needed.
 - [x] **Stage 3 — `predicates.py`**: `Context` class answering each derived
       question. Non-damage questions first (first turn, hazards active,
       knows-move, etc.); damage-dependent questions (`can_ko`,
@@ -111,8 +113,9 @@ Each stage is only started once the stage before it is tested and stable.
       `{delta: Fraction}` table supporting `mix` and `convolve`.
 - [x] **Encode flag scripts** (`flags/basic.py`, `evaluate_attacks.py`,
       `expert.py`, `setup_first_turn.py`, `prio_damage.py`, `baton_pass.py`):
-      **all 236/236 blocks encoded** — setup_first_turn 1, prio_damage 1,
-      evaluate_attacks 9, baton_pass 6, basic 105, expert 114. A test asserts
+      **all 237/237 blocks encoded** — setup_first_turn 1, prio_damage 1,
+      evaluate_attacks 9, baton_pass 6, basic 105, expert 114, risky 1
+      (added for the Roark/Bonsly case; `flags/risky.py`). A test asserts
       every scraped block id has an encoding, so gaps fail loudly.
       Damage-dependent questions still route through `DamageBackend`, so a
       real end-to-end run needs the damage calculator (or a hand-supplied
@@ -133,9 +136,17 @@ Each stage is only started once the stage before it is tested and stable.
       synthetic tests instead: base score, per-flag convolution, turn
       sensitivity, no-procedure moves contributing exactly 0, and a
       deterministic immunity case.
-- [ ] **Stage 6 — `select.py`**: argmax with uniform tie-breaking among equal
-      scores. Validate against the Mars/Skarmory scenario (Tailwind 50.20%,
-      Stealth Rock 40.79%, Iron Head 9.01%, Pluck 0%).
+- [x] **Stage 6 — `select.py`**: argmax with uniform tie-breaking among equal
+      scores, via exact naive enumeration over the product of the actions'
+      supports (tie-count DP deferred until it's ever slow).
+      `move_probabilities(battle, damage)` is now the single entry point for
+      the whole pipeline.
+      First real scenario validated end to end with a hand-supplied damage
+      backend: `cases/roark_bonsly_vs_machop.py` (screenshot in `cases/`) —
+      Stealth Rock 89.60%, Selfdestruct 10.40%, Brick Break 0%, Accelerock 0%;
+      pinned as a regression test. The Mars/Skarmory scenario (Tailwind
+      50.20%, Stealth Rock 40.79%, Iron Head 9.01%, Pluck 0%) still needs its
+      battle data entered to validate against known-good numbers.
 - [ ] **Damage calculator port** (`calc/`): can proceed in parallel with the
       above, gated behind the `Context` interface so nothing downstream needs
       to change when it lands.

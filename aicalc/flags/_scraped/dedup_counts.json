@@ -28,5 +28,10 @@
     "distinct_scoring_blocks": 1,
     "moves_with_no_procedure": 375,
     "total_moves": 466
+  },
+  "risky": {
+    "distinct_scoring_blocks": 1,
+    "moves_with_no_procedure": 405,
+    "total_moves": 466
   }
 }

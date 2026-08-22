@@ -237,6 +237,8 @@ Kept verbatim; those entries simply never match.
 - **`ea5a4dc4` (Natural Gift)** — "not holding a berry" is approximated as `item.endswith("Berry")`; a proper berry list from `data/` would be better.
 - **`8f40e077` (Embargo)** — "no item it could Recycle" is read as having no `consumed_item`.
 
+| `risky` | `d4faa70a` (61 moves) | Same "Unconditionally" question as `prio_damage`. | `Risky_Main` | Gated on the `Risky_RiskyEffects` effect table (sleep, halve-defense, copy-move, OHKO, high-crit, confusion, call-random-move, Psywave-like) — the gate lives in the move→block mapping. `IfRandomLessThan 128` jumps to terminate → +2 at 128/256 = 50%, matching bparkpk. Kaizo-consistency check: Sheer Cold (no longer OHKO in Kaizo) is correctly absent from the scraped move list, while Triple Axel and Fury Cutter (Risky per `ai_changes.csv`) are correctly present. |
+
 ### Architectural consequence
 
 Neither encoded block needs to classify move effects. The decomp selects moves via

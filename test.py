@@ -176,14 +176,15 @@ def test_iron_head_evaluate_attacks_block():
 def test_encoded_flags_match_scrape():
     """Every encoded block id must exist in the scrape, and vice versa."""
     from aicalc.flags import (basic, baton_pass, evaluate_attacks, expert,
-                              prio_damage, setup_first_turn)
+                              prio_damage, risky, setup_first_turn)
 
     for flag, module in [("setup_first_turn", setup_first_turn),
                          ("prio_damage", prio_damage),
                          ("evaluate_attacks", evaluate_attacks),
                          ("baton_pass", baton_pass),
                          ("basic", basic),
-                         ("expert", expert)]:
+                         ("expert", expert),
+                         ("risky", risky)]:
         known = set(blocks_for_flag(flag))
         encoded = set(module.BLOCKS)
         assert encoded <= known, f"{flag}: encoded unknown block ids {encoded - known}"
@@ -768,11 +769,11 @@ def test_scoring_all_actions_and_unsupported_flags():
     assert active_flags(battle) == ["basic", "evaluate_attacks", "expert"]
 
     # A flag we have not encoded must refuse loudly rather than under-count.
-    battle.flags = {"basic", "risky"}
+    battle.flags = {"basic", "check_hp"}
     try:
         action_score_distributions(battle, _ExpertDmg())
     except UnsupportedFlags as exc:
-        assert "risky" in str(exc)
+        assert "check_hp" in str(exc)
     else:
         raise AssertionError("expected UnsupportedFlags for an unencoded flag")
 
@@ -787,6 +788,74 @@ def test_scoring_deterministic_scenario():
     # Target is immune -> Basic scores a flat -10 and terminates.
     dist = score_distribution(battle, Action("Tackle", "player"), _ExpertDmg(eff=0))
     assert dist == ScoreDist.certain(BASE_SCORE - 10)
+
+
+def test_risky_block():
+    from aicalc.flags.risky import BLOCKS
+
+    script = BLOCKS[block_id_for("risky", "Selfdestruct")]
+    assert evaluate(script, None).table == {0: Fraction(1, 2), 2: Fraction(1, 2)}
+    # Sheer Cold is no longer an OHKO move in Kaizo, so Risky must not touch it.
+    assert block_id_for("risky", "Sheer Cold") is None
+
+
+def test_action_probabilities():
+    from aicalc.select import action_probabilities
+    from aicalc.state import Action
+
+    a, b, c = Action("A", "player"), Action("B", "player"), Action("C", "player")
+
+    # Dominance: a strictly higher score always wins.
+    assert action_probabilities({a: ScoreDist.certain(101),
+                                 b: ScoreDist.certain(100)}) == {
+        a: Fraction(1), b: Fraction(0)}
+
+    # An exact tie splits uniformly; a strictly lower third wheel gets nothing.
+    three = action_probabilities({a: ScoreDist.certain(100),
+                                  b: ScoreDist.certain(100),
+                                  c: ScoreDist.certain(99)})
+    assert three == {a: Fraction(1, 2), b: Fraction(1, 2), c: Fraction(0)}
+
+    # Mixed: A is 0 or 2 at even odds vs a certain 1 -> 50/50, no ties possible.
+    mixed = action_probabilities({
+        a: ScoreDist.mix([(Fraction(1, 2), ScoreDist.certain(0)),
+                          (Fraction(1, 2), ScoreDist.certain(2))]),
+        b: ScoreDist.certain(1),
+    })
+    assert mixed == {a: Fraction(1, 2), b: Fraction(1, 2)}
+
+    # Randomness plus a tie: A is 100 or 101; B certain 100. A=101 wins (1/2);
+    # A=100 ties and splits (1/4 each).
+    tied = action_probabilities({
+        a: ScoreDist.mix([(Fraction(1, 2), ScoreDist.certain(100)),
+                          (Fraction(1, 2), ScoreDist.certain(101))]),
+        b: ScoreDist.certain(100),
+    })
+    assert tied == {a: Fraction(3, 4), b: Fraction(1, 4)}
+
+
+def test_case_roark_bonsly_vs_machop():
+    """Regression pin for the first real scenario (cases/roark-bonsly-*.png).
+
+    Hand-verified end to end: Stealth Rock sits at 100/101 (Expert's hazard
+    coin flip), Selfdestruct is dragged below by Evaluate Attacks' suicide
+    deprioritise and Expert's high-HP penalty with only Risky's 50% +2
+    pulling it back up, and both attacks sit dominated at a flat 99.
+    """
+    from cases.roark_bonsly_vs_machop import CalcPanelBackend, battle
+    from aicalc.scoring import action_score_distributions
+    from aicalc.select import action_probabilities
+    from aicalc.state import Action
+
+    dists = action_score_distributions(battle, CalcPanelBackend())
+    picks = action_probabilities(dists)
+    by_move = {a.move: p for a, p in picks.items()}
+
+    assert by_move["Stealth Rock"] == Fraction(234885, 262144)
+    assert by_move["Selfdestruct"] == Fraction(27259, 262144)
+    assert by_move["Brick Break"] == 0
+    assert by_move["Accelerock"] == 0
+    assert sum(by_move.values()) == 1
 
 
 if __name__ == "__main__":
@@ -824,4 +893,7 @@ if __name__ == "__main__":
     test_scoring_is_turn_sensitive()
     test_scoring_all_actions_and_unsupported_flags()
     test_scoring_deterministic_scenario()
+    test_risky_block()
+    test_action_probabilities()
+    test_case_roark_bonsly_vs_machop()
     print("all tests passed")
