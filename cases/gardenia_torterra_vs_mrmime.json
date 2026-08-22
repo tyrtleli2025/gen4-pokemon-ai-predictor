@@ -1,0 +1,63 @@
+{
+  "format": 1,
+  "name": "Gardenia's Torterra vs Mr. Mime, Torterra's last Pokemon",
+  "source": "gardenia-torterra-vs-mrmime.png",
+  "notes": [
+    "Damage answers are hand-supplied from the HZLA calc's damage panel, since the damage calculator port (calc/) does not exist yet.",
+    "Torterra's party_remaining = 0 and Mr. Mime's party_remaining = 5 per the user: 'all of torterra's teammates are dead, and my entire team is alive' (Mr. Mime's box shows a 6-mon team, all alive).",
+    "Turn number is not recorded (Field.turn left at its default of 1) because it provably cannot matter: none of Torterra's four moves (Roar, Bulldoze, Rock Climb, Seed Bomb) appear in the Setup First Turn effect table, so that flag contributes exactly 0 to every action regardless of turn.",
+    "mr_mime.turns_active: the screenshot does not show how long Mr. Mime has been out. Roar/Whirlwind's Expert block branches on 'target has been in battle for more than 3 turns', so this is a real fact affecting the score, not a free assumption -- the user confirmed <=3 turns (a recent switch-in), set here as 3.",
+    "Effectiveness: Torterra's four moves are Normal (Roar), Ground (Bulldoze), Rock (Rock Climb) and Grass (Seed Bomb), all neutral (1x) against Mr. Mime's pure Psychic typing -- no super-effective option exists, so has_super_effective_move is false.",
+    "best_damaging_move: Bulldoze/Rock Climb/Seed Bomb are all plain damaging effects (none in sNoDamageCalcMoveEffects), so all three enter the AI's comparable-damage table; Seed Bomb's 43.9-52.4% clearly beats Bulldoze's 32.9-40.2% and Rock Climb's 32.9-39%, so it is the AI's highest-damage move. Roar (0 power) never enters the comparison at all.",
+    "None of the three damaging moves can KO from Mr. Mime's full HP (all max rolls stay under 53%)."
+  ],
+  "battle": {
+    "flags": ["Basic", "Evaluate Atks", "Expert", "1st Turn Setup"],
+    "field": {"weather": "rain"},
+    "ai": {
+      "pokemon": {
+        "species": "Torterra",
+        "level": 28,
+        "ability": "Thick Fat",
+        "item": "Lum Berry",
+        "types": ["Grass", "Ground"],
+        "stats": {"atk": 82, "def": 72, "spa": 43, "spd": 72, "spe": 44},
+        "max_hp": 99,
+        "gender": "M",
+        "moves": ["Roar", "Bulldoze", "Rock Climb", "Seed Bomb"]
+      },
+      "party_remaining": 0
+    },
+    "player": {
+      "pokemon": {
+        "species": "Mr. Mime",
+        "level": 28,
+        "ability": "Filter",
+        "types": ["Psychic"],
+        "stats": {"atk": 27, "def": 62, "spa": 70, "spd": 73, "spe": 50},
+        "max_hp": 82,
+        "gender": "F",
+        "moves": ["Teleport", "Magical Leaf", "Confusion", "Copycat"],
+        "turns_active": 3
+      },
+      "party_remaining": 5
+    }
+  },
+  "damage": {
+    "moves": {
+      "Roar": {"effectiveness": 1},
+      "Bulldoze": {"can_ko": false, "effectiveness": 1},
+      "Rock Climb": {"can_ko": false, "effectiveness": 1},
+      "Seed Bomb": {"can_ko": false, "effectiveness": 1}
+    },
+    "best_damaging_move": "Seed Bomb"
+  },
+  "expected": {
+    "pick_probabilities": {
+      "Seed Bomb": "1",
+      "Roar": "0",
+      "Bulldoze": "0",
+      "Rock Climb": "0"
+    }
+  }
+}

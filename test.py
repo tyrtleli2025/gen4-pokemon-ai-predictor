@@ -889,6 +889,32 @@ def test_case_gardenia_miltank_vs_delcatty():
     assert picks == case.expected
 
 
+def test_case_gardenia_torterra_vs_mrmime():
+    """Regression pin for the third scenario (cases/gardenia-torterra-*.png).
+
+    Fully deterministic -- no Chance node fires anywhere. Torterra is on its
+    last Pokemon, but that only matters to Basic blocks it doesn't have
+    (Explosion, Baton Pass); Roar's Basic block cares about the *target's*
+    party (Mr. Mime has 5 left, so no penalty). Roar's Expert block falls to
+    its flat -3 branch since the target has been out <=3 turns, no hazards,
+    no boosts -> 97. Bulldoze and Rock Climb are both out-damaged by Seed
+    Bomb (-1 each -> 99); Seed Bomb is the comparable-damage best and neither
+    KOs nor hits 4x, so it stays flat at 100 and wins outright.
+    """
+    from aicalc.case_loader import load_case
+    from aicalc.select import move_probabilities
+
+    case = load_case("cases/gardenia_torterra_vs_mrmime.json")
+    picks = {a.move: p
+             for a, p in move_probabilities(case.battle, case.damage).items()}
+
+    assert picks["Seed Bomb"] == 1
+    assert picks["Roar"] == 0
+    assert picks["Bulldoze"] == 0
+    assert picks["Rock Climb"] == 0
+    assert picks == case.expected
+
+
 def _case_doc():
     """A fresh, minimal, valid format-1 case document."""
     return {
@@ -1097,6 +1123,7 @@ if __name__ == "__main__":
     test_action_probabilities()
     test_case_roark_bonsly_vs_machop()
     test_case_gardenia_miltank_vs_delcatty()
+    test_case_gardenia_torterra_vs_mrmime()
     test_canonical_move_names()
     test_canonical_move_solarbeam_collision()
     test_flag_names()
