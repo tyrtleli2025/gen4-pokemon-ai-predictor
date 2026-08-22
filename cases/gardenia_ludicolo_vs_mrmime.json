@@ -1,0 +1,88 @@
+{
+  "format": 1,
+  "name": "Gardenia's Ludicolo vs Mr. Mime, rain up, not turn 1",
+  "source": "gardenia-ludicolo-vs-mrmime.png",
+  "notes": [
+    "First case with NO damage section: every fact is computed by aicalc/calc/ from the battle state alone. Screenshot panel provenance for cross-checking: Aqua Cutter 32.4-40.2% of 77 (max 31), Razor Leaf and Ice Punch both 20.7-24.6% (max 19), Swords Dance 0%. Nothing KOs.",
+    "NOT turn 1 (user confirmed Ludicolo was sent out later), so the 1st Turn Setup flag contributes nothing despite Swords Dance being in its effect table; field.turn is set to 2 as an arbitrary later-turn value.",
+    "Ludicolo's Speed is stored raw (45); the calculator displays 90 because Swift Swim doubles it in rain. The engine does not model Swift Swim, but no consulted block asks about speed order in this case, so it provably cannot affect the result.",
+    "Aqua Cutter's damage stacks Muscle Band (70->77 power), rain (x1.5) and STAB (x1.5) off a 45 Attack; Razor Leaf/Ice Punch stay weak, so Aqua Cutter is the comparable-damage best.",
+    "Aqua Cutter and Razor Leaf carry Expert's high-crit block; their STAB makes the AI's effectiveness value 1.5 (a blind-spot bucket matching neither the '2x or 4x' nor the '1/2, 1/4, 0' check), so both fall to the 'otherwise: 25% of +1' branch. Ice Punch (neutral, no STAB, no Expert block) just eats the out-damaged -1.",
+    "Assumed: both trainers have living party members besides the active Pokemon (nothing in this moveset consults party state either way).",
+    "This case caught two engine bugs on first run: Context.super_effective()/resisted() used ordering comparisons (>1, <1) that wrongly matched the off-bucket 1.5, where the real AI's IfMoveEffectivenessEquals is exact-equality per bucket; and the high-crit Expert block let a missed super-effective 128/256 roll fall through into the otherwise-roll, where the decomp terminates both sides (Expert_HighCritical). Both fixed; the corrected block matches the decomp's two-chained-rolls structure exactly (otherwise = 128/256 * 128/256 = 25%)."
+  ],
+  "battle": {
+    "flags": [
+      "Basic",
+      "Evaluate Atks",
+      "Expert",
+      "1st Turn Setup"
+    ],
+    "field": {
+      "weather": "rain",
+      "turn": 2
+    },
+    "ai": {
+      "pokemon": {
+        "species": "Ludicolo",
+        "level": 24,
+        "ability": "Swift Swim",
+        "item": "Muscle Band",
+        "types": [
+          "Water",
+          "Grass"
+        ],
+        "stats": {
+          "atk": 45,
+          "def": 45,
+          "spa": 55,
+          "spd": 60,
+          "spe": 45
+        },
+        "max_hp": 79,
+        "gender": "F",
+        "moves": [
+          "Swords Dance",
+          "Aqua Cutter",
+          "Razor Leaf",
+          "Ice Punch"
+        ]
+      },
+      "party_remaining": 2
+    },
+    "player": {
+      "pokemon": {
+        "species": "Mr. Mime",
+        "level": 26,
+        "ability": "Filter",
+        "types": [
+          "Psychic"
+        ],
+        "stats": {
+          "atk": 25,
+          "def": 58,
+          "spa": 66,
+          "spd": 68,
+          "spe": 46
+        },
+        "max_hp": 77,
+        "gender": "F",
+        "moves": [
+          "Teleport",
+          "Magical Leaf",
+          "Confusion",
+          "Copycat"
+        ]
+      },
+      "party_remaining": 1
+    }
+  },
+  "expected": {
+    "pick_probabilities": {
+      "Swords Dance": "43/64",
+      "Aqua Cutter": "19/64",
+      "Razor Leaf": "1/32",
+      "Ice Punch": "0"
+    }
+  }
+}

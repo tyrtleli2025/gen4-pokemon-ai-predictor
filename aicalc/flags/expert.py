@@ -252,9 +252,13 @@ ENCORE_MOVES = frozenset({
 
 BLOCKS = {
     # --- high-crit / accuracy / recoil families ----------------------------
-    "b28ff4b6": Seq(RESISTED_NOOP,                       # 21 high-crit moves
-                    If(lambda c: c.super_effective(), Chance(128, 256, _stop(1))),
-                    Chance(64, 256, _stop(1))),
+    # 21 high-crit moves. Three-way if/elif/else: the SE branch terminates on
+    # BOTH sides of its roll (decomp convention for "...and terminate"), so a
+    # missed 128/256 must not fall through into the otherwise-roll.
+    "b28ff4b6": Seq(RESISTED_NOOP,
+                    If(lambda c: c.super_effective(),
+                       Seq(Chance(128, 256, Add(1)), Stop()),
+                       Chance(64, 256, Seq(Add(1), Stop())))),
     "83941872": Seq(RESISTED_NOOP,                       # 19 recoil moves
                     If(lambda c: c.has_any_ability(c.user, "Rock Head", "Magic Guard"),
                        _stop(1))),

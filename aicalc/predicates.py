@@ -178,11 +178,17 @@ class Context:
         return self.damage.effectiveness(self.battle, self.action)
 
     def resisted(self) -> bool:
-        """The Expert flag's recurring "1/2x, 1/4x, or 0x" test."""
-        return self.effectiveness() < 1
+        """The Expert flag's recurring "1/2x, 1/4x, or 0x" test.
+
+        Exact-equality membership, matching AICmd_IfMoveEffectivenessEquals:
+        the AI's off-bucket values (plain STAB's 1.5, Filter/Expert Belt
+        distortions...) match no bucket check at all.
+        """
+        return self.effectiveness() in (0, 0.25, 0.5)
 
     def super_effective(self) -> bool:
-        return self.effectiveness() > 1
+        """The Expert flag's recurring "2x or 4x" test (exact equality)."""
+        return self.effectiveness() in (2, 4)
 
     def has_super_effective_move(self) -> bool:
         if self.damage is None:

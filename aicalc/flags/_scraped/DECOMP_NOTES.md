@@ -206,6 +206,32 @@ BattleSystem_ApplyTypeChart, beyond what the sections above already cover:
   moves.csv every run (status ⇒ excluded; comparable at power≤1 ⇒ must have a
   special dispatch).
 
+## Cascade termination convention (found via the Ludicolo case)
+
+Three decomp routines (`Expert_HighCritical`, `Expert_StatusParalyze`,
+`Expert_Encore`) establish the convention for prose like "If C: p% chance of
+±N **and terminate**" inside an if/elif cascade: **once the branch is entered,
+both sides of the roll terminate** — a missed roll goes to the End label, it
+never falls back into the remaining cascade conditions. (Paralyze: a slower
+attacker whose 92.2% roll misses scores 0; the HP≤70% −1 check is never
+reached.) `Expert_HighCritical` also shows the compiler-golf form: the
+"otherwise" path chains **two** 128/256 rolls through the shared TryScorePlus1
+label to make 25%.
+
+Two engine bugs fixed accordingly (both caught by the Ludicolo case, whose
+STAB attacks produce the off-bucket 1.5): `Context.super_effective()` /
+`resisted()` now use exact bucket membership (`in (2, 4)` / `in (0, 0.25,
+0.5)`) instead of ordering comparisons, matching `IfMoveEffectivenessEquals`;
+and expert block `b28ff4b6` no longer lets a missed SE roll fall through into
+the otherwise-roll.
+
+**Open audit**: other expert.py cascades encoded as
+`Seq(If(C, Chance(n, d, _stop(x))), <more>)` let the miss fall through. Where
+the later conditions are mutually exclusive with C (e.g. the Selfdestruct
+block's HP bands, verified pin-safe) the outcome is identical; where they
+overlap, the encoding is wrong. A systematic block-by-block pass against the
+scraped texts is pending — ~40 candidate sites.
+
 ## Structural facts worth reusing
 
 - `IfTargetIsPartner Terminate` opens every flag — irrelevant in singles.

@@ -915,6 +915,30 @@ def test_case_gardenia_torterra_vs_mrmime():
     assert picks == case.expected
 
 
+def test_case_gardenia_ludicolo_vs_mrmime():
+    """Regression pin for the fourth scenario -- the first with NO damage
+    section: every fact computed by aicalc/calc/. Hand-verified end to end:
+    Swords Dance {100, 102} (Expert's full-HP 50% +2; Setup First Turn silent
+    off turn 1); Aqua Cutter is the computed best (Muscle Band + rain + STAB)
+    at {100: 3/4, 101: 1/4} via the high-crit block's otherwise-25%; Razor
+    Leaf out-damaged at {99, 100}; Ice Punch flat 99.
+    """
+    from aicalc.case_loader import load_case
+    from aicalc.calc import CalcBackend
+    from aicalc.select import move_probabilities
+
+    case = load_case("cases/gardenia_ludicolo_vs_mrmime.json")
+    assert isinstance(case.damage, CalcBackend)  # no override layer at all
+    picks = {a.move: p
+             for a, p in move_probabilities(case.battle, case.damage).items()}
+
+    assert picks["Swords Dance"] == Fraction(43, 64)
+    assert picks["Aqua Cutter"] == Fraction(19, 64)
+    assert picks["Razor Leaf"] == Fraction(1, 32)
+    assert picks["Ice Punch"] == 0
+    assert picks == case.expected
+
+
 def _case_doc():
     """A fresh, minimal, valid format-1 case document."""
     return {
@@ -1367,6 +1391,7 @@ if __name__ == "__main__":
     test_case_roark_bonsly_vs_machop()
     test_case_gardenia_miltank_vs_delcatty()
     test_case_gardenia_torterra_vs_mrmime()
+    test_case_gardenia_ludicolo_vs_mrmime()
     test_canonical_move_names()
     test_canonical_move_solarbeam_collision()
     test_flag_names()
