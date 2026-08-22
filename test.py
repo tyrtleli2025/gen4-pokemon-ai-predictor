@@ -860,6 +860,32 @@ def test_case_roark_bonsly_vs_machop():
     assert sum(by_move.values()) == 1
 
 
+def test_case_gardenia_miltank_vs_delcatty():
+    """Regression pin for the second scenario (cases/gardenia-miltank-*.png).
+
+    Hand-verified: Stealth Rock at 100/101 (Expert's coin flip; the 1st Turn
+    Setup flag is silent because hazards are not in its effect table);
+    Body Slam is the comparable-damage best at a flat 100; ThunderPunch
+    out-damaged at 99; Milk Drink at full HP eats -8 (Basic) and -3 (Expert)
+    for a flat 89.
+    """
+    from cases.gardenia_miltank_vs_delcatty import CalcPanelBackend, battle
+    from aicalc.scoring import action_score_distributions
+    from aicalc.select import action_probabilities
+
+    dists = action_score_distributions(battle, CalcPanelBackend())
+    by_move = {a.move: d for a, d in dists.items()}
+    assert by_move["Milk Drink"] == ScoreDist.certain(89)
+    assert by_move["Body Slam"] == ScoreDist.certain(100)
+    assert by_move["ThunderPunch"] == ScoreDist.certain(99)
+
+    picks = {a.move: p for a, p in action_probabilities(dists).items()}
+    assert picks["Stealth Rock"] == Fraction(3, 4)
+    assert picks["Body Slam"] == Fraction(1, 4)
+    assert picks["Milk Drink"] == 0
+    assert picks["ThunderPunch"] == 0
+
+
 if __name__ == "__main__":
     test_legal_actions_singles()
     test_context_non_damage_predicates()
@@ -898,4 +924,5 @@ if __name__ == "__main__":
     test_risky_block()
     test_action_probabilities()
     test_case_roark_bonsly_vs_machop()
+    test_case_gardenia_miltank_vs_delcatty()
     print("all tests passed")
