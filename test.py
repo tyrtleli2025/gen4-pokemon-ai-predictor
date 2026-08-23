@@ -1351,6 +1351,76 @@ def test_loader_computed_backend():
     assert case.damage.is_best_damaging_move(case.battle, Action("Slash", "player"))
 
 
+def test_item_table():
+    """items.csv-backed item data: full coverage, faithful effects."""
+    from aicalc.calc.items import (canonical_item, hold_effect, known_item,
+                                   natural_gift, plate_type)
+    from aicalc.names import UnknownName
+
+    # The previously hand-curated effects reproduce from the real data.
+    assert hold_effect("Charcoal") == ("boost_Fire", 20)
+    assert hold_effect("NeverMeltIce") == ("boost_Ice", 20)
+    assert hold_effect("Flame Plate") == ("boost_Fire", 20)  # plates boost too
+    assert hold_effect("Muscle Band") == ("muscle_band", 10)
+    assert hold_effect("Wise Glasses") == ("wise_glasses", 10)
+    assert hold_effect("Choice Band") == ("choice_atk", 0)
+    assert hold_effect("Expert Belt") == ("expert_belt", 20)
+    assert hold_effect("Iron Ball") == ("iron_ball", 0)
+    assert hold_effect("Soul Dew") == ("soul_dew", 0)
+
+    # A known item with no damage-relevant hold effect is a correct no-op.
+    assert known_item("Focus Sash") and hold_effect("Focus Sash") == (None, 0)
+    assert known_item("Leftovers") and hold_effect("Leftovers") == (None, 0)
+
+    # Display-spelling tolerance and typo detection.
+    assert canonical_item("focus sash") == "Focus Sash"
+    assert canonical_item("Never-Melt Ice") == "NeverMeltIce"
+    try:
+        canonical_item("Focus Sashh")
+    except UnknownName as exc:
+        assert "Focus Sash" in str(exc)
+    else:
+        raise AssertionError("expected UnknownName")
+
+    # Judgment plates and Natural Gift data.
+    assert plate_type("Flame Plate") == "Fire"
+    assert plate_type("Charcoal") is None
+    assert natural_gift("Lum Berry") == (60, "Flying")
+    assert natural_gift("Oran Berry") == (60, "Poison")
+    assert natural_gift("Charcoal") == (0, None)
+
+
+def test_loader_rejects_unknown_item():
+    doc = _case_doc()
+    doc["battle"]["ai"]["pokemon"]["item"] = "Focus Sashh"
+    _expect_case_error(doc, "Focus Sash")
+
+
+def test_natural_gift_computed():
+    """Natural Gift's power/type come from the held berry; no override needed."""
+    from aicalc.calc.ai_damage import damage_outcomes
+
+    battle = _sample_battle()
+    battle.ai.active.moves = ["Natural Gift"]
+    battle.ai.active.item = "Cheri Berry"   # 60 bp Fire
+    out_berry = damage_outcomes(battle, "Natural Gift", battle.ai.active,
+                                battle.ai, battle.player.active, battle.player)
+    assert len(out_berry) == 1 and out_berry[0][1] > 2
+
+    # Fire 60bp vs Skarmory (Steel/Flying) is super effective; the same berry
+    # granting Poison (Oran) would be 0x into Steel/Flying via Poison->Steel.
+    battle.ai.active.item = "Oran Berry"    # 60 bp Poison -> immune vs Steel
+    out_poison = damage_outcomes(battle, "Natural Gift", battle.ai.active,
+                                 battle.ai, battle.player.active, battle.player)
+    assert out_poison[0][1] == 0
+
+    # No item: power falls back to the move data's own (tiny) power.
+    battle.ai.active.item = None
+    out_none = damage_outcomes(battle, "Natural Gift", battle.ai.active,
+                               battle.ai, battle.player.active, battle.player)
+    assert out_none[0][1] < out_berry[0][1]
+
+
 if __name__ == "__main__":
     test_legal_actions_singles()
     test_context_non_damage_predicates()
@@ -1405,4 +1475,7 @@ if __name__ == "__main__":
     test_comparable_set_tripwire()
     test_calc_backend_quirks()
     test_loader_computed_backend()
+    test_item_table()
+    test_loader_rejects_unknown_item()
+    test_natural_gift_computed()
     print("all tests passed")

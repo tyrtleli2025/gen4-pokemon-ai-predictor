@@ -20,7 +20,7 @@ from ..flags._blocks import block_id_for
 from ..state import Action, Battle, Pokemon, Side
 from .damage import calc_move_damage
 from .divmath import c_div, game_divide
-from .items import hold_effect
+from .items import natural_gift, plate_type
 from .type_chart import (IMMUNE, SUPER_EFFECTIVE, apply_type_chart,
                          effectiveness_bucket)
 
@@ -75,15 +75,17 @@ def _special_outcomes(battle: Battle, move: str, attacker: Pokemon,
     if vid == 237:  # Hidden Power -- IV-driven; no Kaizo move should hit this
         raise NeedsManualFact(f"{move}: Hidden Power IV calculation is not "
                               f"modelled; supply a damage override")
-    if vid == 363:  # Natural Gift -- berry table not modelled
-        raise NeedsManualFact(f"{move}: Natural Gift berry powers are not "
-                              f"modelled; supply a damage override")
-    if vid == 449:  # Judgment -- typed by held plate
-        effect, _ = hold_effect(attacker.item)
-        if (effect or "").startswith("boost_") and "plate" in str(attacker.item).lower():
-            yield (Fraction(1), 0, 0, effect.split("_", 1)[1])
+    if vid == 363:  # Natural Gift -- power/type from the held berry
+        if attacker.ability == "Klutz" or "embargo" in attacker.volatiles:
+            power, gift_type = 0, None
         else:
-            yield (Fraction(1), 0, 0, "Normal")
+            power, gift_type = natural_gift(attacker.item)
+        # Power 0 (no berry) falls back to the move data's own power/type
+        # inside the formula, matching the C.
+        yield (Fraction(1), power, 0, gift_type)
+        return
+    if vid == 449:  # Judgment -- typed by the held Arceus plate
+        yield (Fraction(1), 0, 0, plate_type(attacker.item) or "Normal")
         return
     if vid == 360:  # Gyro Ball
         from ..predicates import effective_speed

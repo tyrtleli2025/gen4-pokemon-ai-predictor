@@ -10,6 +10,7 @@ https://docs.google.com/spreadsheets/d/1y95UYKY9HNgZjUlbeZbQ3BWf5IqcFqAkmstC-OSa
 | `ai_changes.csv` | AI Changes | Kaizo-specific deviations from vanilla Gen 4 trainer AI |
 | `ability_changes.csv` | Ability Changes | Ability diffs vs. vanilla |
 | `move_aliases.json` | — | Name mismatches between the scoring site and this sheet |
+| `items.csv` | — (generated from the pokeplatinum decomp by `tools/gen_items.py`) | All 446 items: hold effect, effect param, Natural Gift power/type, Fling power/effect. The Kaizo spreadsheet's Item Changes tab was empty at export, so vanilla item data stands. |
 
 ## Reconciling the two sources by move name
 

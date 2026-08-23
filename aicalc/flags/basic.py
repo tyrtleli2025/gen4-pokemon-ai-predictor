@@ -14,6 +14,11 @@ is already baked into which moves share a block, so it isn't repeated here.
 from ..script import Add, Chance, If, Seq, Stop
 
 
+def _natural_gift_power(item: str | None) -> int:
+    from ..calc.items import natural_gift
+    return natural_gift(item)[0]
+
+
 # --- shared clauses ---------------------------------------------------------
 
 def _stop(delta: int) -> Seq:
@@ -393,9 +398,11 @@ BLOCKS = {
                     If(lambda c: c.target.item is None, _stop(-10))),
     "b85507c9": Seq(IMMUNE, WONDER_GUARD,                                 # Last Resort
                     If(lambda c: not c.used_all_other_moves(c.user), _stop(-10))),
-    "ea5a4dc4": Seq(VARIABLE_TYPE,                                        # Natural Gift
-                    If(lambda c: c.user.item is None
-                       or not c.user.item.endswith("Berry"), _stop(-10))),
+    # Natural Gift: "not holding a berry" is checked via the item table --
+    # exactly the berries grant a Natural Gift power.
+    "ea5a4dc4": Seq(VARIABLE_TYPE,
+                    If(lambda c: _natural_gift_power(c.user.item) == 0,
+                       _stop(-10))),
     # Recycle restores a *consumed* item, so the check is on consumed_item,
     # not on what's currently held.
     "2baad71f": Seq(If(lambda c: c.user.consumed_item is None, _stop(-10))),

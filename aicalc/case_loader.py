@@ -25,6 +25,7 @@ from pathlib import Path
 
 from . import movedata
 from .calc import CalcBackend, OverrideBackend
+from .calc.items import canonical_item
 from .names import UnknownName, canonical_flag, canonical_move, squash
 from .state import VOLATILES, Battle, Field, Pokemon, Side
 
@@ -180,13 +181,22 @@ def _pokemon(obj, where: str, *, moves_required: bool) -> Pokemon:
 
     pp_left = _dict(obj.get("pp_left", {}), f"{where}.pp_left")
 
-    item = obj.get("item")
-    consumed = obj.get("consumed_item")
+    def _item(key):
+        value = obj.get(key)
+        if value is None:
+            return None
+        try:
+            return canonical_item(_str(value, f"{where}.{key}"))
+        except UnknownName as exc:
+            raise CaseError(f"{where}.{key}: {exc}") from None
+
+    item = _item("item")
+    consumed = _item("consumed_item")
     return Pokemon(
         species=_str(obj["species"], f"{where}.species"),
         level=_int(obj["level"], f"{where}.level", minimum=1),
         ability=ability,
-        item=None if item is None else _str(item, f"{where}.item"),
+        item=item,
         types=types,
         stats=stats,
         max_hp=max_hp,
@@ -204,8 +214,7 @@ def _pokemon(obj, where: str, *, moves_required: bool) -> Pokemon:
                           minimum=1),
         moves_used={_move(m, f"{where}.moves_used[{i}]")
                     for i, m in enumerate(obj.get("moves_used", []))},
-        consumed_item=None if consumed is None else _str(consumed,
-                                                         f"{where}.consumed_item"),
+        consumed_item=consumed,
         pp_left={_move(m, f"{where}.pp_left"): _int(pp, f"{where}.pp_left[{m!r}]",
                                                     minimum=0)
                  for m, pp in pp_left.items()},
