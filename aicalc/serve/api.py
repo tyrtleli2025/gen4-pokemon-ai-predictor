@@ -193,24 +193,42 @@ def _trunc_pct(value: int, max_hp: int) -> float:
 
 
 def _ko_text(outcomes, defender) -> str:
+    """Showdown-style KO line: the earliest possible N-hit KO with its exact
+    probability, treating each hit as an independent draw from the per-hit
+    damage distribution (roll and, for Bulldoze/Triple Axel, power tier are
+    re-rolled every use)."""
     hp = defender.current_hp
-    p_ohko = sum((prob * Fraction(sum(1 for r in rolls if r >= hp), 16)
-                  for prob, _, rolls in outcomes), Fraction(0))
-    if p_ohko == 1:
-        return "guaranteed OHKO"
-    if p_ohko > 0:
-        return f"{float(p_ohko) * 100:.1f}% chance to OHKO"
-    lo = min(min(rolls) for _, _, rolls in outcomes)
-    hi = max(max(rolls) for _, _, rolls in outcomes)
+    dist: dict[int, Fraction] = {}
+    for prob, _, rolls in outcomes:
+        for roll in rolls:
+            dist[roll] = dist.get(roll, Fraction(0)) + prob * Fraction(1, 16)
+
+    hi = max(dist)
     if hi == 0:
         return "no damage"
-    n_best = -(-hp // hi)   # ceil: fewest hits at max rolls
-    n_sure = -(-hp // lo) if lo else None
-    if n_sure is None:
-        return f"{n_best}HKO best case"
-    if n_best == n_sure:
-        return f"guaranteed {n_sure}HKO"
-    return f"{n_best}HKO best case, guaranteed {n_sure}HKO"
+    n = -(-hp // hi)   # ceil: fewest hits that can possibly KO
+
+    # Exact P(sum of n draws >= hp), collapsing all sums >= hp into one
+    # bucket so the state space stays bounded by the defender's HP.
+    sums = {0: Fraction(1)}
+    for _ in range(n):
+        nxt: dict[int, Fraction] = {}
+        for total, p in sums.items():
+            for dmg, q in dist.items():
+                key = min(total + dmg, hp)
+                nxt[key] = nxt.get(key, Fraction(0)) + p * q
+        sums = nxt
+    p_ko = sums.get(hp, Fraction(0))
+
+    label = "OHKO" if n == 1 else f"{n}HKO"
+    if p_ko == 1:
+        return f"guaranteed {label}"
+    pct = f"{float(p_ko) * 100:.1f}"
+    if pct == "0.0":
+        pct = "<0.1"
+    elif pct == "100.0":
+        pct = ">99.9"
+    return f"{pct}% chance to {label}"
 
 
 def _damage_entry(battle, move, attacker, atk_side, defender, def_side) -> dict:

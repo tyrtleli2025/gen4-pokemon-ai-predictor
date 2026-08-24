@@ -1703,7 +1703,8 @@ def test_serve_api_damage_panel():
     assert ai["Aqua Cutter"]["min_pct"] == 32.4
     assert ai["Aqua Cutter"]["max_pct"] == 40.2
     assert ai["Aqua Cutter"]["max"] == 31
-    assert ai["Aqua Cutter"]["ko"] == "3HKO best case, guaranteed 4HKO"
+    # 3 hits KO unless all three are the single min roll: 4095/4096.
+    assert ai["Aqua Cutter"]["ko"] == ">99.9% chance to 3HKO"
     assert ai["Razor Leaf"]["max"] == 19 and ai["Razor Leaf"]["max_pct"] == 24.6
     assert ai["Ice Punch"]["max"] == 19 and ai["Ice Punch"]["max_pct"] == 24.6
     assert len(ai["Ice Punch"]["outcomes"]) == 1
