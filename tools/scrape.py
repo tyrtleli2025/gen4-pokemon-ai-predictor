@@ -75,7 +75,10 @@ def clean_section_text(raw: str) -> str:
         if line == "" and collapsed and collapsed[-1] == "":
             continue
         collapsed.append(line)
-    return "\n".join(collapsed)
+    # The Dragon Rage page closes its Doubles vs Opponent section with a
+    # typo'd "/p>" (missing "<") that survives tag-stripping as text; the
+    # section regex already stopped at the next <h2>, so just drop it.
+    return re.sub(r"/p>\s*$", "", "\n".join(collapsed)).rstrip()
 
 
 def extract_flags(page_html: str) -> dict[str, str]:
@@ -84,7 +87,9 @@ def extract_flags(page_html: str) -> dict[str, str]:
         pattern = (
             r'<h2 style="color:black;">\s*'
             + re.escape(site_label)
-            + r'\s*</h2>\s*<p style="color:black;">(.*?)</p>'
+            + r'\s*</h2>\s*<p style="color:black;">(.*?)'
+            # normal close, or (Dragon Rage's typo'd "/p>") the next section
+            + r'(?:</p>|(?=<h2 style="color:black;">))'
         )
         m = re.search(pattern, page_html, re.DOTALL)
         out[key] = clean_section_text(m.group(1)) if m else "(MISSING SECTION)"

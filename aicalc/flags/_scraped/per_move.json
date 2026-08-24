@@ -1365,7 +1365,7 @@
     "baton_pass": "(No applicable AI procedures)",
     "setup_first_turn": "(No applicable AI procedures)",
     "risky": "(No applicable AI procedures)",
-    "tag_opponent": "If the move deals the most damage to the target when considering all of the user's ally's moves as well (regardless of if the ally is alive):\n\n50% (128/256) chance of score +1 and terminate/p>\n\nDoubles vs Ally\nUnconditionally:\n\nScore -30 and terminate",
+    "tag_opponent": "If the move deals the most damage to the target when considering all of the user's ally's moves as well (regardless of if the ally is alive):\n\n50% (128/256) chance of score +1 and terminate",
     "tag_ally": "Unconditionally:\n\nScore -30 and terminate",
     "check_hp": "(No applicable AI procedures)",
     "weather": "(No applicable AI procedures)",

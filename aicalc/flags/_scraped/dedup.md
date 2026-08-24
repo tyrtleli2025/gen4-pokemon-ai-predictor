@@ -7,7 +7,7 @@
 - **baton_pass**: 6 distinct scoring blocks to encode (290/466 moves have no procedure for this flag)
 - **setup_first_turn**: 1 distinct scoring blocks to encode (375/466 moves have no procedure for this flag)
 - **risky**: 1 distinct scoring blocks to encode (405/466 moves have no procedure for this flag)
-- **tag_opponent**: 21 distinct scoring blocks to encode (174/466 moves have no procedure for this flag)
+- **tag_opponent**: 20 distinct scoring blocks to encode (174/466 moves have no procedure for this flag)
 - **tag_ally**: 12 distinct scoring blocks to encode (0/466 moves have no procedure for this flag)
 - **check_hp**: 18 distinct scoring blocks to encode (356/466 moves have no procedure for this flag)
 - **weather**: 4 distinct scoring blocks to encode (462/466 moves have no procedure for this flag)
@@ -4936,7 +4936,7 @@ Absorb, Accelerock, Acid, Acid Armor, Aerial Ace, Aeroblast, Agility, Air Slash,
 
 ## tag_opponent
 
-- 21 distinct scoring blocks (+ 174 moves with no applicable procedure) out of 466 moves
+- 20 distinct scoring blocks (+ 174 moves with no applicable procedure) out of 466 moves
 
 
 ### Shared by 226 move(s): Absorb, Accelerock, Acid, Aerial Ace, Aeroblast, Air Cutter, Air Slash, AncientPower, Aqua Cutter, Assurance, Astonish, Attack Order, Aura Sphere, Aurora Beam, Avalanche, Beat Up, Bite, Blizzard, Body Slam, Bone Club, Bone Rush, Bonemerang, Bounce, Brick Break, Bug Bite, Bug Buzz, Bulldoze, Bullet Punch, Bullet Seed, Chatter, Confusion, Constrict, Crabhammer, Cross Chop, Cross Poison, Crunch, Crush Claw, Crush Grip, Cut, Dark Pulse, Dig, Dizzy Punch, Double Hit, Double Kick, Double-Edge, DoubleSlap, Draco Meteor, Dragon Claw, Dragon Pulse, Dragon Rush, DragonBreath, Drain Punch, Drill Peck, Drill Run, DynamicPunch, Earth Power, Egg Bomb, Energy Ball, Extrasensory, ExtremeSpeed, Facade, Faint Attack, Fake Out, False Swipe, Feint, Flash Cannon, Fly, Focus Blast, Force Palm, Frenzy Plant, Frustration, Fury Attack, Fury Swipes, Giga Drain, Giga Impact, Grass Knot, Gunk Shot, Gust, Gyro Ball, HP Dark, HP Fighting, HP Flying, HP Ghost, HP Grass, HP Ground, HP Ice, HP Psychic, HP Rock, Hail Ball, Hammer Arm, Headbutt, Hi Jump Kick, Hidden Power, Hurricane, Hydro Cannon, Hyper Beam, Hyper Fang, Hyper Voice, Ice Ball, Ice Beam, Ice Fang, Ice Punch, Ice Shard, Icicle Spear, Icy Wind, Iron Head, Iron Tail, Judgment, Jump Kick, Karate Chop, Knock Off, Last Resort, Leaf Blade, Leaf Storm, Leech Life, Lick, Low Kick, Luster Purge, Mach Punch, Magical Leaf, Magnet Bomb, Mega Drain, Mega Kick, Mega Punch, Megahorn, Metal Claw, Meteor Mash, Mirror Shot, Mist Ball, Mud Bomb, Mud Shot, Mud-Slap, Mystical Fire, Natural Gift, Needle Arm, Night Slash, Ominous Wind, Outrage, Pay Day, Payback, Peck, Petal Dance, Pin Missile, Pluck, Poison Fang, Poison Jab, Poison Sting, Poison Tail, Pound, Powder Snow, Power Gem, Power Whip, Psybeam, Psychic, Psycho Boost, Psycho Cut, Pursuit, Quick Attack, Rage, Razor Leaf, Return, Revenge, Roar of Time, Rock Ball, Rock Blast, Rock Climb, Rock Slide, Rock Smash, Rock Throw, Rock Tomb, Rock Wrecker, Rolling Kick, Sand Tomb, Scratch, Secret Power, Seed Bomb, Seed Flare, Shadow Ball, Shadow Claw, Shadow Force, Shadow Punch, Shadow Sneak, Sheer Cold, Signal Beam, Silver Wind, Sky Attack, Sky Uppercut, Slam, Slash, Sludge, Sludge Bomb, SmellingSalt, Smog, Snore, Solar-Beam, Spacial Rend, Steel Wing, Stomp, Stone Edge, Strength, Submission, Sucker Punch, Superpower, Swallow, Swift, Tackle, Thrash, Tri Attack, Triple Kick, Twineedle, Twister, U-turn, Uproar, Vacuum Wave, ViceGrip, Vine Whip, Vital Throw, Wake-Up Slap, Waterfall, Weather Ball, Wing Attack, Wood Hammer, Wrap, Wring Out, X-Scissor, Zen Headbutt
@@ -5118,7 +5118,7 @@ Score +1 and continue
 ```
 
 
-### Shared by 5 move(s): Fury Cutter, Night Shade, Seismic Toss, SonicBoom, Triple Axel
+### Shared by 6 move(s): Dragon Rage, Fury Cutter, Night Shade, Seismic Toss, SonicBoom, Triple Axel
 
 ```
 If the move deals the most damage to the target when considering all of the user's ally's moves as well (regardless of if the ally is alive):
@@ -5212,20 +5212,6 @@ Score +3 and terminate
 Otherwise:
 
 Score -3 and terminate
-```
-
-
-### Shared by 1 move(s): Dragon Rage
-
-```
-If the move deals the most damage to the target when considering all of the user's ally's moves as well (regardless of if the ally is alive):
-
-50% (128/256) chance of score +1 and terminate/p>
-
-Doubles vs Ally
-Unconditionally:
-
-Score -30 and terminate
 ```
 
 
