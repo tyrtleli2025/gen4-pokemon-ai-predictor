@@ -232,6 +232,23 @@ block's HP bands, verified pin-safe) the outcome is identical; where they
 overlap, the encoding is wrong. A systematic block-by-block pass against the
 scraped texts is pending — ~40 candidate sites.
 
+### Priority kills: +6 needs the PRIORITY_1 *effect*, not data priority
+
+Challenged via a UI scenario (Bonsly vs a 2-HP Grotle: Brick Break and
+Accelerock both KO, engine says 50/50, intuition says "priority kill wins").
+The engine is right. `EvalAttack_ApplyKillBonuses`' +2-then-+4 fall-through
+fires on `IfCurrentMoveEffectEqualTo BATTLE_EFFECT_PRIORITY_1` — and the
+decomp's own comment warns "this checks the move's _effect_, not the priority
+score in its data". The vendored Kaizo effect indices (`data/move_effects.csv`)
+confirm: bparkpk's seven +6 moves are exactly the seven with effect
+PRIORITY_1, while **Accelerock, ExtremeSpeed and Sucker Punch carry priority
+via the data field with effect HIT** — the AI gives their kills the ordinary
++4. Third member of the effect-index blind-spot family (with Bulldoze's
+invisible speed drop and Selfdestruct's damage-comparison exclusion). A
+tripwire test pins the +6 block to the PRIORITY_1 effect set. Empirical check
+if ever doubted: a 2-HP save-state — real Bonsly picking ~50/50 between two
+killing moves confirms; ~100% Accelerock refutes.
+
 ## Structural facts worth reusing
 
 - `IfTargetIsPartner Terminate` opens every flag — irrelevant in singles.

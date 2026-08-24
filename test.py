@@ -1279,6 +1279,29 @@ def test_effectiveness_buckets():
     assert effectiveness_bucket(b, "Karate Chop", mon(), dual) == 4.0
 
 
+def test_priority_kill_bonus_matches_effect_index():
+    """The +6-on-KO eval block must be exactly the moves whose Kaizo effect
+    index is BATTLE_EFFECT_PRIORITY_1. The decomp's kill-bonus check reads
+    the move's EFFECT, not the priority number in its data -- so Accelerock,
+    ExtremeSpeed and Sucker Punch (priority via the data field, effect HIT)
+    correctly get only the ordinary +4 on kills."""
+    import csv
+    from aicalc.flags._blocks import blocks_for_flag
+
+    priority_effect = set()
+    with open("data/move_effects.csv") as fh:
+        for row in csv.DictReader(fh):
+            if row["Effect"] == "BATTLE_EFFECT_PRIORITY_1":
+                priority_effect.add(row["Name"])
+
+    _, plus6_moves = blocks_for_flag("evaluate_attacks")["469e0e0f"]
+    assert set(plus6_moves) == priority_effect
+
+    # The famous data-priority-but-not-effect-priority moves stay outside.
+    for move in ("Accelerock", "ExtremeSpeed", "Sucker Punch"):
+        assert move not in priority_effect
+
+
 def test_comparable_set_tripwire():
     """The scrape-derived comparison set must stay self-consistent with the
     move data: status moves never compare, and every comparable move either
@@ -1595,6 +1618,7 @@ if __name__ == "__main__":
     test_ai_damage_screenshot_fixtures()
     test_damage_formula_modifiers()
     test_effectiveness_buckets()
+    test_priority_kill_bonus_matches_effect_index()
     test_comparable_set_tripwire()
     test_calc_backend_quirks()
     test_loader_computed_backend()
