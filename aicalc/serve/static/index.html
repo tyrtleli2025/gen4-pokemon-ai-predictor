@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kaizo AI Simulator</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header>
+  <h1>Kaizo AI Simulator</h1>
+  <div class="header-actions">
+    <label class="file-btn">Load case JSON<input type="file" id="load-case" accept=".json"></label>
+    <button id="export-case">Export case JSON</button>
+  </div>
+</header>
+
+<main>
+  <section class="column" id="ai-column">
+    <h2>AI side (opponent)</h2>
+    <div class="row">
+      <input id="trainer-search" list="trainer-list" placeholder="Search trainer…">
+      <datalist id="trainer-list"></datalist>
+    </div>
+    <div id="trainer-party" class="party-strip"></div>
+    <div id="ai-flags" class="flag-row"></div>
+    <div id="ai-mon" class="mon-panel"></div>
+    <div class="side-conditions" id="ai-side"></div>
+  </section>
+
+  <section class="column" id="field-column">
+    <h2>Field</h2>
+    <div id="field-controls"></div>
+    <h2>Pick probabilities</h2>
+    <div id="prob-panel"><p class="placeholder">Set both Pokémon to compute.</p></div>
+    <div id="error-panel"></div>
+    <details><summary>Raw battle JSON</summary>
+      <textarea id="raw-json" rows="14" spellcheck="false"></textarea>
+      <button id="apply-raw">Apply raw JSON</button>
+    </details>
+  </section>
+
+  <section class="column" id="player-column">
+    <h2>Player side (you)</h2>
+    <div class="row">
+      <input id="player-species" list="species-list" placeholder="Species…">
+      <datalist id="species-list"></datalist>
+      <label>Lv <input id="player-level" type="number" value="50" min="1" max="100"></label>
+      <select id="player-nature"></select>
+    </div>
+    <div class="row">
+      <label>Item <input id="player-item" placeholder="(none)"></label>
+      <label>Ability <input id="player-ability" placeholder="ability"></label>
+    </div>
+    <div class="row" id="player-ivs"></div>
+    <div class="row" id="player-moves"></div>
+    <button id="player-build">Set player Pokémon</button>
+    <div id="player-mon" class="mon-panel"></div>
+    <div class="side-conditions" id="player-side"></div>
+  </section>
+</main>
+
+<datalist id="move-list"></datalist>
+<script src="/app.js"></script>
+</body>
+</html>

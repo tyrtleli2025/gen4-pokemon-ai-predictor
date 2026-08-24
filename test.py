@@ -1480,6 +1480,49 @@ def test_trainer_dataset_full_roundtrip():
     assert count > 3000
 
 
+def test_serve_api_probabilities():
+    """The API layer reproduces every pinned case's exact fractions."""
+    import json as _json
+    from aicalc.serve import api
+
+    for path in ("cases/roark_bonsly_vs_machop.json",
+                 "cases/gardenia_miltank_vs_delcatty.json",
+                 "cases/gardenia_torterra_vs_mrmime.json",
+                 "cases/gardenia_ludicolo_vs_mrmime.json"):
+        doc = _json.load(open(path))
+        expected = doc["expected"]["pick_probabilities"]
+        out = api.probabilities(doc)
+        got = {a["move"]: Fraction(a["pick"]["fraction"]) for a in out["actions"]}
+        from aicalc.names import canonical_move
+        want = {canonical_move(m): Fraction(p) for m, p in expected.items()}
+        assert got == want, path
+
+    # Error path: a typo'd move must raise CaseError with a suggestion.
+    from aicalc.case_loader import CaseError
+    doc = _json.load(open("cases/roark_bonsly_vs_machop.json"))
+    doc["battle"]["ai"]["pokemon"]["moves"][2] = "Brick Braek"
+    try:
+        api.probabilities(doc)
+    except CaseError as exc:
+        assert "Brick Break" in str(exc)
+    else:
+        raise AssertionError("expected CaseError")
+
+
+def test_serve_api_trainer_and_tables():
+    from aicalc.serve import api
+
+    idx = api.trainers()["trainers"]
+    gardenia = next(t for t in idx if t["name"] == "Leader Gardenia")
+    full = api.trainer(gardenia["id"])
+    assert any(p["pokemon"]["species"] == "Ludicolo" for p in full["party"])
+    assert all(p["ai_flags"] for p in full["party"])
+
+    tables = api.tables()
+    assert tables["moves"]["Aqua Cutter"]["effect"] == "BATTLE_EFFECT_HIGH_CRITICAL"
+    assert tables["species"]["Bonsly"]["base"]["def"] == 95
+
+
 if __name__ == "__main__":
     test_legal_actions_singles()
     test_context_non_damage_predicates()
@@ -1539,4 +1582,6 @@ if __name__ == "__main__":
     test_natural_gift_computed()
     test_trainer_dataset()
     test_trainer_dataset_full_roundtrip()
+    test_serve_api_probabilities()
+    test_serve_api_trainer_and_tables()
     print("all tests passed")
