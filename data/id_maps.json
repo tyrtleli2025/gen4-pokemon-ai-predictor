@@ -1,0 +1,32 @@
+{
+ "species": {
+  "Bad Egg": "Bad Ending"
+ },
+ "moves": {
+  "Comet Punch": "Water Ball",
+  "Bind": "Mystical Fire",
+  "Horn Attack": "Fire Ball",
+  "Defense Curl": "Rock Ball",
+  "Skull Bash": "Solar-Beam",
+  "Spike Cannon": "Hail Ball",
+  "Barrage": "Hurricane",
+  "Psywave": "Triple Axel",
+  "Splash": "HP Water",
+  "Conversion": "HP Ice",
+  "Nightmare": "HP Ghost",
+  "Spark": "Wild Charge",
+  "Magnitude": "Bulldoze",
+  "Rapid Spin": "HP Fire",
+  "Spit Up": "HP Rock",
+  "Taunt": "HP Dark",
+  "Trick": "HP Psychic",
+  "Snatch": "Drill Run",
+  "Arm Thrust": "HP Fighting",
+  "Mud Sport": "HP Ground",
+  "Covet": "HP Grass",
+  "Water Sport": "Scald",
+  "Healing Wish": "HP Electric",
+  "Heal Block": "Aqua Cutter",
+  "Switcheroo": "HP Flying"
+ }
+}

@@ -24,6 +24,25 @@ TYPE_NAMES = {
 }
 
 
+#: Items Kaizo uses that do not exist in vanilla Platinum's item data (they
+#: appear on trainer sets in the HZLA dataset). Their in-battle hold effects
+#: are not documented anywhere we trust, so they are recorded as NONE -- the
+#: damage formula treats them as no-ops, and any real effect (e.g. Berserk
+#: Gene's Gen 2 behaviour, if Kaizo implements it) must be hand-applied in
+#: the recorder.
+HACK_ITEMS = [
+    {"Name": "Big Nugget", "Hold Effect": "HOLD_EFFECT_NONE", "Effect Param": 0,
+     "Natural Gift Power": 0, "Natural Gift Type": "", "Fling Power": 30,
+     "Fling Effect": "FLING_EFFECT_NONE"},
+    {"Name": "RageCandyBar", "Hold Effect": "HOLD_EFFECT_NONE", "Effect Param": 0,
+     "Natural Gift Power": 0, "Natural Gift Type": "", "Fling Power": 30,
+     "Fling Effect": "FLING_EFFECT_NONE"},
+    {"Name": "Berserk Gene", "Hold Effect": "HOLD_EFFECT_NONE", "Effect Param": 0,
+     "Natural Gift Power": 0, "Natural Gift Type": "", "Fling Power": 30,
+     "Fling Effect": "FLING_EFFECT_NONE"},
+]
+
+
 def main():
     rows = []
     for path in sorted(DECOMP_ITEMS.glob("*.json")):
@@ -46,6 +65,7 @@ def main():
         writer = csv.DictWriter(fh, fieldnames=list(rows[0]))
         writer.writeheader()
         writer.writerows(rows)
+        writer.writerows(HACK_ITEMS)
     print(f"wrote {len(rows)} items to {OUT}")
 
 

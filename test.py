@@ -1421,6 +1421,65 @@ def test_natural_gift_computed():
     assert out_none[0][1] < out_berry[0][1]
 
 
+def test_trainer_dataset():
+    """The vendored HZLA dataset reproduces every pinned case's Pokemon."""
+    from aicalc.trainers import (build_pokemon, decode_ai_flags, load_trainer,
+                                 species_row, trainer_index)
+
+    idx = trainer_index()
+
+    def entry_for(trainer_name, species, level):
+        for t in idx:
+            if t["name"] != trainer_name:
+                continue
+            if any(p["species"] == species and p["level"] == level
+                   for p in t["party"]):
+                full = load_trainer(t["id"])
+                return next(p for p in full["party"]
+                            if p["species"] == species and p["level"] == level)
+        raise AssertionError(f"{trainer_name} {species} L{level} not found")
+
+    # The four pinned cases' AI mons: stats AND flags, computed from data
+    # alone, must match what was hand-transcribed from the screenshots.
+    pins = [
+        ("Leader Roark", "Bonsly", 15, 44,
+         {"atk": 33, "def": 41, "spa": 10, "spd": 23, "spe": 12},
+         {"basic", "evaluate_attacks", "expert", "risky"}),
+        ("Leader Gardenia", "Miltank", 26, 93,
+         {"atk": 64, "def": 67, "spa": 33, "spd": 44, "spe": 65},
+         {"basic", "evaluate_attacks", "expert", "setup_first_turn"}),
+        ("Leader Gardenia", "Torterra", 28, 99,
+         {"atk": 82, "def": 72, "spa": 43, "spd": 72, "spe": 44},
+         {"basic", "evaluate_attacks", "expert", "setup_first_turn"}),
+        ("Leader Gardenia", "Ludicolo", 24, 79,
+         {"atk": 45, "def": 45, "spa": 55, "spd": 60, "spe": 45},
+         {"basic", "evaluate_attacks", "expert", "setup_first_turn"}),
+    ]
+    for trainer, species, level, hp, stats, flags in pins:
+        entry = entry_for(trainer, species, level)
+        mon = build_pokemon(entry)
+        assert mon.max_hp == hp and mon.stats == stats, (species, mon.stats)
+        supported, unsupported = decode_ai_flags(entry["ai_mask"])
+        assert supported == flags and unsupported == set(), (species, supported)
+
+    # Weight brackets for Low Kick (Gastly 1.0kg -> 10hg; Snorlax 460kg).
+    assert int(species_row("Gastly")["WeightHg"]) <= 100
+    assert int(species_row("Snorlax")["WeightHg"]) > 2000
+
+
+def test_trainer_dataset_full_roundtrip():
+    """Every one of the ~3000 trainer party mons builds without errors."""
+    from aicalc.trainers import build_pokemon, load_trainer, trainer_index
+
+    count = 0
+    for summary in trainer_index():
+        for entry in load_trainer(summary["id"])["party"]:
+            mon = build_pokemon(entry)
+            assert mon.max_hp > 0 and all(v > 0 for v in mon.stats.values())
+            count += 1
+    assert count > 3000
+
+
 if __name__ == "__main__":
     test_legal_actions_singles()
     test_context_non_damage_predicates()
@@ -1478,4 +1537,6 @@ if __name__ == "__main__":
     test_item_table()
     test_loader_rejects_unknown_item()
     test_natural_gift_computed()
+    test_trainer_dataset()
+    test_trainer_dataset_full_roundtrip()
     print("all tests passed")
