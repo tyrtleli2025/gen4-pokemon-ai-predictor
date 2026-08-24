@@ -1,25 +1,33 @@
-/* Kaizo AI Simulator — milestone B: live probability explorer.
-   The battle doc (case format 1) is the single source of truth. */
+/* Kaizo AI Simulator — fully reactive: every input mutates the battle doc
+   and recomputes probabilities immediately. Layout follows the familiar
+   damage-calculator anatomy: your Pokémon left, field + results middle,
+   the AI's Pokémon right. */
 "use strict";
 
 const state = {
   meta: null, tables: null, trainers: [],
-  trainerParty: [],           // /api/trainer party entries
+  trainerParty: [],          // /api/trainer party entries
+  activeAiIndex: null,
+  playerBuild: {             // build inputs that derive the player mon's stats
+    nature: "Hardy",
+    ivs: { hp: 31, atk: 31, def: 31, spa: 31, spd: 31, spe: 31 },
+  },
   battle: {
     flags: [],
     field: { weather: null, turn: 1, trick_room: false, gravity: false },
-    ai: null,                 // side objects created when a mon is set
+    ai: null,
     player: null,
   },
 };
 
+const STATS = ["atk", "def", "spa", "spd", "spe"];
 const $ = (sel) => document.querySelector(sel);
 const el = (tag, attrs = {}, ...children) => {
   const node = document.createElement(tag);
   for (const [k, v] of Object.entries(attrs)) {
     if (k === "class") node.className = v;
     else if (k.startsWith("on")) node.addEventListener(k.slice(2), v);
-    else node.setAttribute(k, v);
+    else if (v !== false && v !== undefined) node.setAttribute(k, v === true ? "" : v);
   }
   node.append(...children);
   return node;
@@ -42,40 +50,29 @@ async function init() {
 
   const tl = $("#trainer-list");
   for (const t of state.trainers) {
-    const label = `${t.name}${t.location ? " — " + t.location : ""} (#${t.id})`;
-    tl.append(el("option", { value: label }));
+    tl.append(el("option", { value: `${t.name}${t.location ? " — " + t.location : ""} (#${t.id})` }));
   }
   const sl = $("#species-list");
   for (const name of Object.keys(state.tables.species)) sl.append(el("option", { value: name }));
   const ml = $("#move-list");
   for (const name of Object.keys(state.tables.moves)) ml.append(el("option", { value: name }));
 
-  const nat = $("#player-nature");
-  for (const n of state.meta.natures) nat.append(el("option", { value: n }, n));
-
-  const ivRow = $("#player-ivs");
-  ivRow.append("IVs ");
-  for (const s of ["hp", "atk", "def", "spa", "spd", "spe"]) {
-    ivRow.append(el("label", {}, s,
-      el("input", { type: "number", id: `iv-${s}`, value: 31, min: 0, max: 31 })));
-  }
-  const mvRow = $("#player-moves");
-  for (let i = 0; i < 4; i++) {
-    mvRow.append(el("input", { list: "move-list", id: `pm-${i}`, placeholder: `Move ${i + 1}` }));
-  }
-
   $("#trainer-search").addEventListener("change", onTrainerPicked);
-  $("#player-build").addEventListener("click", buildPlayerMon);
-  $("#player-species").addEventListener("change", onPlayerSpecies);
   $("#export-case").addEventListener("click", exportCase);
   $("#load-case").addEventListener("change", loadCaseFile);
   $("#apply-raw").addEventListener("click", applyRawJSON);
 
+  renderAll();
+}
+
+function renderAll() {
   renderField();
+  renderPanel("player");
+  renderPanel("ai");
   refresh();
 }
 
-/* ---------------- doc helpers ---------------- */
+/* ---------------- doc plumbing ---------------- */
 
 function newSide(pokemon) {
   return {
@@ -89,172 +86,238 @@ function newSide(pokemon) {
 
 function battleDoc() {
   const b = state.battle;
-  if (!b.ai || !b.player) return null;
+  if (!b.ai || !b.player || !b.flags.length) return null;
   const clean = JSON.parse(JSON.stringify(b));
   for (const side of [clean.ai, clean.player]) {
-    for (const key of ["hazards"])
-      for (const h of Object.keys(side[key])) if (!side[key][h]) delete side[key][h];
+    for (const h of Object.keys(side.hazards)) if (!side.hazards[h]) delete side.hazards[h];
     const mon = side.pokemon;
-    for (const key of ["boosts"])
-      if (mon[key]) for (const s of Object.keys(mon[key])) if (!mon[key][s]) delete mon[key][s];
+    if (mon.boosts) for (const s of Object.keys(mon.boosts)) if (!mon.boosts[s]) delete mon.boosts[s];
     for (const key of Object.keys(mon))
-      if (mon[key] === null || (Array.isArray(mon[key]) && !mon[key].length)) delete mon[key];
+      if (mon[key] === null || mon[key] === "" ||
+          (Array.isArray(mon[key]) && !mon[key].length)) delete mon[key];
     if (mon.protect_streak === 0) delete mon.protect_streak;
     if (mon.turns_active === 1) delete mon.turns_active;
     if (mon.current_hp === mon.max_hp) delete mon.current_hp;
+    mon.moves = (mon.moves || []).filter(Boolean);
   }
   if (!clean.field.weather) delete clean.field.weather;
   return clean;
 }
 
-/* ---------------- trainer side ---------------- */
+/* ---------------- trainer / AI side ---------------- */
 
 async function onTrainerPicked(ev) {
   const match = /\(#(\d+)\)\s*$/.exec(ev.target.value);
   if (!match) return;
   const data = await getJSON(`/api/trainer?id=${match[1]}`);
   state.trainerParty = data.party;
+  state.activeAiIndex = null;
   const strip = $("#trainer-party");
   strip.replaceChildren();
   data.party.forEach((entry, i) => {
     strip.append(el("div", { class: "party-chip", onclick: () => setAiMon(i) },
       entry.pokemon.species, " ", el("span", { class: "lv" }, `L${entry.pokemon.level}`)));
   });
+  if (data.party.length) setAiMon(0);   // auto-select the lead: instant feedback
 }
 
 function setAiMon(index) {
   const entry = state.trainerParty[index];
+  state.activeAiIndex = index;
   const mon = JSON.parse(JSON.stringify(entry.pokemon));
-  state.battle.ai = { ...newSide(mon), party_remaining: state.trainerParty.length - 1 };
+  const prev = state.battle.ai;
+  state.battle.ai = {
+    ...newSide(mon),
+    ...(prev ? { hazards: prev.hazards, reflect: prev.reflect,
+                 light_screen: prev.light_screen, tailwind: prev.tailwind,
+                 safeguard: prev.safeguard, mist: prev.mist,
+                 lucky_chant: prev.lucky_chant, future_attack: prev.future_attack } : {}),
+    party_remaining: state.trainerParty.length - 1,
+  };
   state.battle.flags = [...entry.ai_flags];
   document.querySelectorAll(".party-chip").forEach((c, i) =>
     c.classList.toggle("active", i === index));
-  renderFlags(entry);
-  renderMon("ai");
-  renderSide("ai");
+  renderAiFlags(entry);
+  renderPanel("ai");
   refresh();
 }
 
-function renderFlags(entry) {
+function renderAiFlags(entry) {
   const row = $("#ai-flags");
   row.replaceChildren();
   for (const f of entry.ai_flags) row.append(el("span", { class: "flag" }, f));
   for (const f of entry.unsupported_flags)
-    row.append(el("span", { class: "flag unsupported", title: "not encoded — engine will refuse" }, f));
+    row.append(el("span", { class: "flag unsupported",
+                            title: "not encoded — engine will refuse" }, f));
 }
 
-/* ---------------- player side ---------------- */
+/* ---------------- player mon derivation ---------------- */
 
-function onPlayerSpecies(ev) {
-  const sp = state.tables.species[ev.target.value];
-  if (sp && sp.abilities.length) $("#player-ability").value = sp.abilities[0];
-}
-
-function computeStats(base, ivs, level, nature) {
-  const [up, down] = state.meta.nature_effects[nature];
-  const hp = Math.floor((2 * base.hp + ivs.hp) * level / 100) + level + 10;
-  const stats = {};
-  for (const s of ["atk", "def", "spa", "spd", "spe"]) {
-    let v = Math.floor((2 * base[s] + ivs[s]) * level / 100) + 5;
-    if (s === up) v = Math.floor(v * 110 / 100);
-    else if (s === down) v = Math.floor(v * 90 / 100);
-    stats[s] = v;
-  }
-  return { hp, stats };
-}
-
-function buildPlayerMon() {
-  const species = $("#player-species").value;
+function ensurePlayerMon(species) {
   const sp = state.tables.species[species];
-  if (!sp) { showError({ error: { type: "UI", message: `unknown species '${species}'` } }); return; }
-  const level = parseInt($("#player-level").value, 10) || 50;
-  const nature = $("#player-nature").value;
-  const ivs = {};
-  for (const s of ["hp", "atk", "def", "spa", "spd", "spe"])
-    ivs[s] = parseInt($(`#iv-${s}`).value, 10) || 0;
-  const { hp, stats } = computeStats(sp.base, ivs, level, nature);
-  const moves = [];
-  for (let i = 0; i < 4; i++) {
-    const value = $(`#pm-${i}`).value.trim();
-    if (value) moves.push(value);
-  }
-  const mon = {
-    species, level,
-    ability: $("#player-ability").value.trim() || sp.abilities[0],
-    item: $("#player-item").value.trim() || null,
-    types: sp.types, stats, max_hp: hp, current_hp: hp,
-    status: null, boosts: {}, moves,
+  if (!sp) return;
+  const existing = state.battle.player?.pokemon;
+  const mon = existing && existing.species === species ? existing : {
+    species, level: existing?.level ?? 50,
+    ability: sp.abilities[0] || "", item: null,
+    types: sp.types, stats: {}, max_hp: 1, current_hp: null,
+    status: null, boosts: {}, moves: ["", "", "", ""],
     weight_hg: sp.weight_hg,
   };
-  state.battle.player = state.battle.player
-    ? { ...state.battle.player, pokemon: mon } : newSide(mon);
-  renderMon("player");
-  renderSide("player");
-  refresh();
+  mon.species = species;
+  mon.types = sp.types;
+  mon.weight_hg = sp.weight_hg;
+  if (!existing || existing.species !== species) mon.ability = sp.abilities[0] || "";
+  recomputePlayerStats(mon);
+  if (!state.battle.player) state.battle.player = newSide(mon);
+  else state.battle.player.pokemon = mon;
 }
 
-/* ---------------- mon + side editors ---------------- */
+function recomputePlayerStats(mon) {
+  const sp = state.tables.species[mon.species];
+  if (!sp) return;
+  const { nature, ivs } = state.playerBuild;
+  const [up, down] = state.meta.nature_effects[nature];
+  const atFull = mon.current_hp === null || mon.current_hp >= mon.max_hp;
+  mon.max_hp = Math.floor((2 * sp.base.hp + ivs.hp) * mon.level / 100) + mon.level + 10;
+  for (const s of STATS) {
+    let v = Math.floor((2 * sp.base[s] + ivs[s]) * mon.level / 100) + 5;
+    if (s === up) v = Math.floor(v * 110 / 100);
+    else if (s === down) v = Math.floor(v * 90 / 100);
+    mon.stats[s] = v;
+  }
+  if (atFull) mon.current_hp = mon.max_hp;
+  else mon.current_hp = Math.min(mon.current_hp, mon.max_hp);
+}
 
-function renderMon(which) {
-  const side = state.battle[which];
-  const panel = $(`#${which}-mon`);
+/* ---------------- unified Pokémon panel ---------------- */
+
+function renderPanel(which) {
+  const panel = $(`#${which}-panel`);
   panel.replaceChildren();
-  if (!side) return;
+  const side = state.battle[which];
+  const isPlayer = which === "player";
+
+  // Species / level header
+  const head = el("div", { class: "row" });
+  if (isPlayer) {
+    head.append(el("input", {
+      list: "species-list", placeholder: "Species…", class: "species-input",
+      value: side?.pokemon?.species || "",
+      onchange: (e) => { ensurePlayerMon(e.target.value.trim()); renderPanel("player"); refresh(); },
+    }));
+  }
+  if (!side) {
+    if (isPlayer) panel.append(head);
+    else panel.append(el("p", { class: "placeholder" }, "Pick a trainer, then a party member."));
+    return;
+  }
   const mon = side.pokemon;
+  if (isPlayer) {
+    head.append(
+      el("label", {}, "Lv",
+        el("input", { type: "number", value: mon.level, min: 1, max: 100, style: "width:4em",
+          onchange: (e) => { mon.level = clampInt(e.target.value, 1, 100, 50);
+                             recomputePlayerStats(mon); renderPanel("player"); refresh(); } })),
+      el("select", { onchange: (e) => { state.playerBuild.nature = e.target.value;
+                                        recomputePlayerStats(mon); renderPanel("player"); refresh(); } },
+        ...state.meta.natures.map((n) =>
+          el("option", { value: n, selected: state.playerBuild.nature === n }, n))),
+    );
+  } else {
+    head.append(el("span", { class: "big-name" }, mon.species),
+                el("span", { class: "dim" }, ` Lv ${mon.level}`));
+  }
+  panel.append(head);
+  panel.append(el("div", { class: "sub" }, mon.types.join(" / ")));
 
-  panel.append(
-    el("div", { class: "name" }, mon.species),
-    el("div", { class: "sub" },
-      `L${mon.level} ${mon.types.join("/")} · ${mon.ability}` +
-      (mon.item ? ` · ${mon.item}` : "")),
+  // Ability / item / status
+  const idRow = el("div", { class: "row mini" });
+  idRow.append(
+    el("label", {}, "Ability",
+      el("input", { value: mon.ability || "", style: "width:8.5em",
+        onchange: (e) => { mon.ability = e.target.value.trim(); refresh(); } })),
+    el("label", {}, "Item",
+      el("input", { value: mon.item || "", placeholder: "(none)", style: "width:8em",
+        onchange: (e) => { mon.item = e.target.value.trim() || null; refresh(); } })),
+    el("label", {}, "Status",
+      el("select", { onchange: (e) => { mon.status = e.target.value || null; refresh(); } },
+        el("option", { value: "" }, "healthy"),
+        ...state.meta.statuses.map((s) =>
+          el("option", { value: s, selected: mon.status === s }, s)))),
   );
+  panel.append(idRow);
 
-  const hpRow = el("div", { class: "hp-row" });
-  const hpInput = el("input", {
-    type: "number", value: mon.current_hp ?? mon.max_hp, min: 0, max: mon.max_hp,
-    onchange: (e) => { mon.current_hp = parseInt(e.target.value, 10) || 0; renderMon(which); refresh(); },
-  });
-  const pct = Math.round(100 * (mon.current_hp ?? mon.max_hp) / mon.max_hp);
-  hpRow.append("HP", hpInput, `/${mon.max_hp}`,
-    el("div", { class: "hp-bar" }, el("div", { style: `width:${pct}%` })));
-  panel.append(hpRow);
+  // HP
+  const hp = mon.current_hp ?? mon.max_hp;
+  const pct = Math.max(0, Math.min(100, Math.round(100 * hp / mon.max_hp)));
+  panel.append(el("div", { class: "hp-row" },
+    "HP",
+    el("input", { type: "number", value: hp, min: 0, max: mon.max_hp,
+      onchange: (e) => { mon.current_hp = clampInt(e.target.value, 0, mon.max_hp, mon.max_hp);
+                         renderPanel(which); refresh(); } }),
+    `/${mon.max_hp}`,
+    el("div", { class: "hp-bar" },
+      el("div", { style: `width:${pct}%; background:${pct > 50 ? "var(--good)" : pct > 20 ? "var(--warn)" : "var(--bad)"}` })),
+    el("span", { class: "dim mini" }, `${pct}%`),
+  ));
 
-  const statusRow = el("div", { class: "row mini" });
-  const statusSel = el("select", {
-    onchange: (e) => { mon.status = e.target.value || null; refresh(); },
-  }, el("option", { value: "" }, "healthy"));
-  for (const s of state.meta.statuses)
-    statusSel.append(el("option", { value: s, ...(mon.status === s ? { selected: "" } : {}) }, s));
-  statusRow.append("Status", statusSel,
+  // Stat rows with inline boosts (calc-style)
+  const grid = el("div", { class: "stat-grid" });
+  grid.append(el("span", { class: "dim" }, ""), el("span", { class: "dim" }, "stat"),
+              el("span", { class: "dim" }, "boost"));
+  for (const s of STATS) {
+    grid.append(
+      el("span", { class: "stat-name" }, s.toUpperCase()),
+      isPlayer
+        ? el("span", {}, String(mon.stats[s]))
+        : el("input", { type: "number", value: mon.stats[s], min: 1, class: "stat-edit",
+            onchange: (e) => { mon.stats[s] = clampInt(e.target.value, 1, 9999, mon.stats[s]); refresh(); } }),
+      boostSelect(mon, s),
+    );
+  }
+  grid.append(el("span", { class: "stat-name" }, "ACC"), el("span", {}, "—"), boostSelect(mon, "acc"));
+  grid.append(el("span", { class: "stat-name" }, "EVA"), el("span", {}, "—"), boostSelect(mon, "eva"));
+  panel.append(grid);
+
+  // Player IVs (compact, under stats)
+  if (isPlayer) {
+    const ivRow = el("div", { class: "row mini" }, "IVs ");
+    for (const s of ["hp", ...STATS]) {
+      ivRow.append(el("label", {}, s,
+        el("input", { type: "number", value: state.playerBuild.ivs[s], min: 0, max: 31, style: "width:3.6em",
+          onchange: (e) => { state.playerBuild.ivs[s] = clampInt(e.target.value, 0, 31, 31);
+                             recomputePlayerStats(mon); renderPanel("player"); refresh(); } })));
+    }
+    panel.append(ivRow);
+  }
+
+  // Moves ×4
+  const mv = el("div", { class: "moves-box" });
+  for (let i = 0; i < 4; i++) {
+    mv.append(el("input", { list: "move-list", value: mon.moves[i] || "",
+      placeholder: `Move ${i + 1}`,
+      onchange: (e) => { mon.moves[i] = e.target.value.trim(); refresh(); } }));
+  }
+  panel.append(mv);
+
+  // Battle-history extras
+  panel.append(el("div", { class: "row mini" },
     el("label", {}, "last move",
-      el("input", { list: "move-list", value: mon.last_move || "", style: "width:9em",
+      el("input", { list: "move-list", value: mon.last_move || "", style: "width:8.5em",
         onchange: (e) => { mon.last_move = e.target.value.trim() || null; refresh(); } })),
     el("label", {}, "turns out",
       el("input", { type: "number", value: mon.turns_active ?? 1, min: 1, style: "width:3.5em",
-        onchange: (e) => { mon.turns_active = parseInt(e.target.value, 10) || 1; refresh(); } })),
+        onchange: (e) => { mon.turns_active = clampInt(e.target.value, 1, 999, 1); refresh(); } })),
     el("label", {}, "protect streak",
       el("input", { type: "number", value: mon.protect_streak ?? 0, min: 0, style: "width:3.5em",
-        onchange: (e) => { mon.protect_streak = parseInt(e.target.value, 10) || 0; refresh(); } })),
-  );
-  panel.append(statusRow);
-
-  const boosts = el("div", { class: "boost-grid" });
-  for (const s of ["atk", "def", "spa", "spd", "spe", "acc", "eva"]) {
-    boosts.append(el("label", {}, s,
-      el("input", { type: "number", value: (mon.boosts || {})[s] || 0, min: -6, max: 6,
-        onchange: (e) => {
-          mon.boosts = mon.boosts || {};
-          mon.boosts[s] = parseInt(e.target.value, 10) || 0;
-          refresh();
-        } })));
-  }
-  panel.append(boosts);
+        onchange: (e) => { mon.protect_streak = clampInt(e.target.value, 0, 99, 0); refresh(); } })),
+  ));
 
   const vols = el("div", { class: "vol-grid" });
   for (const v of state.meta.volatiles) {
-    const checked = (mon.volatiles || []).includes(v);
     vols.append(el("label", {},
-      el("input", { type: "checkbox", ...(checked ? { checked: "" } : {}),
+      el("input", { type: "checkbox", checked: (mon.volatiles || []).includes(v),
         onchange: (e) => {
           mon.volatiles = mon.volatiles || [];
           if (e.target.checked) mon.volatiles.push(v);
@@ -263,74 +326,93 @@ function renderMon(which) {
         } }), v));
   }
   panel.append(el("details", {}, el("summary", {}, "volatiles"), vols));
-  panel.append(el("div", { class: "mini", style: "color:var(--dim)" },
-    `moves: ${mon.moves.join(", ") || "—"}`));
-}
 
-function renderSide(which) {
-  const side = state.battle[which];
-  const panel = $(`#${which}-side`);
-  panel.replaceChildren();
-  if (!side) return;
-
-  const row1 = el("div", { class: "row mini" });
-  row1.append(el("label", {}, "bench alive",
-    el("input", { type: "number", value: side.party_remaining, min: 0, max: 5,
-      onchange: (e) => { side.party_remaining = parseInt(e.target.value, 10) || 0; refresh(); } })));
+  // Side conditions
+  const cond = el("div", { class: "side-conditions" });
+  const row1 = el("div", { class: "row mini" },
+    el("label", {}, "bench alive",
+      el("input", { type: "number", value: side.party_remaining, min: 0, max: 5,
+        onchange: (e) => { side.party_remaining = clampInt(e.target.value, 0, 5, 1); refresh(); } })));
   for (const h of state.meta.hazards) {
     row1.append(el("label", {}, h.replace("_", " "),
       el("input", { type: "number", value: side.hazards[h] || 0, min: 0, max: 3,
-        onchange: (e) => { side.hazards[h] = parseInt(e.target.value, 10) || 0; refresh(); } })));
+        onchange: (e) => { side.hazards[h] = clampInt(e.target.value, 0, 3, 0); refresh(); } })));
   }
-  panel.append(row1);
-
   const row2 = el("div", { class: "row mini" });
   for (const flag of ["reflect", "light_screen", "tailwind", "safeguard", "mist", "lucky_chant"]) {
     row2.append(el("label", {},
-      el("input", { type: "checkbox", ...(side[flag] ? { checked: "" } : {}),
+      el("input", { type: "checkbox", checked: !!side[flag],
         onchange: (e) => { side[flag] = e.target.checked; refresh(); } }),
       flag.replace("_", " ")));
   }
-  panel.append(row2);
+  cond.append(el("div", { class: "dim mini" }, "side conditions (this side of the field)"),
+              row1, row2);
+  panel.append(cond);
 }
+
+function boostSelect(mon, stat) {
+  const sel = el("select", { class: "boost-select",
+    onchange: (e) => { mon.boosts = mon.boosts || {};
+                       mon.boosts[stat] = parseInt(e.target.value, 10); refresh(); } });
+  for (let b = 6; b >= -6; b--) {
+    sel.append(el("option", { value: b, selected: ((mon.boosts || {})[stat] || 0) === b },
+      b > 0 ? `+${b}` : String(b)));
+  }
+  return sel;
+}
+
+function clampInt(value, min, max, fallback) {
+  const n = parseInt(value, 10);
+  if (Number.isNaN(n)) return fallback;
+  return Math.max(min, Math.min(max, n));
+}
+
+/* ---------------- field ---------------- */
 
 function renderField() {
   const panel = $("#field-controls");
   panel.replaceChildren();
   const field = state.battle.field;
-  const row = el("div", { class: "row" });
-  const weather = el("select", {
-    onchange: (e) => { field.weather = e.target.value || null; refresh(); },
-  }, el("option", { value: "" }, "no weather"));
-  for (const w of state.meta.weathers)
-    weather.append(el("option", { value: w, ...(field.weather === w ? { selected: "" } : {}) }, w));
-  row.append(weather,
+
+  const weatherRow = el("div", { class: "row" });
+  for (const w of [null, ...state.meta.weathers]) {
+    weatherRow.append(el("button", {
+      class: "toggle" + (field.weather === w ? " on" : ""),
+      onclick: () => { field.weather = w; renderField(); refresh(); },
+    }, w || "no weather"));
+  }
+  panel.append(weatherRow);
+
+  panel.append(el("div", { class: "row" },
     el("label", {}, "turn",
-      el("input", { type: "number", value: field.turn, min: 1,
-        onchange: (e) => { field.turn = parseInt(e.target.value, 10) || 1; refresh(); } })),
-    el("label", {},
-      el("input", { type: "checkbox", ...(field.trick_room ? { checked: "" } : {}),
-        onchange: (e) => { field.trick_room = e.target.checked; refresh(); } }), "Trick Room"),
-    el("label", {},
-      el("input", { type: "checkbox", ...(field.gravity ? { checked: "" } : {}),
-        onchange: (e) => { field.gravity = e.target.checked; refresh(); } }), "Gravity"),
-  );
-  panel.append(row);
+      el("input", { type: "number", value: field.turn, min: 1, style: "width:4em",
+        onchange: (e) => { field.turn = clampInt(e.target.value, 1, 999, 1); refresh(); } })),
+    el("button", { class: "toggle" + (field.trick_room ? " on" : ""),
+      onclick: () => { field.trick_room = !field.trick_room; renderField(); refresh(); } }, "Trick Room"),
+    el("button", { class: "toggle" + (field.gravity ? " on" : ""),
+      onclick: () => { field.gravity = !field.gravity; renderField(); refresh(); } }, "Gravity"),
+  ));
 }
 
-/* ---------------- probabilities ---------------- */
+/* ---------------- probabilities (always live) ---------------- */
 
 let seq = 0, timer = null;
 
 function refresh() {
   $("#raw-json").value = JSON.stringify(battleDoc() || state.battle, null, 1);
   clearTimeout(timer);
-  timer = setTimeout(fetchProbabilities, 180);
+  timer = setTimeout(fetchProbabilities, 150);
 }
 
 async function fetchProbabilities() {
   const doc = battleDoc();
-  if (!doc) return;
+  if (!doc) {
+    $("#prob-panel").replaceChildren(
+      el("p", { class: "placeholder" },
+        !state.battle.ai ? "Pick a trainer Pokémon (right side)."
+                         : "Set your Pokémon's species (left side)."));
+    return;
+  }
   const mySeq = ++seq;
   try {
     const resp = await fetch("/api/probabilities", {
@@ -350,8 +432,7 @@ async function fetchProbabilities() {
 function renderProbabilities(data) {
   const panel = $("#prob-panel");
   panel.replaceChildren();
-  panel.append(el("div", { class: "mini", style: "color:var(--dim)" },
-    `flags: ${data.active_flags.join(", ")}`));
+  panel.append(el("div", { class: "mini dim" }, `flags: ${data.active_flags.join(", ")}`));
   for (const action of data.actions) {
     const pctNum = action.pick.float * 100;
     const box = el("div", { class: "action" });
@@ -396,9 +477,13 @@ function exportCase() {
 async function loadCaseFile(ev) {
   const file = ev.target.files[0];
   if (!file) return;
-  const doc = JSON.parse(await file.text());
-  const battle = doc.battle || doc;
-  adoptBattle(battle);
+  try {
+    const doc = JSON.parse(await file.text());
+    adoptBattle(doc.battle || doc);
+  } catch (err) {
+    showError({ error: { type: "JSON", message: String(err) } });
+  }
+  ev.target.value = "";
 }
 
 function applyRawJSON() {
@@ -410,7 +495,6 @@ function applyRawJSON() {
 }
 
 function adoptBattle(battle) {
-  // Fill optional keys so the editors have something to bind to.
   for (const which of ["ai", "player"]) {
     const side = battle[which];
     if (!side) continue;
@@ -418,17 +502,18 @@ function adoptBattle(battle) {
     const mon = battle[which].pokemon;
     mon.boosts = mon.boosts || {};
     mon.volatiles = mon.volatiles || [];
+    mon.moves = [...(mon.moves || []), "", "", "", ""].slice(0, 4);
     mon.current_hp = mon.current_hp ?? mon.max_hp;
   }
   battle.field = { weather: null, turn: 1, trick_room: false, gravity: false,
                    ...(battle.field || {}) };
+  battle.flags = battle.flags || [];
   state.battle = battle;
-  renderField();
-  renderMon("ai"); renderSide("ai");
-  renderMon("player"); renderSide("player");
+  state.activeAiIndex = null;
   $("#ai-flags").replaceChildren(
     ...battle.flags.map((f) => el("span", { class: "flag" }, f)));
-  refresh();
+  document.querySelectorAll(".party-chip").forEach((c) => c.classList.remove("active"));
+  renderAll();
 }
 
 init();

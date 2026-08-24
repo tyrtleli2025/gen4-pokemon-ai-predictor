@@ -13,13 +13,14 @@ header {
   padding: 10px 18px; background: var(--panel); border-bottom: 1px solid var(--border);
 }
 h1 { font-size: 18px; margin: 0; }
-h2 { font-size: 14px; margin: 12px 0 6px; color: var(--accent); }
+h2 { font-size: 13px; margin: 10px 0 6px; color: var(--accent);
+     text-transform: uppercase; letter-spacing: .04em; }
 main {
-  display: grid; grid-template-columns: 1fr 1.1fr 1fr; gap: 14px;
+  display: grid; grid-template-columns: 1fr 1.15fr 1fr; gap: 14px;
   padding: 14px 18px; align-items: start;
 }
 .column { background: var(--panel); border: 1px solid var(--border);
-  border-radius: 8px; padding: 10px 12px; }
+  border-radius: 8px; padding: 8px 12px 12px; }
 .row { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0; align-items: center; }
 input, select, button, textarea {
   background: var(--panel2); color: var(--text); border: 1px solid var(--border);
@@ -29,7 +30,13 @@ input[type="number"] { width: 4.5em; }
 input[type="checkbox"] { accent-color: var(--accent); }
 button { cursor: pointer; }
 button:hover { border-color: var(--accent); }
+button.toggle.on { background: #24406b; border-color: var(--accent); }
 label { display: inline-flex; gap: 4px; align-items: center; color: var(--dim); }
+.dim { color: var(--dim); }
+.mini { font-size: 12px; }
+.sub { color: var(--dim); font-size: 12px; margin: 2px 0 4px; }
+.big-name { font-weight: 600; font-size: 16px; }
+.species-input { font-size: 15px; font-weight: 600; width: 11em; }
 .file-btn { position: relative; overflow: hidden; background: var(--panel2);
   border: 1px solid var(--border); border-radius: 5px; padding: 4px 8px; cursor: pointer; }
 .file-btn input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
@@ -38,7 +45,8 @@ label { display: inline-flex; gap: 4px; align-items: center; color: var(--dim); 
 .party-strip { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0; }
 .party-chip { padding: 4px 8px; border: 1px solid var(--border); border-radius: 6px;
   background: var(--panel2); cursor: pointer; font-size: 13px; }
-.party-chip:hover, .party-chip.active { border-color: var(--accent); }
+.party-chip:hover { border-color: var(--accent); }
+.party-chip.active { border-color: var(--accent); background: #24406b; }
 .party-chip .lv { color: var(--dim); font-size: 11px; }
 
 .flag-row { display: flex; flex-wrap: wrap; gap: 5px; margin: 6px 0; }
@@ -46,23 +54,24 @@ label { display: inline-flex; gap: 4px; align-items: center; color: var(--dim); 
   background: #24406b; border: 1px solid var(--accent); }
 .flag.unsupported { background: #4d2f2f; border-color: var(--bad); color: #f4b1b1; }
 
-.mon-panel { background: var(--panel2); border: 1px solid var(--border);
-  border-radius: 7px; padding: 8px 10px; margin-top: 8px; }
-.mon-panel .name { font-weight: 600; font-size: 15px; }
-.mon-panel .sub { color: var(--dim); font-size: 12px; margin-bottom: 5px; }
-.hp-row { display: flex; gap: 6px; align-items: center; margin: 5px 0; }
-.hp-bar { flex: 1; height: 8px; background: #333; border-radius: 4px; overflow: hidden; }
-.hp-bar > div { height: 100%; background: var(--good); }
-.boost-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin: 5px 0; }
-.boost-grid label { flex-direction: column; gap: 1px; font-size: 10px; text-transform: uppercase; }
-.boost-grid input { width: 100%; padding: 2px 4px; }
-.mini { font-size: 12px; }
+.hp-row { display: flex; gap: 6px; align-items: center; margin: 6px 0; }
+.hp-bar { flex: 1; height: 9px; background: #333; border-radius: 4px; overflow: hidden; }
+.hp-bar > div { height: 100%; }
+
+.stat-grid { display: grid; grid-template-columns: 3em 1fr 4.6em; gap: 3px 8px;
+  margin: 6px 0; align-items: center; font-size: 13px; max-width: 240px; }
+.stat-name { color: var(--dim); font-size: 11px; }
+.stat-edit { width: 100%; padding: 2px 5px; }
+.boost-select { padding: 2px 3px; font-size: 12px; }
+
+.moves-box { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin: 8px 0; }
+.moves-box input { width: 100%; }
+
 details { margin-top: 8px; }
 details summary { cursor: pointer; color: var(--dim); }
 .vol-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; font-size: 12px; }
 
-.side-conditions { margin-top: 8px; font-size: 13px; }
-.side-conditions .row { gap: 10px; }
+.side-conditions { margin-top: 10px; padding-top: 6px; border-top: 1px dashed var(--border); }
 
 #prob-panel .action { margin: 7px 0; padding: 7px 9px; background: var(--panel2);
   border: 1px solid var(--border); border-radius: 7px; }
