@@ -619,12 +619,7 @@ function renderMainResult() {
     return;
   }
   const e = d[sel.side][sel.index];
-  const atk = (sel.side === "player" ? state.battle.player : state.battle.ai).pokemon;
-  const tgt = (sel.side === "player" ? state.battle.ai : state.battle.player).pokemon;
-  const item = atk.item ? `${atk.item} ` : "";
-  let line = `Lv${atk.level} ${item}${atk.species} ${e.move} vs. Lv${tgt.level} ${tgt.species}: `;
-  line += e.max === 0 ? "no damage (immune)"
-        : `${e.min}-${e.max} (${e.min_pct} - ${e.max_pct}%) — ${e.ko}`;
+  let line = e.desc || `${e.move}: ${e.min}-${e.max} (${e.min_pct} - ${e.max_pct}%) -- ${e.ko}`;
   if (e.caveat) line += ` ⚠ ${e.caveat}`;
   text.textContent = line;
 

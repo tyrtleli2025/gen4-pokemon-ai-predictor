@@ -231,6 +231,91 @@ def _ko_text(outcomes, defender) -> str:
     return f"{pct}% chance to {label}"
 
 
+def _fmt_pct(value: float) -> str:
+    return f"{value:g}"
+
+
+def _damage_desc(battle, move, entry, attacker_is_player: bool) -> str:
+    """Showdown-calc-style one-liner (EV-less, since Kaizo trainer mons have
+    no EVs). Every optional token -- boost, item, ability, burn, screen,
+    weather -- is included only when neutralizing it actually changes the
+    roll list, mirroring how @smogon/calc's mechanics only set description
+    fields they consumed."""
+    import dataclasses as dc
+
+    from ..calc.battle_order import battle_damage_outcomes
+
+    def views(b):
+        if attacker_is_player:
+            return (b.player.active, b.player, b.ai.active, b.ai)
+        return (b.ai.active, b.ai, b.player.active, b.player)
+
+    def rolls(b):
+        a, a_s, d, d_s = views(b)
+        try:
+            return battle_damage_outcomes(b, move, a, a_s, d, d_s)
+        except Exception:  # noqa: BLE001 -- un-probeable => not listed
+            return None
+
+    def variant(atk=None, dfn=None, def_side_ch=None, field_ch=None):
+        a, a_s, d, d_s = views(battle)
+        new_a = dc.replace(a, **atk) if atk else a
+        new_d = dc.replace(d, **dfn) if dfn else d
+        new_a_side = dc.replace(a_s, active=new_a)
+        new_d_side = dc.replace(d_s, active=new_d, **(def_side_ch or {}))
+        field = dc.replace(battle.field, **field_ch) if field_ch else battle.field
+        if attacker_is_player:
+            return dc.replace(battle, player=new_a_side, ai=new_d_side,
+                              field=field)
+        return dc.replace(battle, ai=new_a_side, player=new_d_side,
+                          field=field)
+
+    base = rolls(battle)
+
+    def relevant(**kw):
+        return base is not None and rolls(variant(**kw)) != base
+
+    atk, atk_side, dfn, def_side = views(battle)
+    atk_stat = "atk" if entry["category"] == "Physical" else "spa"
+    def_stat = "def" if entry["category"] == "Physical" else "spd"
+
+    parts = []
+    stage = (atk.boosts or {}).get(atk_stat, 0)
+    if stage and relevant(atk={"boosts": {**atk.boosts, atk_stat: 0}}):
+        parts.append(f"{stage:+d}")
+    if atk.item and relevant(atk={"item": None}):
+        parts.append(atk.item)
+    if atk.ability and relevant(atk={"ability": ""}):
+        parts.append(atk.ability)
+    if atk.status == "brn" and relevant(atk={"status": None}):
+        parts.append("burned")
+    parts.append(f"Lvl {atk.level} {atk.species} {move} vs.")
+
+    stage = (dfn.boosts or {}).get(def_stat, 0)
+    if stage and relevant(dfn={"boosts": {**dfn.boosts, def_stat: 0}}):
+        parts.append(f"{stage:+d}")
+    if dfn.item and relevant(dfn={"item": None}):
+        parts.append(dfn.item)
+    if dfn.ability and relevant(dfn={"ability": ""}):
+        parts.append(dfn.ability)
+    parts.append(f"Lvl {dfn.level} {dfn.species}")
+
+    if def_side.reflect and relevant(def_side_ch={"reflect": False}):
+        parts.append("through Reflect")
+    if def_side.light_screen and relevant(def_side_ch={"light_screen": False}):
+        parts.append("through Light Screen")
+    weather = battle.field.weather
+    if weather and relevant(field_ch={"weather": None}):
+        parts.append(f"in {weather.capitalize()}")
+
+    head = " ".join(parts)
+    if entry["max"] == 0:
+        return f"{head}: no damage (immune)"
+    return (f"{head}: {entry['min']}-{entry['max']} "
+            f"({_fmt_pct(entry['min_pct'])} - {_fmt_pct(entry['max_pct'])}%) "
+            f"-- {entry['ko']}")
+
+
 def _damage_entry(battle, move, attacker, atk_side, defender, def_side) -> dict:
     from ..calc.ai_damage import NeedsManualFact
     from ..calc.battle_order import battle_damage_outcomes
@@ -271,6 +356,9 @@ def _damage_entry(battle, move, attacker, atk_side, defender, def_side) -> dict:
     caveat = _POWER_CAVEATS.get(effect)
     if caveat:
         entry["caveat"] = caveat
+    entry["desc"] = _damage_desc(battle, move, entry,
+                                 attacker_is_player=attacker
+                                 is battle.player.active)
     return entry
 
 

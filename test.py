@@ -1705,6 +1705,15 @@ def test_serve_api_damage_panel():
     assert ai["Aqua Cutter"]["max"] == 31
     # 3 hits KO unless all three are the single min roll: 4095/4096.
     assert ai["Aqua Cutter"]["ko"] == ">99.9% chance to 3HKO"
+    # Showdown-style description with relevance-probed tokens: Muscle Band
+    # and rain matter for Aqua Cutter; Swift Swim and Filter never appear
+    # (neither touches this damage); rain is dropped for non-Water moves.
+    assert ai["Aqua Cutter"]["desc"] == (
+        "Muscle Band Lvl 24 Ludicolo Aqua Cutter vs. Lvl 26 Mr. Mime "
+        "in Rain: 25-31 (32.4 - 40.2%) -- >99.9% chance to 3HKO")
+    assert "in Rain" not in ai["Ice Punch"]["desc"]
+    assert "Swift Swim" not in ai["Aqua Cutter"]["desc"]
+    assert "Filter" not in ai["Aqua Cutter"]["desc"]
     assert ai["Razor Leaf"]["max"] == 19 and ai["Razor Leaf"]["max_pct"] == 24.6
     assert ai["Ice Punch"]["max"] == 19 and ai["Ice Punch"]["max_pct"] == 24.6
     assert len(ai["Ice Punch"]["outcomes"]) == 1
