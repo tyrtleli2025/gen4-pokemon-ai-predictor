@@ -232,6 +232,17 @@ Each stage is only started once the stage before it is tested and stable.
           (`apply_turn`, re-validated through `load_case_dict` every time);
           damage-roll picker + crit/secondary/miss choices in the UI; a
           timeline of snapshots with undo (linear v1, no branch tree).
+        - [x] C.1 (rolls, no crit yet): `calc/battle_order.py` computes the
+          16-roll battle-order lists (variance before STAB/type chart —
+          pinned digit-for-digit against HZLA roll lists: Ludicolo Ice Punch
+          42..50 in rain, Machop Karate Chop 18,18,18,20×12,24). `/api/damage`
+          serves both directions; the UI shows an HZLA-style damage strip
+          (your moves left, AI's right, %-of-max-HP ranges, click a move for
+          the headline + full roll list + KO text). Fixed-damage moves take
+          no variance; Bulldoze/Triple Axel list per-tier outcomes;
+          Counter/OHKO/etc. show "n/a" with the reason; conditional-power
+          effects (Brine, Payback, ...) show flat power with a visible
+          caveat. `critical_mul` still pending (lands with the recorder).
     - [ ] **D — save-file import**: `aicalc/saveread.py`, pure stdlib —
           Platinum's dual-slot layout, PK4 decrypt/unshuffle/checksum, Kaizo
           ID remapping via `data/id_maps.json`. Verified with a synthetic

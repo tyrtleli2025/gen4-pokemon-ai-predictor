@@ -126,6 +126,10 @@ class Handler(BaseHTTPRequestHandler):
             body = self._read_json_safe()
             if body is not None:
                 self._handle(lambda: api.probabilities(body))
+        elif url.path == "/api/damage":
+            body = self._read_json_safe()
+            if body is not None:
+                self._handle(lambda: api.damage(body))
         else:
             self.send_error(404)
 

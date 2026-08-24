@@ -15,17 +15,26 @@
   </div>
 </header>
 
+<!-- Damage strip: your moves left, the AI's right, headline underneath -->
+<section id="damage-strip">
+  <div id="dmg-player" class="dmg-moves"></div>
+  <div id="dmg-vs">vs</div>
+  <div id="dmg-ai" class="dmg-moves right"></div>
+</section>
+<div id="dmg-headline"></div>
+
 <main>
-  <!-- Player: left, like the calc you attack from -->
+  <!-- Player: left -->
   <section class="column" id="player-col">
     <h2>Your Pokémon</h2>
     <div id="player-panel"></div>
   </section>
 
-  <!-- Field + results in the middle -->
+  <!-- Field + side conditions + results: middle -->
   <section class="column" id="mid-col">
     <h2>Field</h2>
     <div id="field-controls"></div>
+    <div id="side-conditions"></div>
     <h2>AI move probabilities</h2>
     <div id="prob-panel"><p class="placeholder">Pick a trainer Pokémon and set yours.</p></div>
     <div id="error-panel"></div>

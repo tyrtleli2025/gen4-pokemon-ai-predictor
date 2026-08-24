@@ -1567,6 +1567,102 @@ def test_serve_api_trainer_and_tables():
     assert tables["species"]["Bonsly"]["base"]["def"] == 95
 
 
+def test_battle_order_rolls_match_hzla():
+    """Battle-order rolls (variance BEFORE the type chart) pinned against the
+    HZLA calculator screenshot: L24 Muscle Band Ludicolo vs L20 Quiet
+    Farfetch'd in rain. Ice Punch's 16-roll list is transcribed verbatim."""
+    from aicalc.calc.battle_order import battle_damage_outcomes
+
+    ludicolo = Pokemon(
+        species="Ludicolo", level=24, ability="Swift Swim", item="Muscle Band",
+        types=("Water", "Grass"),
+        stats={"atk": 45, "def": 45, "spa": 55, "spd": 60, "spe": 45},
+        max_hp=79, current_hp=79,
+        moves=["Swords Dance", "Aqua Cutter", "Razor Leaf", "Ice Punch"])
+    farfetchd = Pokemon(
+        species="Farfetch'd", level=20, ability="Scrappy", item=None,
+        types=("Normal", "Flying"),
+        stats={"atk": 46, "def": 43, "spa": 31, "spd": 40, "spe": 31},
+        max_hp=56, current_hp=56,
+        moves=["Slash", "Quick Attack", "False Swipe", "Poison Jab"])
+    battle = Battle(ai=Side(active=ludicolo, party_remaining=5),
+                    player=Side(active=farfetchd, party_remaining=1),
+                    field=Field(weather="rain"))
+
+    def rolls(move, attacker):
+        if attacker is ludicolo:
+            out = battle_damage_outcomes(battle, move, ludicolo, battle.ai,
+                                         farfetchd, battle.player)
+        else:
+            out = battle_damage_outcomes(battle, move, farfetchd,
+                                         battle.player, ludicolo, battle.ai)
+        assert len(out) == 1 and out[0][1] is None
+        return out[0][2]
+
+    # Ice Punch 75 - 89.2%: "Rolls: (42, 42, 42, 44, ..., 50)" verbatim.
+    assert rolls("Ice Punch", ludicolo) == [42, 42, 42, 44, 44, 44, 44, 46,
+                                            46, 46, 46, 48, 48, 48, 48, 50]
+    # Aqua Cutter 58.9-71.4%: rain 1.5x inside the formula, STAB after variance.
+    aq = rolls("Aqua Cutter", ludicolo)
+    assert aq[0] == 33 and aq[-1] == 40
+    # Razor Leaf 17.8-21.4%: STAB, then not-very-effective vs Flying.
+    rl = rolls("Razor Leaf", ludicolo)
+    assert rl[0] == 10 and rl[-1] == 12
+    # Player side: Slash 24-30.3%, Quick Attack 15.1-18.9%, Poison Jab
+    # 37.9-45.5% (no STAB, super effective vs Grass).
+    sl = rolls("Slash", farfetchd)
+    assert sl[0] == 19 and sl[-1] == 24
+    qa = rolls("Quick Attack", farfetchd)
+    assert qa[0] == 12 and qa[-1] == 15
+    pj = rolls("Poison Jab", farfetchd)
+    assert pj[0] == 30 and pj[-1] == 36
+
+
+def test_serve_api_damage_panel():
+    """api.damage on the pinned Ludicolo case reproduces the screenshot's
+    panel numbers recorded in the case notes (Aqua Cutter 32.4-40.2% of 77,
+    max 31; Razor Leaf and Ice Punch both max 19 at 24.6%)."""
+    import json
+    from pathlib import Path
+
+    from aicalc.serve import api
+
+    doc = json.loads(
+        Path("cases/gardenia_ludicolo_vs_mrmime.json").read_text())
+    out = api.damage(doc)
+
+    ai = {e["move"]: e for e in out["ai"]}
+    assert ai["Swords Dance"]["kind"] == "status"
+    assert ai["Aqua Cutter"]["min_pct"] == 32.4
+    assert ai["Aqua Cutter"]["max_pct"] == 40.2
+    assert ai["Aqua Cutter"]["max"] == 31
+    assert ai["Aqua Cutter"]["ko"] == "3HKO best case, guaranteed 4HKO"
+    assert ai["Razor Leaf"]["max"] == 19 and ai["Razor Leaf"]["max_pct"] == 24.6
+    assert ai["Ice Punch"]["max"] == 19 and ai["Ice Punch"]["max_pct"] == 24.6
+    assert len(ai["Ice Punch"]["outcomes"]) == 1
+    assert len(ai["Ice Punch"]["outcomes"][0]["rolls"]) == 16
+
+    player = {e["move"]: e for e in out["player"]}
+    assert player["Teleport"]["kind"] == "status"
+    assert player["Copycat"]["kind"] == "status"
+    assert player["Confusion"]["kind"] == "damage"
+    assert player["Magical Leaf"]["kind"] == "damage"
+    assert player["Magical Leaf"]["min"] > 0
+
+    # The Bonsly case: Karate Chop's roll list (STAB x1.5 then SE x2 after
+    # the variance makes the values step 18 -> 20 -> 24 with no 19/22),
+    # Seismic Toss fixed at level with no variance, Selfdestruct's real
+    # battle damage (halved defense) despite its AI-comparison exclusion.
+    doc = json.loads(Path("cases/roark_bonsly_vs_machop.json").read_text())
+    out = api.damage(doc)
+    kc = next(e for e in out["player"] if e["move"] == "Karate Chop")
+    assert kc["outcomes"][0]["rolls"] == [18, 18, 18] + [20] * 12 + [24]
+    toss = next(e for e in out["player"] if e["move"] == "Seismic Toss")
+    assert toss["min"] == toss["max"] == 16
+    boom = next(e for e in out["ai"] if e["move"] == "Selfdestruct")
+    assert boom["ko"] == "guaranteed OHKO"
+
+
 if __name__ == "__main__":
     test_legal_actions_singles()
     test_context_non_damage_predicates()
@@ -1630,4 +1726,6 @@ if __name__ == "__main__":
     test_serve_api_probabilities()
     test_serve_api_trainer_mon_roundtrip()
     test_serve_api_trainer_and_tables()
+    test_battle_order_rolls_match_hzla()
+    test_serve_api_damage_panel()
     print("all tests passed")

@@ -1,13 +1,16 @@
 /* Kaizo AI Simulator — fully reactive: every input mutates the battle doc
-   and recomputes probabilities immediately. Layout follows the familiar
-   damage-calculator anatomy: your Pokémon left, field + results middle,
-   the AI's Pokémon right. */
+   and recomputes probabilities AND damage rolls immediately. Layout follows
+   the HZLA/Showdown calculator anatomy: damage strip on top (your moves
+   left, the AI's right, a headline with the exact roll list underneath),
+   then your Pokémon | field | AI Pokémon. */
 "use strict";
 
 const state = {
   meta: null, tables: null, trainers: [],
   trainerParty: [],          // /api/trainer party entries
   activeAiIndex: null,
+  damage: null,              // /api/damage response
+  sel: null,                 // {side: "player"|"ai", index} — headline move
   playerBuild: {             // build inputs that derive the player mon's stats
     nature: "Hardy",
     ivs: { hp: 31, atk: 31, def: 31, spa: 31, spd: 31, spe: 31 },
@@ -40,6 +43,18 @@ async function getJSON(url) {
   return body;
 }
 
+async function postJSON(url, doc) {
+  try {
+    const resp = await fetch(url, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(doc),
+    });
+    return { ok: resp.ok, body: await resp.json() };
+  } catch (err) {
+    return { ok: false, body: { error: { type: "network", message: String(err) } } };
+  }
+}
+
 /* ---------------- init ---------------- */
 
 async function init() {
@@ -67,6 +82,7 @@ async function init() {
 
 function renderAll() {
   renderField();
+  renderSideConditions();
   renderPanel("player");
   renderPanel("ai");
   refresh();
@@ -139,6 +155,7 @@ function setAiMon(index) {
     c.classList.toggle("active", i === index));
   renderAiFlags(entry);
   renderPanel("ai");
+  renderSideConditions();
   refresh();
 }
 
@@ -204,7 +221,8 @@ function renderPanel(which) {
     head.append(el("input", {
       list: "species-list", placeholder: "Species…", class: "species-input",
       value: side?.pokemon?.species || "",
-      onchange: (e) => { ensurePlayerMon(e.target.value.trim()); renderPanel("player"); refresh(); },
+      onchange: (e) => { ensurePlayerMon(e.target.value.trim());
+                         renderPanel("player"); renderSideConditions(); refresh(); },
     }));
   }
   if (!side) {
@@ -229,7 +247,8 @@ function renderPanel(which) {
                 el("span", { class: "dim" }, ` Lv ${mon.level}`));
   }
   panel.append(head);
-  panel.append(el("div", { class: "sub" }, mon.types.join(" / ")));
+  panel.append(el("div", { class: "type-row" },
+    ...mon.types.map((t) => el("span", { class: `type-chip t-${t}` }, t))));
 
   // Ability / item / status
   const idRow = el("div", { class: "row mini" });
@@ -292,12 +311,21 @@ function renderPanel(which) {
     panel.append(ivRow);
   }
 
-  // Moves ×4
-  const mv = el("div", { class: "moves-box" });
+  // Moves ×4, one per row with power/type readout
+  const mv = el("div", { class: "moves-list" });
   for (let i = 0; i < 4; i++) {
-    mv.append(el("input", { list: "move-list", value: mon.moves[i] || "",
-      placeholder: `Move ${i + 1}`,
-      onchange: (e) => { mon.moves[i] = e.target.value.trim(); refresh(); } }));
+    const meta = el("span", { class: "move-meta dim mini" });
+    const setMeta = (name) => {
+      const info = state.tables.moves[name];
+      meta.textContent = info ? `${info.power || "—"} ${info.type}` : "";
+    };
+    setMeta(mon.moves[i] || "");
+    mv.append(el("div", { class: "move-row" },
+      el("input", { list: "move-list", value: mon.moves[i] || "",
+        placeholder: `Move ${i + 1}`,
+        onchange: (e) => { mon.moves[i] = e.target.value.trim();
+                           setMeta(mon.moves[i]); refresh(); } }),
+      meta));
   }
   panel.append(mv);
 
@@ -326,28 +354,6 @@ function renderPanel(which) {
         } }), v));
   }
   panel.append(el("details", {}, el("summary", {}, "volatiles"), vols));
-
-  // Side conditions
-  const cond = el("div", { class: "side-conditions" });
-  const row1 = el("div", { class: "row mini" },
-    el("label", {}, "bench alive",
-      el("input", { type: "number", value: side.party_remaining, min: 0, max: 5,
-        onchange: (e) => { side.party_remaining = clampInt(e.target.value, 0, 5, 1); refresh(); } })));
-  for (const h of state.meta.hazards) {
-    row1.append(el("label", {}, h.replace("_", " "),
-      el("input", { type: "number", value: side.hazards[h] || 0, min: 0, max: 3,
-        onchange: (e) => { side.hazards[h] = clampInt(e.target.value, 0, 3, 0); refresh(); } })));
-  }
-  const row2 = el("div", { class: "row mini" });
-  for (const flag of ["reflect", "light_screen", "tailwind", "safeguard", "mist", "lucky_chant"]) {
-    row2.append(el("label", {},
-      el("input", { type: "checkbox", checked: !!side[flag],
-        onchange: (e) => { side[flag] = e.target.checked; refresh(); } }),
-      flag.replace("_", " ")));
-  }
-  cond.append(el("div", { class: "dim mini" }, "side conditions (this side of the field)"),
-              row1, row2);
-  panel.append(cond);
 }
 
 function boostSelect(mon, stat) {
@@ -367,19 +373,19 @@ function clampInt(value, min, max, fallback) {
   return Math.max(min, Math.min(max, n));
 }
 
-/* ---------------- field ---------------- */
+/* ---------------- field + side conditions ---------------- */
 
 function renderField() {
   const panel = $("#field-controls");
   panel.replaceChildren();
   const field = state.battle.field;
 
-  const weatherRow = el("div", { class: "row" });
+  const weatherRow = el("div", { class: "seg-row" });
   for (const w of [null, ...state.meta.weathers]) {
     weatherRow.append(el("button", {
-      class: "toggle" + (field.weather === w ? " on" : ""),
+      class: "seg" + (field.weather === w ? " on" : ""),
       onclick: () => { field.weather = w; renderField(); refresh(); },
-    }, w || "no weather"));
+    }, w || "none"));
   }
   panel.append(weatherRow);
 
@@ -388,45 +394,169 @@ function renderField() {
       el("input", { type: "number", value: field.turn, min: 1, style: "width:4em",
         onchange: (e) => { field.turn = clampInt(e.target.value, 1, 999, 1); refresh(); } })),
     el("button", { class: "toggle" + (field.trick_room ? " on" : ""),
-      onclick: () => { field.trick_room = !field.trick_room; renderField(); refresh(); } }, "Trick Room"),
+      onclick: (e) => { field.trick_room = !field.trick_room;
+                        e.target.classList.toggle("on"); refresh(); } }, "Trick Room"),
     el("button", { class: "toggle" + (field.gravity ? " on" : ""),
-      onclick: () => { field.gravity = !field.gravity; renderField(); refresh(); } }, "Gravity"),
+      onclick: (e) => { field.gravity = !field.gravity;
+                        e.target.classList.toggle("on"); refresh(); } }, "Gravity"),
   ));
 }
 
-/* ---------------- probabilities (always live) ---------------- */
+function renderSideConditions() {
+  const box = $("#side-conditions");
+  box.replaceChildren();
+  const grid = el("div", { class: "cond-grid" });
+  for (const which of ["player", "ai"]) {
+    const side = state.battle[which];
+    const cell = el("div", { class: "cond-cell" });
+    cell.append(el("div", { class: "cond-title" },
+      which === "player" ? "Your side" : "AI side"));
+    if (!side) {
+      cell.append(el("div", { class: "dim mini" }, "—"));
+      grid.append(cell);
+      continue;
+    }
+    const chips = el("div", { class: "chip-row" });
+    for (const flag of ["reflect", "light_screen", "tailwind", "safeguard", "mist", "lucky_chant"]) {
+      chips.append(el("button", { class: "toggle mini" + (side[flag] ? " on" : ""),
+        onclick: (e) => { side[flag] = !side[flag];
+                          e.target.classList.toggle("on"); refresh(); } },
+        flag.replace("_", " ")));
+    }
+    cell.append(chips);
+    const hz = el("div", { class: "row mini" });
+    for (const h of state.meta.hazards) {
+      hz.append(el("label", {}, h.replace(/_/g, " "),
+        el("input", { type: "number", value: side.hazards[h] || 0, min: 0, max: 3, style: "width:3em",
+          onchange: (e) => { side.hazards[h] = clampInt(e.target.value, 0, 3, 0); refresh(); } })));
+    }
+    cell.append(hz);
+    cell.append(el("div", { class: "row mini" },
+      el("label", {}, "bench alive",
+        el("input", { type: "number", value: side.party_remaining, min: 0, max: 5,
+          onchange: (e) => { side.party_remaining = clampInt(e.target.value, 0, 5, 1); refresh(); } }))));
+    grid.append(cell);
+  }
+  box.append(grid);
+}
+
+/* ---------------- live results (probabilities + damage) ---------------- */
 
 let seq = 0, timer = null;
 
 function refresh() {
   $("#raw-json").value = JSON.stringify(battleDoc() || state.battle, null, 1);
   clearTimeout(timer);
-  timer = setTimeout(fetchProbabilities, 150);
+  timer = setTimeout(fetchAll, 150);
 }
 
-async function fetchProbabilities() {
+async function fetchAll() {
   const doc = battleDoc();
+  const mySeq = ++seq;
   if (!doc) {
+    state.damage = null;
+    renderDamageStrip();
     $("#prob-panel").replaceChildren(
       el("p", { class: "placeholder" },
         !state.battle.ai ? "Pick a trainer Pokémon (right side)."
                          : "Set your Pokémon's species (left side)."));
     return;
   }
-  const mySeq = ++seq;
-  try {
-    const resp = await fetch("/api/probabilities", {
-      method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(doc),
-    });
-    const body = await resp.json();
-    if (mySeq !== seq) return;
-    if (!resp.ok) { showError(body); return; }
-    showError(null);
-    renderProbabilities(body);
-  } catch (err) {
-    if (mySeq === seq) showError({ error: { type: "network", message: String(err) } });
+  const [probs, dmg] = await Promise.all([
+    postJSON("/api/probabilities", doc), postJSON("/api/damage", doc),
+  ]);
+  if (mySeq !== seq) return;
+  state.damage = dmg.ok ? dmg.body : null;
+  ensureSelection();
+  renderDamageStrip();
+  if (probs.ok) {
+    showError(dmg.ok ? null : dmg.body);
+    renderProbabilities(probs.body);
+  } else {
+    showError(probs.body);
   }
+}
+
+function ensureSelection() {
+  const d = state.damage;
+  if (!d) { state.sel = null; return; }
+  const valid = (s) => s && d[s.side] && d[s.side][s.index]
+                       && d[s.side][s.index].kind === "damage";
+  if (valid(state.sel)) return;
+  state.sel = null;
+  for (const side of ["player", "ai"]) {   // prefer your own best move
+    let best = null;
+    (d[side] || []).forEach((e, i) => {
+      if (e.kind === "damage" && e.max > 0 && (!best || e.max_pct > best.pct))
+        best = { side, index: i, pct: e.max_pct };
+    });
+    if (best) { state.sel = { side: best.side, index: best.index }; return; }
+  }
+}
+
+function renderDamageStrip() {
+  const d = state.damage;
+  for (const side of ["player", "ai"]) {
+    const box = $(side === "player" ? "#dmg-player" : "#dmg-ai");
+    box.replaceChildren();
+    if (!d) continue;
+    (d[side] || []).forEach((e, i) => {
+      const selected = state.sel && state.sel.side === side && state.sel.index === i;
+      const row = el("div", {
+        class: "dmg-row" + (selected ? " sel" : "") + (e.kind !== "damage" ? " inert" : ""),
+        onclick: () => {
+          if (e.kind !== "damage") return;
+          state.sel = { side, index: i };
+          renderDamageStrip();
+        },
+      });
+      let range;
+      if (e.kind === "damage") range = e.max === 0 ? "immune" : `${e.min_pct} - ${e.max_pct}%`;
+      else if (e.kind === "status") range = "—";
+      else { range = "n/a"; row.title = e.reason; }
+      const name = el("span", { class: "dmg-name" }, e.move);
+      const pct = el("span", { class: "dmg-range" }, range);
+      if (side === "player") row.append(name, pct);
+      else row.append(pct, name);
+      box.append(row);
+    });
+  }
+  renderHeadline();
+}
+
+function renderHeadline() {
+  const bar = $("#dmg-headline");
+  bar.replaceChildren();
+  const d = state.damage, sel = state.sel;
+  if (!d || !sel) {
+    bar.append(el("span", { class: "dim mini" }, "Set both Pokémon to see damage rolls."));
+    return;
+  }
+  const e = d[sel.side][sel.index];
+  const atk = (sel.side === "player" ? state.battle.player : state.battle.ai).pokemon;
+  const tgt = (sel.side === "player" ? state.battle.ai : state.battle.player).pokemon;
+  const item = atk.item ? `${atk.item} ` : "";
+  let text = `Lv${atk.level} ${item}${atk.species} ${e.move} vs. Lv${tgt.level} ${tgt.species}: `;
+  text += e.max === 0 ? "no damage (immune)"
+        : `${e.min}-${e.max} (${e.min_pct} - ${e.max_pct}%) — ${e.ko}`;
+  bar.append(el("div", { class: "headline-main" }, text));
+  if (e.caveat) bar.append(el("div", { class: "headline-caveat" }, `⚠ ${e.caveat}`));
+  if (e.max > 0) {
+    if (e.outcomes.length === 1) {
+      bar.append(el("div", { class: "headline-rolls" },
+        `Rolls: (${e.outcomes[0].rolls.join(", ")})`));
+    } else {
+      for (const o of e.outcomes) {   // Bulldoze tiers, Triple Axel values
+        bar.append(el("div", { class: "headline-rolls" },
+          `${o.desc} (${fracPct(o.chance)}): ${o.min}-${o.max} (${o.min_pct} - ${o.max_pct}%)`));
+      }
+    }
+  }
+}
+
+function fracPct(frac) {  // "1/11" -> "9%"
+  const [n, den] = frac.split("/").map(Number);
+  return `${Math.round(100 * n / (den || 1))}%`;
 }
 
 function renderProbabilities(data) {
@@ -445,7 +575,7 @@ function renderProbabilities(data) {
     const dists = el("div", { class: "dists" }, el("b", {}, "score "), finals);
     for (const [flag, pairs] of Object.entries(action.flag_dists)) {
       dists.append(el("div", {}, el("b", {}, flag + " "),
-        pairs.map(([d, p]) => `${d >= 0 ? "+" + d : d}: ${p}`).join("  ")));
+        pairs.map(([dd, p]) => `${dd >= 0 ? "+" + dd : dd}: ${p}`).join("  ")));
     }
     box.append(dists);
     panel.append(box);
@@ -510,6 +640,7 @@ function adoptBattle(battle) {
   battle.flags = battle.flags || [];
   state.battle = battle;
   state.activeAiIndex = null;
+  state.sel = null;
   $("#ai-flags").replaceChildren(
     ...battle.flags.map((f) => el("span", { class: "flag" }, f)));
   document.querySelectorAll(".party-chip").forEach((c) => c.classList.remove("active"));
