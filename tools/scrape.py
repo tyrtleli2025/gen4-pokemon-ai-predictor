@@ -24,6 +24,14 @@ FLAGS = {
     "Baton Pass": "baton_pass",
     "Setup First Turn": "setup_first_turn",
     "Risky": "risky",
+    # Doubles milestone: the five sections the original scrape skipped.
+    # "Doubles vs Opponent"/"Doubles vs Ally" are the two sub-trees of the
+    # Tag Strategy flag (forced on for every trainer in doubles).
+    "Doubles vs Opponent": "tag_opponent",
+    "Doubles vs Ally": "tag_ally",
+    "Check HP": "check_hp",
+    "Weather": "weather",
+    "Harassment": "harassment",
 }
 
 # The site's nav links these two pages at typo'd URLs that 404; the real pages

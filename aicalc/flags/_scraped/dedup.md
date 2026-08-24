@@ -7,6 +7,11 @@
 - **baton_pass**: 6 distinct scoring blocks to encode (290/466 moves have no procedure for this flag)
 - **setup_first_turn**: 1 distinct scoring blocks to encode (375/466 moves have no procedure for this flag)
 - **risky**: 1 distinct scoring blocks to encode (405/466 moves have no procedure for this flag)
+- **tag_opponent**: 21 distinct scoring blocks to encode (174/466 moves have no procedure for this flag)
+- **tag_ally**: 12 distinct scoring blocks to encode (0/466 moves have no procedure for this flag)
+- **check_hp**: 18 distinct scoring blocks to encode (356/466 moves have no procedure for this flag)
+- **weather**: 4 distinct scoring blocks to encode (462/466 moves have no procedure for this flag)
+- **harassment**: 1 distinct scoring blocks to encode (413/466 moves have no procedure for this flag)
 
 ---
 # Scraped & deduplicated AI scoring text
@@ -4927,3 +4932,1245 @@ Unconditionally:
 ### No applicable AI procedure (405 moves)
 
 Absorb, Accelerock, Acid, Acid Armor, Aerial Ace, Aeroblast, Agility, Air Slash, Amnesia, Aqua Jet, Aqua Ring, Aqua Tail, Aromatherapy, Assist, Assurance, Astonish, Attack Order, Aura Sphere, Aurora Beam, Avalanche, Barrier, Baton Pass, Beat Up, Bite, Blast Burn, Blaze Kick, Blizzard, Block, Body Slam, Bone Club, Bone Rush, Bonemerang, Bounce, Brave Bird, Brick Break, Brine, Bubble, BubbleBeam, Bug Bite, Bug Buzz, Bulk Up, Bulldoze, Bullet Punch, Bullet Seed, Calm Mind, Camouflage, Captivate, Charge, Charge Beam, Charm, Chatter, Clamp, Close Combat, Confusion, Constrict, Conversion 2, Copycat, Cosmic Power, Cotton Spore, Crunch, Crush Claw, Crush Grip, Curse, Cut, Dark Pulse, Defend Order, Defog, Detect, Dig, Disable, Discharge, Dive, Dizzy Punch, Doom Desire, Double Hit, Double Kick, Double Team, Double-Edge, DoubleSlap, Draco Meteor, Dragon Dance, Dragon Pulse, Dragon Rage, Dragon Rush, DragonBreath, Drain Punch, Dream Eater, DynamicPunch, Earth Power, Earthquake, Egg Bomb, Embargo, Ember, Encore, Endeavor, Endure, Energy Ball, Eruption, Extrasensory, ExtremeSpeed, Facade, Faint Attack, Fake Out, Fake Tears, False Swipe, FeatherDance, Feint, Fire Ball, Fire Blast, Fire Fang, Fire Punch, Fire Spin, Flail, Flame Wheel, Flamethrower, Flare Blitz, Flash, Flash Cannon, Fling, Fly, Focus Blast, Focus Energy, Follow Me, Force Palm, Foresight, Frenzy Plant, Frustration, Fury Attack, Fury Swipes, Future Sight, Gastro Acid, Giga Drain, Giga Impact, Glare, Grass Knot, Gravity, Growl, Growth, Grudge, Guard Swap, Gunk Shot, Gust, HP Dark, HP Electric, HP Fighting, HP Fire, HP Flying, HP Ghost, HP Grass, HP Ground, HP Ice, HP Psychic, HP Rock, HP Water, Hail, Hail Ball, Hammer Arm, Harden, Haze, Head Smash, Headbutt, Heal Bell, Heal Order, Heart Swap, Heat Wave, Helping Hand, Hi Jump Kick, Hidden Power, Howl, Hurricane, Hydro Cannon, Hydro Pump, Hyper Beam, Hyper Fang, Hyper Voice, Ice Ball, Ice Beam, Ice Fang, Ice Punch, Ice Shard, Icicle Spear, Icy Wind, Imprison, Ingrain, Iron Defense, Iron Head, Iron Tail, Judgment, Jump Kick, Kinesis, Knock Off, Last Resort, Lava Plume, Leaf Storm, Leech Life, Leech Seed, Leer, Lick, Light Screen, Lock-On, Low Kick, Lucky Chant, Lunar Dance, Luster Purge, Mach Punch, Magic Coat, Magical Leaf, Magma Storm, Magnet Bomb, Magnet Rise, Me First, Mean Look, Meditate, Mega Drain, Mega Kick, Mega Punch, Metal Claw, Metal Sound, Meteor Mash, Milk Drink, Mimic, Mind Reader, Minimize, Miracle Eye, Mirror Shot, Mist, Mist Ball, Moonlight, Morning Sun, Mud Bomb, Mud Shot, Mud-Slap, Muddy Water, Mystical Fire, Nasty Plot, Natural Gift, Nature Power, Needle Arm, Night Shade, Octazooka, Odor Sleuth, Outrage, Overheat, Pain Split, Pay Day, Peck, Perish Song, Petal Dance, Pin Missile, Pluck, Poison Fang, Poison Gas, Poison Jab, Poison Sting, PoisonPowder, Pound, Powder Snow, Power Gem, Power Swap, Power Trick, Protect, Psybeam, Psych Up, Psychic, Psycho Boost, Psycho Shift, Punishment, Pursuit, Quick Attack, Rage, Rain Dance, Recover, Recycle, Reflect, Refresh, Rest, Return, Reversal, Roar, Roar of Time, Rock Ball, Rock Blast, Rock Climb, Rock Polish, Rock Slide, Rock Smash, Rock Throw, Rock Tomb, Rock Wrecker, Role Play, Rolling Kick, Roost, Sacred Fire, Safeguard, Sand Tomb, Sand-Attack, Sandstorm, Scald, Scary Face, Scratch, Screech, Secret Power, Seed Bomb, Seed Flare, Seismic Toss, Shadow Ball, Shadow Claw, Shadow Force, Shadow Punch, Shadow Sneak, Sharpen, Sheer Cold, Shock Wave, Signal Beam, Sketch, Skill Swap, Sky Attack, Sky Uppercut, Slack Off, Slam, Sleep Talk, Sludge, Sludge Bomb, SmellingSalt, Smog, SmokeScreen, Snore, Softboiled, Solar-Beam, SolarBeam, SonicBoom, Spider Web, Spikes, Spite, Stealth Rock, Steel Wing, Stockpile, Stomp, Strength, String Shot, Stun Spore, Submission, Substitute, Sucker Punch, Sunny Day, Super Fang, Superpower, Surf, Swallow, Sweet Scent, Swift, Swords Dance, Synthesis, Tackle, Tail Glow, Tail Whip, Tailwind, Take Down, Teleport, Thief, Thrash, Thunder, Thunder Fang, Thunder Wave, ThunderPunch, ThunderShock, Thunderbolt, Tickle, Torment, Toxic, Toxic Spikes, Transform, Tri Attack, Trick Room, Triple Kick, Trump Card, Twineedle, Twister, U-turn, Uproar, Vacuum Wave, ViceGrip, Vine Whip, Vital Throw, Volt Tackle, Wake-Up Slap, Water Ball, Water Gun, Water Pulse, Water Spout, Waterfall, Weather Ball, Whirlpool, Whirlwind, Wild Charge, Will-O-Wisp, Wing Attack, Wish, Withdraw, Wood Hammer, Worry Seed, Wrap, Wring Out, Zap Cannon, Zen Headbutt
+
+
+## tag_opponent
+
+- 21 distinct scoring blocks (+ 174 moves with no applicable procedure) out of 466 moves
+
+
+### Shared by 226 move(s): Absorb, Accelerock, Acid, Aerial Ace, Aeroblast, Air Cutter, Air Slash, AncientPower, Aqua Cutter, Assurance, Astonish, Attack Order, Aura Sphere, Aurora Beam, Avalanche, Beat Up, Bite, Blizzard, Body Slam, Bone Club, Bone Rush, Bonemerang, Bounce, Brick Break, Bug Bite, Bug Buzz, Bulldoze, Bullet Punch, Bullet Seed, Chatter, Confusion, Constrict, Crabhammer, Cross Chop, Cross Poison, Crunch, Crush Claw, Crush Grip, Cut, Dark Pulse, Dig, Dizzy Punch, Double Hit, Double Kick, Double-Edge, DoubleSlap, Draco Meteor, Dragon Claw, Dragon Pulse, Dragon Rush, DragonBreath, Drain Punch, Drill Peck, Drill Run, DynamicPunch, Earth Power, Egg Bomb, Energy Ball, Extrasensory, ExtremeSpeed, Facade, Faint Attack, Fake Out, False Swipe, Feint, Flash Cannon, Fly, Focus Blast, Force Palm, Frenzy Plant, Frustration, Fury Attack, Fury Swipes, Giga Drain, Giga Impact, Grass Knot, Gunk Shot, Gust, Gyro Ball, HP Dark, HP Fighting, HP Flying, HP Ghost, HP Grass, HP Ground, HP Ice, HP Psychic, HP Rock, Hail Ball, Hammer Arm, Headbutt, Hi Jump Kick, Hidden Power, Hurricane, Hydro Cannon, Hyper Beam, Hyper Fang, Hyper Voice, Ice Ball, Ice Beam, Ice Fang, Ice Punch, Ice Shard, Icicle Spear, Icy Wind, Iron Head, Iron Tail, Judgment, Jump Kick, Karate Chop, Knock Off, Last Resort, Leaf Blade, Leaf Storm, Leech Life, Lick, Low Kick, Luster Purge, Mach Punch, Magical Leaf, Magnet Bomb, Mega Drain, Mega Kick, Mega Punch, Megahorn, Metal Claw, Meteor Mash, Mirror Shot, Mist Ball, Mud Bomb, Mud Shot, Mud-Slap, Mystical Fire, Natural Gift, Needle Arm, Night Slash, Ominous Wind, Outrage, Pay Day, Payback, Peck, Petal Dance, Pin Missile, Pluck, Poison Fang, Poison Jab, Poison Sting, Poison Tail, Pound, Powder Snow, Power Gem, Power Whip, Psybeam, Psychic, Psycho Boost, Psycho Cut, Pursuit, Quick Attack, Rage, Razor Leaf, Return, Revenge, Roar of Time, Rock Ball, Rock Blast, Rock Climb, Rock Slide, Rock Smash, Rock Throw, Rock Tomb, Rock Wrecker, Rolling Kick, Sand Tomb, Scratch, Secret Power, Seed Bomb, Seed Flare, Shadow Ball, Shadow Claw, Shadow Force, Shadow Punch, Shadow Sneak, Sheer Cold, Signal Beam, Silver Wind, Sky Attack, Sky Uppercut, Slam, Slash, Sludge, Sludge Bomb, SmellingSalt, Smog, Snore, Solar-Beam, Spacial Rend, Steel Wing, Stomp, Stone Edge, Strength, Submission, Sucker Punch, Superpower, Swallow, Swift, Tackle, Thrash, Tri Attack, Triple Kick, Twineedle, Twister, U-turn, Uproar, Vacuum Wave, ViceGrip, Vine Whip, Vital Throw, Wake-Up Slap, Waterfall, Weather Ball, Wing Attack, Wood Hammer, Wrap, Wring Out, X-Scissor, Zen Headbutt
+
+```
+If the move cannot KO the target, and the user's ally's HP is over 0% (after rounding):
+
+If the effectiveness of the move is 1/2x:
+
+75% (192/256) chance of score -1 and continue
+
+If the effectiveness of the move is 1/4x:
+
+75% (192/256) chance of score -2 and continue
+
+If the move deals the most damage to the target when considering all of the user's ally's moves as well (regardless of if the ally is alive):
+
+50% (128/256) chance of score +1 and continue
+
+If the move did not receive a score +1 in the previous check:
+
+If the effectiveness of the move is 2x:
+
+60.9% (156/256) chance of score +1 and continue
+
+If the effectiveness of the move is 4x:
+
+75% (192/256) chance of score +1 and continue
+
+If the user's ally knows the move Helping Hand:
+
+Score +1 and terminate
+```
+
+
+### Shared by 17 move(s): Aqua Jet, Aqua Tail, Brine, Bubble, BubbleBeam, Clamp, Dive, HP Water, Heart Swap, Hydro Pump, Muddy Water, Octazooka, Scald, Water Ball, Water Gun, Water Pulse, Whirlpool
+
+```
+If the move cannot KO the target, and the user's ally's HP is over 0% (after rounding):
+
+If the effectiveness of the move is 1/2x:
+
+75% (192/256) chance of score -1 and continue
+
+If the effectiveness of the move is 1/4x:
+
+75% (192/256) chance of score -2 and continue
+
+If the move deals the most damage to the target when considering all of the user's ally's moves as well (regardless of if the ally is alive):
+
+50% (128/256) chance of score +1 and continue
+
+If the move did not receive a score +1 in the previous check:
+
+If the effectiveness of the move is 2x:
+
+60.9% (156/256) chance of score +1 and continue
+
+If the effectiveness of the move is 4x:
+
+75% (192/256) chance of score +1 and continue
+
+If the target's ally's ability is certainly Storm Drain:
+
+Score -1 and continue
+
+If the user's ally's ability is Storm Drain:
+
+Score -10 and terminate
+```
+
+
+### Shared by 11 move(s): Charge Beam, HP Electric, Shock Wave, Thunder, Thunder Fang, ThunderPunch, ThunderShock, Thunderbolt, Volt Tackle, Wild Charge, Zap Cannon
+
+```
+If the move cannot KO the target, and the user's ally's HP is over 0% (after rounding):
+
+If the effectiveness of the move is 1/2x:
+
+75% (192/256) chance of score -1 and continue
+
+If the effectiveness of the move is 1/4x:
+
+75% (192/256) chance of score -2 and continue
+
+If the move deals the most damage to the target when considering all of the user's ally's moves as well (regardless of if the ally is alive):
+
+50% (128/256) chance of score +1 and continue
+
+If the move did not receive a score +1 in the previous check:
+
+If the effectiveness of the move is 2x:
+
+60.9% (156/256) chance of score +1 and continue
+
+If the effectiveness of the move is 4x:
+
+75% (192/256) chance of score +1 and continue
+
+If the target's ally's ability is certainly Lightningrod:
+
+If the target's ally is Ground type:
+
+Score -9 and continue
+
+Else:
+
+Score -1 and continue
+
+If the user's ally's ability is Lightningrod:
+
+Score -10 and terminate
+```
+
+
+### Shared by 11 move(s): Ember, Fire Ball, Fire Blast, Fire Fang, Fire Punch, Fire Spin, Flamethrower, Flare Blitz, HP Fire, Heat Wave, Magma Storm
+
+```
+If the move cannot KO the target, and the user's ally's HP is over 0% (after rounding):
+
+If the effectiveness of the move is 1/2x:
+
+75% (192/256) chance of score -1 and continue
+
+If the effectiveness of the move is 1/4x:
+
+75% (192/256) chance of score -2 and continue
+
+If the move deals the most damage to the target when considering all of the user's ally's moves as well (regardless of if the ally is alive):
+
+50% (128/256) chance of score +1 and continue
+
+If the move did not receive a score +1 in the previous check:
+
+If the effectiveness of the move is 2x:
+
+60.9% (156/256) chance of score +1 and continue
+
+If the effectiveness of the move is 4x:
+
+75% (192/256) chance of score +1 and continue
+
+If the user's ability is Flash Fire, and Flash Fire has been activated already:
+
+Score +1 and terminate
+```
+
+
+### Shared by 6 move(s): Blast Burn, Blaze Kick, Eruption, Flame Wheel, Overheat, Sacred Fire
+
+```
+If the move cannot KO the target, and the user's ally's HP is over 0% (after rounding):
+
+If the effectiveness of the move is 1/2x:
+
+75% (192/256) chance of score -1 and continue
+
+If the effectiveness of the move is 1/4x:
+
+75% (192/256) chance of score -2 and continue
+
+If the move deals the most damage to the target when considering all of the user's ally's moves as well (regardless of if the ally is alive):
+
+50% (128/256) chance of score +1 and continue
+
+If the move did not receive a score +1 in the previous check:
+
+If the effectiveness of the move is 2x:
+
+60.9% (156/256) chance of score +1 and continue
+
+If the effectiveness of the move is 4x:
+
+75% (192/256) chance of score +1 and continue
+
+If the user's ability is Flash Fire, and Flash Fire has been activated already:
+
+Score +1 and continue
+```
+
+
+### Shared by 5 move(s): Fury Cutter, Night Shade, Seismic Toss, SonicBoom, Triple Axel
+
+```
+If the move deals the most damage to the target when considering all of the user's ally's moves as well (regardless of if the ally is alive):
+
+50% (128/256) chance of score +1 and terminate
+```
+
+
+### Shared by 2 move(s): Doom Desire, Future Sight
+
+```
+If the move cannot KO the target, and the user's ally's HP is over 0% (after rounding):
+
+If the effectiveness of the move is 1/2x:
+
+75% (192/256) chance of score -1 and continue
+
+If the effectiveness of the move is 1/4x:
+
+75% (192/256) chance of score -2 and continue
+
+If the move deals the most damage to the target when considering all of the user's ally's moves as well (regardless of if the ally is alive):
+
+50% (128/256) chance of score +1 and continue
+
+If the move did not receive a score +1 in the previous check:
+
+If the effectiveness of the move is 2x:
+
+60.9% (156/256) chance of score +1 and continue
+
+If the effectiveness of the move is 4x:
+
+75% (192/256) chance of score +1 and continue
+
+If the user's ally knows the move Future Sight or Doom Desire:
+
+If the user's ally's HP is 0% (after rounding):
+
+No score change and terminate
+
+If the user will attack after its ally:
+
+Score -3 and terminate
+
+If the user will speed tie with its ally:
+
+25% (64/256) chance of score -3 and terminate
+```
+
+
+### Shared by 1 move(s): Discharge
+
+```
+If the move cannot KO the target, and the user's ally's HP is over 0% (after rounding):
+
+If the effectiveness of the move is 1/2x:
+
+75% (192/256) chance of score -1 and continue
+
+If the effectiveness of the move is 1/4x:
+
+75% (192/256) chance of score -2 and continue
+
+If the move deals the most damage to the target when considering all of the user's ally's moves as well (regardless of if the ally is alive):
+
+50% (128/256) chance of score +1 and continue
+
+If the move did not receive a score +1 in the previous check:
+
+If the effectiveness of the move is 2x:
+
+60.9% (156/256) chance of score +1 and continue
+
+If the effectiveness of the move is 4x:
+
+75% (192/256) chance of score +1 and continue
+
+If the user's ally's ability is Volt Absorb or Motor Drive:
+
+Score +3 and terminate
+
+If the user's ally is Water or Flying type:
+
+Score -10 and terminate
+
+If the user's ally is Ground type:
+
+Score +3 and terminate
+
+Otherwise:
+
+Score -3 and terminate
+```
+
+
+### Shared by 1 move(s): Dragon Rage
+
+```
+If the move deals the most damage to the target when considering all of the user's ally's moves as well (regardless of if the ally is alive):
+
+50% (128/256) chance of score +1 and terminate/p>
+
+Doubles vs Ally
+Unconditionally:
+
+Score -30 and terminate
+```
+
+
+### Shared by 1 move(s): Earthquake
+
+```
+If the move cannot KO the target, and the user's ally's HP is over 0% (after rounding):
+
+If the effectiveness of the move is 1/2x:
+
+75% (192/256) chance of score -1 and continue
+
+If the effectiveness of the move is 1/4x:
+
+75% (192/256) chance of score -2 and continue
+
+If the move deals the most damage to the target when considering all of the user's ally's moves as well (regardless of if the ally is alive):
+
+50% (128/256) chance of score +1 and continue
+
+If the move did not receive a score +1 in the previous check:
+
+If the effectiveness of the move is 2x:
+
+60.9% (156/256) chance of score +1 and continue
+
+If the effectiveness of the move is 4x:
+
+75% (192/256) chance of score +1 and continue
+
+If the user's ally is Flying type, or has the ability Levitate, or is under the effect of Magnet Rise:
+
+Score +2 and terminate
+
+If the user's ally is Fire, Electric, Poison, or Rock type:
+
+Score -10 and terminate
+
+Otherwise:
+
+Score -3 and terminate
+```
+
+
+### Shared by 1 move(s): Follow Me
+
+```
+If the user's HP is under 31%:
+
+75% (192/256) chance of score -5 and terminate
+
+If the user's HP is over 90%:
+
+If the user's ally's HP is over 90%:
+
+75% (192/256) chance of score -1 and terminate
+
+If the user's ally's HP is over 50%:
+
+75% (192/256) chance of score +1 and terminate
+
+If the user's ally's HP is over 30%:
+
+75% (192/256) chance of score +2 and terminate
+
+If the user's ally's HP is under 31%:
+
+75% (192/256) chance of score +3 and terminate
+
+If the user's HP is over 50%:
+
+If the user's ally's HP is over 90%:
+
+75% (192/256) chance of score -2 and terminate
+
+If the user's ally's HP is over 50%:
+
+75% (192/256) chance of score -1 and terminate
+
+If the user's ally's HP is over 30%:
+
+75% (192/256) chance of score +1 and terminate
+
+If the user's ally's HP is under 31%:
+
+75% (192/256) chance of score +2 and terminate
+
+If the user's HP is over 30%:
+
+If the user's ally's HP is over 90%:
+
+75% (192/256) chance of score -2 and terminate
+
+If the user's ally's HP is over 50%:
+
+75% (192/256) chance of score -2 and terminate
+
+If the user's ally's HP is over 30%:
+
+75% (192/256) chance of score +1 and terminate
+
+If the user's ally's HP is under 31%:
+
+75% (192/256) chance of score +2 and terminate
+```
+
+
+### Shared by 1 move(s): Gravity
+
+```
+If Gravity is currently active:
+
+No scoring change and terminate
+
+If the user is Flying type, or has the ability Levitate, or is under the effect of Magnet Rise:
+
+Score -5 and continue
+
+If the user's ally is Flying type, or has the ability Levitate, or is under the effect of Magnet Rise:
+
+Score -5 and continue
+
+If the target is Flying type, or certainly has the ability Levitate, or is under the effect of Magnet Rise:
+
+75% (192/256) chance of score +3 and continue
+
+If the target's ally is Flying type, or certainly has the ability Levitate, or is under the effect of Magnet Rise:
+
+75% (192/256) chance of score +3 and terminate
+```
+
+
+### Shared by 1 move(s): Hail
+
+```
+If the user's ability is Ice Body or Snow Cloak, or the user knows the move Blizzard:
+
+Score +2 and continue
+
+If the user's ally's ability is Ice Body or Snow Cloak, or the user's ally knows the move Blizzard:
+
+Score +2 and terminate
+```
+
+
+### Shared by 1 move(s): Lava Plume
+
+```
+If the move cannot KO the target, and the user's ally's HP is over 0% (after rounding):
+
+If the effectiveness of the move is 1/2x:
+
+75% (192/256) chance of score -1 and continue
+
+If the effectiveness of the move is 1/4x:
+
+75% (192/256) chance of score -2 and continue
+
+If the move deals the most damage to the target when considering all of the user's ally's moves as well (regardless of if the ally is alive):
+
+50% (128/256) chance of score +1 and continue
+
+If the move did not receive a score +1 in the previous check:
+
+If the effectiveness of the move is 2x:
+
+60.9% (156/256) chance of score +1 and continue
+
+If the effectiveness of the move is 4x:
+
+75% (192/256) chance of score +1 and continue
+
+If the user's ability is Flash Fire, and Flash Fire has been activated already:
+
+Score +1 and continue
+
+If the user's ally's ability is Dry Skin:
+
+Score -3 and terminate
+
+If the user's ally's ability is Flash Fire:
+
+Score +3 and terminate
+
+If the user's ally is Grass, Steel, Ice, or Bug type:
+
+Score -10 and terminate
+
+Otherwise:
+
+Score -3 and terminate
+```
+
+
+### Shared by 1 move(s): Rain Dance
+
+```
+If the user's ability is Dry Skin, or the user is statused and its ability is Hydration:
+
+Score +2 and continue
+
+If the user's ally's ability is Dry Skin, or the user's ally is statused and its ability is Hydration:
+
+Score +2 and terminate
+```
+
+
+### Shared by 1 move(s): Sandstorm
+
+```
+If the user's ability is Sand Veil, or the user is Rock type:
+
+Score +2 and continue
+
+If the user's ally's ability is Sand Veil, or the user's ally is Rock type:
+
+Score +2 and terminate
+```
+
+
+### Shared by 1 move(s): Skill Swap
+
+```
+If the user's ability is Truant, Slow Start, Stall, or Klutz:
+
+Score +5 and terminate
+
+If the target's ability is Shadow Tag, Pure Power, Huge Power, Solid Rock, Filter, or Flower Gift:
+
+Score +2 and terminate
+```
+
+
+### Shared by 1 move(s): Sunny Day
+
+```
+If the user's ability is Leaf Guard, and the user is not statused, and the user's HP is over 29%:
+
+Score +2 and continue
+
+If the user's ability is Flower Gift:
+
+Score +2 and continue
+
+If the user's ability is Dry Skin:
+
+Score -2 and continue
+
+If the user's ability is Solar Power:
+
+If the user's HP is over 49%:
+
+Score +1 and continue
+
+50% (128/256) chance of score -2 and continue
+
+If the user's ally's ability is Leaf Guard, and the user's ally is not statused, and the user's ally HP is over 29%:
+
+Score +2 and continue
+
+If the user's ally's ability is Flower Gift:
+
+Score +2 and continue
+
+If the user's ally's ability is Dry Skin:
+
+Score -2 and continue
+
+If the user's ally's ability is Solar Power:
+
+If the user's ally's HP is over 49%:
+
+Score +1 and continue
+
+50% (128/256) chance of score -2 and terminate
+```
+
+
+### Shared by 1 move(s): Surf
+
+```
+If the move cannot KO the target, and the user's ally's HP is over 0% (after rounding):
+
+If the effectiveness of the move is 1/2x:
+
+75% (192/256) chance of score -1 and continue
+
+If the effectiveness of the move is 1/4x:
+
+75% (192/256) chance of score -2 and continue
+
+If the move deals the most damage to the target when considering all of the user's ally's moves as well (regardless of if the ally is alive):
+
+50% (128/256) chance of score +1 and continue
+
+If the move did not receive a score +1 in the previous check:
+
+If the effectiveness of the move is 2x:
+
+60.9% (156/256) chance of score +1 and continue
+
+If the effectiveness of the move is 4x:
+
+75% (192/256) chance of score +1 and continue
+
+If the user's ally's ability is Dry Skin or Water Absorb:
+
+Score +3 and terminate
+
+If the user's ally is Ground or Fire type:
+
+Score -10 and terminate
+
+Otherwise:
+
+Score -3 and terminate
+```
+
+
+### Shared by 1 move(s): Trick Room
+
+```
+If the user's ally's HP is 0% (after rounding), or either of the foes' HP is 0% (after rounding):
+
+Score -30 and terminate
+
+If the user and its ally will both move before both of the foes:
+
+Score -30 and terminate
+
+If the user and its ally will both move after both of the foes:
+
+75% (192/256) chance of score +5 and terminate
+
+Otherwise:
+
+Score -5 and terminate
+```
+
+
+### Shared by 1 move(s): Water Spout
+
+```
+If the target's ally's ability is certainly Storm Drain:
+
+Score -1 and continue
+
+If the user's ally's ability is Storm Drain:
+
+Score -10 and terminate
+```
+
+
+### No applicable AI procedure (174 moves)
+
+Acid Armor, Acupressure, Agility, Amnesia, Aqua Ring, Aromatherapy, Assist, Attract, Barrier, Baton Pass, Belly Drum, Bide, Block, Brave Bird, Bulk Up, Calm Mind, Camouflage, Captivate, Charge, Charm, Close Combat, Confuse Ray, Conversion 2, Copycat, Cosmic Power, Cotton Spore, Counter, Curse, Dark Void, Defend Order, Defog, Destiny Bond, Detect, Disable, Double Team, Dragon Dance, Dream Eater, Embargo, Encore, Endeavor, Endure, Explosion, Fake Tears, FeatherDance, Fissure, Flail, Flash, Flatter, Fling, Focus Energy, Focus Punch, Foresight, Gastro Acid, Glare, GrassWhistle, Growl, Growth, Grudge, Guard Swap, Guillotine, Harden, Haze, Head Smash, Heal Bell, Heal Order, Helping Hand, Horn Drill, Howl, Hypnosis, Imprison, Ingrain, Iron Defense, Kinesis, Leech Seed, Leer, Light Screen, Lock-On, Lovely Kiss, Lucky Chant, Lunar Dance, Magic Coat, Magnet Rise, Me First, Mean Look, Meditate, Memento, Metal Burst, Metal Sound, Metronome, Milk Drink, Mimic, Mind Reader, Minimize, Miracle Eye, Mirror Coat, Mirror Move, Mist, Moonlight, Morning Sun, Nasty Plot, Nature Power, Odor Sleuth, Pain Split, Perish Song, Poison Gas, PoisonPowder, Power Swap, Power Trick, Present, Protect, Psych Up, Psycho Shift, Punishment, Razor Wind, Recover, Recycle, Reflect, Refresh, Rest, Reversal, Roar, Rock Polish, Role Play, Roost, Safeguard, Sand-Attack, Scary Face, Screech, Selfdestruct, Sharpen, Sing, Sketch, Slack Off, Sleep Powder, Sleep Talk, SmokeScreen, Softboiled, SolarBeam, Spider Web, Spikes, Spite, Spore, Stealth Rock, Stockpile, String Shot, Stun Spore, Substitute, Super Fang, Supersonic, Swagger, Sweet Kiss, Sweet Scent, Swords Dance, Synthesis, Tail Glow, Tail Whip, Tailwind, Take Down, Teeter Dance, Teleport, Thief, Thunder Wave, Tickle, Torment, Toxic, Toxic Spikes, Transform, Trump Card, Whirlwind, Will-O-Wisp, Wish, Withdraw, Worry Seed, Yawn
+
+
+## tag_ally
+
+- 12 distinct scoring blocks (+ 0 moves with no applicable procedure) out of 466 moves
+
+
+### Shared by 408 move(s): Absorb, Accelerock, Acid, Acid Armor, Aerial Ace, Aeroblast, Agility, Air Cutter, Air Slash, Amnesia, AncientPower, Aqua Cutter, Aqua Ring, Aromatherapy, Assist, Assurance, Astonish, Attack Order, Attract, Aura Sphere, Aurora Beam, Avalanche, Barrier, Baton Pass, Beat Up, Belly Drum, Bide, Bite, Blizzard, Block, Body Slam, Bone Club, Bone Rush, Bonemerang, Bounce, Brave Bird, Brick Break, Bug Bite, Bug Buzz, Bulk Up, Bulldoze, Bullet Punch, Bullet Seed, Calm Mind, Camouflage, Captivate, Charge, Charm, Chatter, Close Combat, Confuse Ray, Confusion, Constrict, Conversion 2, Copycat, Cosmic Power, Cotton Spore, Counter, Crabhammer, Cross Chop, Cross Poison, Crunch, Crush Claw, Crush Grip, Curse, Cut, Dark Pulse, Dark Void, Defend Order, Defog, Destiny Bond, Detect, Dig, Disable, Dizzy Punch, Doom Desire, Double Hit, Double Kick, Double Team, Double-Edge, DoubleSlap, Draco Meteor, Dragon Claw, Dragon Dance, Dragon Pulse, Dragon Rage, Dragon Rush, DragonBreath, Drain Punch, Dream Eater, Drill Peck, Drill Run, DynamicPunch, Earth Power, Earthquake, Egg Bomb, Embargo, Encore, Endeavor, Endure, Energy Ball, Explosion, Extrasensory, ExtremeSpeed, Facade, Faint Attack, Fake Out, Fake Tears, False Swipe, FeatherDance, Feint, Fissure, Flail, Flash, Flash Cannon, Flatter, Fling, Fly, Focus Blast, Focus Energy, Focus Punch, Follow Me, Force Palm, Foresight, Frenzy Plant, Frustration, Fury Attack, Fury Cutter, Fury Swipes, Future Sight, Giga Drain, Giga Impact, Glare, Grass Knot, GrassWhistle, Gravity, Growl, Growth, Grudge, Guard Swap, Guillotine, Gunk Shot, Gust, Gyro Ball, HP Dark, HP Fighting, HP Flying, HP Ghost, HP Grass, HP Ground, HP Ice, HP Psychic, HP Rock, Hail, Hail Ball, Hammer Arm, Harden, Haze, Head Smash, Headbutt, Heal Bell, Heal Order, Hi Jump Kick, Hidden Power, Horn Drill, Howl, Hurricane, Hydro Cannon, Hyper Beam, Hyper Fang, Hyper Voice, Hypnosis, Ice Ball, Ice Beam, Ice Fang, Ice Punch, Ice Shard, Icicle Spear, Icy Wind, Imprison, Ingrain, Iron Defense, Iron Head, Iron Tail, Judgment, Jump Kick, Karate Chop, Kinesis, Knock Off, Last Resort, Leaf Blade, Leaf Storm, Leech Life, Leech Seed, Leer, Lick, Light Screen, Lock-On, Lovely Kiss, Low Kick, Lucky Chant, Lunar Dance, Luster Purge, Mach Punch, Magic Coat, Magical Leaf, Magnet Bomb, Magnet Rise, Me First, Mean Look, Meditate, Mega Drain, Mega Kick, Mega Punch, Megahorn, Memento, Metal Burst, Metal Claw, Metal Sound, Meteor Mash, Metronome, Milk Drink, Mimic, Mind Reader, Minimize, Miracle Eye, Mirror Coat, Mirror Move, Mirror Shot, Mist, Mist Ball, Moonlight, Morning Sun, Mud Bomb, Mud Shot, Mud-Slap, Mystical Fire, Nasty Plot, Natural Gift, Nature Power, Needle Arm, Night Shade, Night Slash, Odor Sleuth, Ominous Wind, Outrage, Pain Split, Pay Day, Payback, Peck, Perish Song, Petal Dance, Pin Missile, Pluck, Poison Fang, Poison Jab, Poison Sting, Poison Tail, Pound, Powder Snow, Power Gem, Power Swap, Power Trick, Power Whip, Present, Protect, Psybeam, Psych Up, Psychic, Psycho Boost, Psycho Cut, Psycho Shift, Punishment, Pursuit, Quick Attack, Rage, Rain Dance, Razor Leaf, Razor Wind, Recover, Recycle, Reflect, Refresh, Rest, Return, Revenge, Reversal, Roar, Roar of Time, Rock Ball, Rock Blast, Rock Climb, Rock Polish, Rock Slide, Rock Smash, Rock Throw, Rock Tomb, Rock Wrecker, Role Play, Rolling Kick, Roost, Safeguard, Sand Tomb, Sand-Attack, Sandstorm, Scary Face, Scratch, Screech, Secret Power, Seed Bomb, Seed Flare, Seismic Toss, Selfdestruct, Shadow Ball, Shadow Claw, Shadow Force, Shadow Punch, Shadow Sneak, Sharpen, Sheer Cold, Signal Beam, Silver Wind, Sing, Sketch, Sky Attack, Sky Uppercut, Slack Off, Slam, Slash, Sleep Powder, Sleep Talk, Sludge, Sludge Bomb, SmellingSalt, Smog, SmokeScreen, Snore, Softboiled, Solar-Beam, SolarBeam, SonicBoom, Spacial Rend, Spider Web, Spikes, Spite, Spore, Stealth Rock, Steel Wing, Stockpile, Stomp, Stone Edge, Strength, String Shot, Stun Spore, Submission, Substitute, Sucker Punch, Sunny Day, Super Fang, Superpower, Supersonic, Swallow, Sweet Kiss, Sweet Scent, Swift, Swords Dance, Synthesis, Tackle, Tail Glow, Tail Whip, Tailwind, Take Down, Teeter Dance, Teleport, Thief, Thrash, Tickle, Torment, Toxic Spikes, Transform, Tri Attack, Trick Room, Triple Axel, Triple Kick, Trump Card, Twineedle, Twister, U-turn, Uproar, Vacuum Wave, ViceGrip, Vine Whip, Vital Throw, Wake-Up Slap, Water Spout, Waterfall, Weather Ball, Whirlwind, Wing Attack, Wish, Withdraw, Wood Hammer, Worry Seed, Wrap, Wring Out, X-Scissor, Yawn, Zen Headbutt
+
+```
+Unconditionally:
+
+Score -30 and terminate
+```
+
+
+### Shared by 18 move(s): Aqua Jet, Aqua Tail, Brine, Bubble, BubbleBeam, Clamp, Dive, HP Water, Heart Swap, Hydro Pump, Muddy Water, Octazooka, Scald, Surf, Water Ball, Water Gun, Water Pulse, Whirlpool
+
+```
+If the target's ability is Water Absorb or Dry Skin:
+
+If the target is at full HP:
+
+Score -10 and terminate
+
+If the target's HP is over 90%:
+
+No scoring change and terminate
+
+If the target's HP is over 75%:
+
+25% (64/256) chance of score +3 and terminate
+
+If the target's HP is over 50%:
+
+50% (128/256) chance of score +3 and terminate
+
+Otherwise:
+
+75% (192/256) chance of score +3 and terminate
+
+Otherwise:
+
+Score -30 and terminate
+```
+
+
+### Shared by 18 move(s): Blast Burn, Blaze Kick, Ember, Eruption, Fire Ball, Fire Blast, Fire Fang, Fire Punch, Fire Spin, Flame Wheel, Flamethrower, Flare Blitz, HP Fire, Heat Wave, Lava Plume, Magma Storm, Overheat, Sacred Fire
+
+```
+If the target's ability is Flash Fire, and Flash Fire has not been activated already:
+
+Score +3 and terminate
+
+Otherwise:
+
+Score -30 and terminate
+```
+
+
+### Shared by 12 move(s): Charge Beam, Discharge, HP Electric, Shock Wave, Thunder, Thunder Fang, ThunderPunch, ThunderShock, Thunderbolt, Volt Tackle, Wild Charge, Zap Cannon
+
+```
+If the target's ability is Motor Drive, and the target's current speed is not boosted to +6:
+
+37.5% (96/256) chance of score +3 and terminate
+
+If the target's ability is Volt Absorb:
+
+If the target is at full HP:
+
+Score -10 and terminate
+
+If the target's HP is over 90%:
+
+No scoring change and terminate
+
+If the target's HP is over 75%:
+
+25% (64/256) chance of score +3 and terminate
+
+If the target's HP is over 50%:
+
+50% (128/256) chance of score +3 and terminate
+
+Otherwise:
+
+75% (192/256) chance of score +3 and terminate
+
+Otherwise:
+
+Score -30 and terminate
+```
+
+
+### Shared by 3 move(s): Poison Gas, PoisonPowder, Toxic
+
+```
+If the target's ability is Poison Heal, and the target is not already statused, and the target's HP is under 92%:
+
+Score +5 and terminate
+
+Otherwise:
+
+Score -30 and terminate
+```
+
+
+### Shared by 1 move(s): Acupressure
+
+```
+If the target's ability is not Simple, and the target's current attack, defense, speed, special attack, special defense, evasion, or accuracy is boosted to +6:
+
+Score -30 and terminate
+
+If the target's ability is Simple, and the target's current attack, defense, speed, special attack, special defense, evasion, or accuracy is boosted to +3 or more:
+
+Score -10 and terminate
+
+If the target's HP is under 51%:
+
+Score -1 and terminate
+
+If the target's HP is over 90%:
+
+68.8% (176/256) chance of score +2 and terminate
+
+Otherwise:
+
+34.4% (88/256) chance of score +1 and terminate
+```
+
+
+### Shared by 1 move(s): Gastro Acid
+
+```
+If the target is already under the effect of Gastro Acid:
+
+Score -30 and terminate
+
+If the target's ability is Truant or Slow Start:
+
+Score +5 and terminate
+
+Otherwise:
+
+No scoring change and terminate
+```
+
+
+### Shared by 1 move(s): Helping Hand
+
+```
+If the target's HP is 0% (after rounding):
+
+Score -30 and terminate
+
+If the target's HP is over 50%, or the target will move before both of its foes:
+
+With a 25% (64/256) chance:
+
+Score -1 and terminate
+
+Else:
+
+75% (192/256) chance of score +2 and terminate
+
+Otherwise:
+
+No scoring change and terminate
+```
+
+
+### Shared by 1 move(s): Skill Swap
+
+```
+If the target's ability is Truant or Slow Start:
+
+Score +10 and terminate
+
+If the user's ability is Levitate, and the target's ability is not Levitate, and the target is Electric type:
+
+If the target is pure Electric type:
+
+Score +2 and terminate
+
+Else:
+
+Score -29 and terminate
+
+If the user's ability is CompoundEyes or No Guard, and the target knows a move in the list below:
+
+Score +3 and terminate
+
+Otherwise:
+
+Score -30 and terminate
+
+Attached list:
+
+Fire Blast
+
+Thunder
+
+Cross Chop
+
+Hydro Pump
+
+DynamicPunch
+
+Blizzard
+
+Zap Cannon
+
+Megahorn
+
+Focus Blast
+
+Gunk Shot
+
+Magma Storm
+
+Power Whip
+
+Seed Flare
+
+Head Smash
+```
+
+
+### Shared by 1 move(s): Swagger
+
+```
+If the target is holding a Lum Berry or Persim Berry:
+
+If the target's current attack is boosted to +2 or more:
+
+No scoring change and terminate
+
+Else:
+
+Score +3 and terminate
+
+Otherwise:
+
+Score -30 and terminate
+```
+
+
+### Shared by 1 move(s): Thunder Wave
+
+```
+If the target is Ground type:
+
+Score -30 and terminate
+
+If the target's ability is Motor Drive, and the target's current speed is not boosted to +6:
+
+37.5% (96/256) chance of score +3 and terminate
+
+If the target's ability is Volt Absorb:
+
+If the target is at full HP:
+
+Score -10 and terminate
+
+If the target's HP is over 90%:
+
+No scoring change and terminate
+
+If the target's HP is over 75%:
+
+25% (64/256) chance of score +3 and terminate
+
+If the target's HP is over 50%:
+
+50% (128/256) chance of score +3 and terminate
+
+Otherwise:
+
+75% (192/256) chance of score +3 and terminate
+
+Otherwise:
+
+Score -30 and terminate
+```
+
+
+### Shared by 1 move(s): Will-O-Wisp
+
+```
+If the target's ability is Flash Fire, and Flash Fire has not been activated already:
+
+Score +3 and terminate
+
+If the target's ability is Guts, and the target is not currently statused, and the target is not Fire type, and the target is not holding a Flame Orb or Toxic Orb, and the target's HP is over 80%:
+
+Score +5 and terminate
+
+Otherwise:
+
+Score -30 and terminate
+```
+
+
+## check_hp
+
+- 18 distinct scoring blocks (+ 356 moves with no applicable procedure) out of 466 moves
+
+
+### Shared by 26 move(s): Amnesia, Belly Drum, Bulk Up, Calm Mind, Captivate, Charge, Charm, Cosmic Power, Cotton Spore, Defend Order, Dragon Dance, Fake Tears, FeatherDance, Fling, Kinesis, Metal Sound, Minimize, Nasty Plot, Safeguard, Scary Face, Screech, Stockpile, Swords Dance, Tail Glow, Tailwind, Tickle
+
+```
+If the user's HP is under 70%:
+
+80.5% (206/256) chance of score -2 and terminate
+
+If the target's HP is under 71%:
+
+80.5% (206/256) chance of score -2 and terminate
+```
+
+
+### Shared by 21 move(s): Attract, Dark Void, Fissure, Flatter, Glare, GrassWhistle, Guillotine, Horn Drill, Hypnosis, Lovely Kiss, Poison Gas, Sing, Sleep Powder, Spite, Spore, Stun Spore, Super Fang, Thunder Wave, Toxic, Will-O-Wisp, Yawn
+
+```
+If the target's HP is under 31%:
+
+80.5% (206/256) chance of score -2 and terminate
+```
+
+
+### Shared by 10 move(s): Grudge, Heal Order, Lunar Dance, Milk Drink, Moonlight, Morning Sun, Recover, Slack Off, Softboiled, Synthesis
+
+```
+If the user's HP is over 70%:
+
+80.5% (206/256) chance of score -2 and terminate
+```
+
+
+### Shared by 8 move(s): Flash, Growl, Leer, Sand-Attack, SmokeScreen, String Shot, Sweet Scent, Tail Whip
+
+```
+If the user's HP is under 71%:
+
+80.5% (206/256) chance of score -2 and terminate
+
+If the target's HP is under 72%:
+
+80.5% (206/256) chance of score -2 and terminate
+```
+
+
+### Shared by 7 move(s): Confuse Ray, Pain Split, Perish Song, PoisonPowder, Supersonic, Sweet Kiss, Teeter Dance
+
+```
+If the target's HP is under 71%:
+
+80.5% (206/256) chance of score -2 and terminate
+```
+
+
+### Shared by 7 move(s): Double Team, Growth, Harden, Howl, Meditate, Sharpen, Withdraw
+
+```
+If the user HP is under 71%:
+
+80.5% (206/256) chance of score -2 and terminate
+```
+
+
+### Shared by 5 move(s): Acid Armor, Agility, Barrier, Iron Defense, Rock Polish
+
+```
+If the user HP is under 70%:
+
+80.5% (206/256) chance of score -2 and terminate
+
+If the target's HP is under 71%:
+
+80.5% (206/256) chance of score -2 and terminate
+```
+
+
+### Shared by 5 move(s): Counter, Lock-On, Mind Reader, Mirror Coat, Psych Up
+
+```
+If the user's HP is under 31%:
+
+80.5% (206/256) chance of score -2 and terminate
+
+If the target's HP is under 31%:
+
+80.5% (206/256) chance of score -2 and terminate
+```
+
+
+### Shared by 4 move(s): Destiny Bond, Flail, Reversal, Roost
+
+```
+If the user's HP is over 71%:
+
+80.5% (206/256) chance of score -2 and terminate
+```
+
+
+### Shared by 3 move(s): Bide, Metal Burst, Water Spout
+
+```
+If the user's HP is under 31%:
+
+80.5% (206/256) chance of score -2 and terminate
+```
+
+
+### Shared by 3 move(s): Explosion, Memento, Selfdestruct
+
+```
+If the user's HP is over 30%:
+
+80.5% (206/256) chance of score -2 and terminate
+
+If the target's HP is under 31%:
+
+80.5% (206/256) chance of score -2 and terminate
+```
+
+
+### Shared by 3 move(s): Guard Swap, Lucky Chant, Power Swap
+
+```
+If the user's HP is over 30% and under 71%:
+
+80.5% (206/256) chance of score -2 and terminate
+```
+
+
+### Shared by 2 move(s): Light Screen, Reflect
+
+```
+If the user HP is under 71%:
+
+80.5% (206/256) chance of score -2 and terminate
+
+If the target's HP is under 31%:
+
+80.5% (206/256) chance of score -2 and terminate
+```
+
+
+### Shared by 2 move(s): Rest, Wish
+
+```
+If the user's HP is under 71%:
+
+80.5% (206/256) chance of score -2 and terminate
+```
+
+
+### Shared by 1 move(s): Acupressure
+
+```
+If the user's HP is under 31%:
+
+80.5% (206/256) chance of score -2 and terminate
+
+If the target's HP is under 71%:
+
+80.5% (206/256) chance of score -2 and terminate
+```
+
+
+### Shared by 1 move(s): Conversion 2
+
+```
+If the user's HP is under 70%:
+
+80.5% (206/256) chance of score -2 and terminate
+
+If the target's HP is under 31%:
+
+80.5% (206/256) chance of score -2 and terminate
+```
+
+
+### Shared by 1 move(s): Focus Energy
+
+```
+If the user HP is under 70%:
+
+80.5% (206/256) chance of score -2 and terminate
+```
+
+
+### Shared by 1 move(s): Mist
+
+```
+If the user HP is under 71%:
+
+80.5% (206/256) chance of score -2 and terminate
+
+If the target's HP is over 71%:
+
+80.5% (206/256) chance of score -2 and terminate
+```
+
+
+### No applicable AI procedure (356 moves)
+
+Absorb, Accelerock, Acid, Aerial Ace, Aeroblast, Air Cutter, Air Slash, AncientPower, Aqua Cutter, Aqua Jet, Aqua Ring, Aqua Tail, Aromatherapy, Assist, Assurance, Astonish, Attack Order, Aura Sphere, Aurora Beam, Avalanche, Baton Pass, Beat Up, Bite, Blast Burn, Blaze Kick, Blizzard, Block, Body Slam, Bone Club, Bone Rush, Bonemerang, Bounce, Brave Bird, Brick Break, Brine, Bubble, BubbleBeam, Bug Bite, Bug Buzz, Bulldoze, Bullet Punch, Bullet Seed, Camouflage, Charge Beam, Chatter, Clamp, Close Combat, Confusion, Constrict, Copycat, Crabhammer, Cross Chop, Cross Poison, Crunch, Crush Claw, Crush Grip, Curse, Cut, Dark Pulse, Defog, Detect, Dig, Disable, Discharge, Dive, Dizzy Punch, Doom Desire, Double Hit, Double Kick, Double-Edge, DoubleSlap, Draco Meteor, Dragon Claw, Dragon Pulse, Dragon Rage, Dragon Rush, DragonBreath, Drain Punch, Dream Eater, Drill Peck, Drill Run, DynamicPunch, Earth Power, Earthquake, Egg Bomb, Embargo, Ember, Encore, Endeavor, Endure, Energy Ball, Eruption, Extrasensory, ExtremeSpeed, Facade, Faint Attack, Fake Out, False Swipe, Feint, Fire Ball, Fire Blast, Fire Fang, Fire Punch, Fire Spin, Flame Wheel, Flamethrower, Flare Blitz, Flash Cannon, Fly, Focus Blast, Focus Punch, Follow Me, Force Palm, Foresight, Frenzy Plant, Frustration, Fury Attack, Fury Cutter, Fury Swipes, Future Sight, Gastro Acid, Giga Drain, Giga Impact, Grass Knot, Gravity, Gunk Shot, Gust, Gyro Ball, HP Dark, HP Electric, HP Fighting, HP Fire, HP Flying, HP Ghost, HP Grass, HP Ground, HP Ice, HP Psychic, HP Rock, HP Water, Hail, Hail Ball, Hammer Arm, Haze, Head Smash, Headbutt, Heal Bell, Heart Swap, Heat Wave, Helping Hand, Hi Jump Kick, Hidden Power, Hurricane, Hydro Cannon, Hydro Pump, Hyper Beam, Hyper Fang, Hyper Voice, Ice Ball, Ice Beam, Ice Fang, Ice Punch, Ice Shard, Icicle Spear, Icy Wind, Imprison, Ingrain, Iron Head, Iron Tail, Judgment, Jump Kick, Karate Chop, Knock Off, Last Resort, Lava Plume, Leaf Blade, Leaf Storm, Leech Life, Leech Seed, Lick, Low Kick, Luster Purge, Mach Punch, Magic Coat, Magical Leaf, Magma Storm, Magnet Bomb, Magnet Rise, Me First, Mean Look, Mega Drain, Mega Kick, Mega Punch, Megahorn, Metal Claw, Meteor Mash, Metronome, Mimic, Miracle Eye, Mirror Move, Mirror Shot, Mist Ball, Mud Bomb, Mud Shot, Mud-Slap, Muddy Water, Mystical Fire, Natural Gift, Nature Power, Needle Arm, Night Shade, Night Slash, Octazooka, Odor Sleuth, Ominous Wind, Outrage, Overheat, Pay Day, Payback, Peck, Petal Dance, Pin Missile, Pluck, Poison Fang, Poison Jab, Poison Sting, Poison Tail, Pound, Powder Snow, Power Gem, Power Trick, Power Whip, Present, Protect, Psybeam, Psychic, Psycho Boost, Psycho Cut, Psycho Shift, Punishment, Pursuit, Quick Attack, Rage, Rain Dance, Razor Leaf, Razor Wind, Recycle, Refresh, Return, Revenge, Roar, Roar of Time, Rock Ball, Rock Blast, Rock Climb, Rock Slide, Rock Smash, Rock Throw, Rock Tomb, Rock Wrecker, Role Play, Rolling Kick, Sacred Fire, Sand Tomb, Sandstorm, Scald, Scratch, Secret Power, Seed Bomb, Seed Flare, Seismic Toss, Shadow Ball, Shadow Claw, Shadow Force, Shadow Punch, Shadow Sneak, Sheer Cold, Shock Wave, Signal Beam, Silver Wind, Sketch, Skill Swap, Sky Attack, Sky Uppercut, Slam, Slash, Sleep Talk, Sludge, Sludge Bomb, SmellingSalt, Smog, Snore, Solar-Beam, SolarBeam, SonicBoom, Spacial Rend, Spider Web, Spikes, Stealth Rock, Steel Wing, Stomp, Stone Edge, Strength, Submission, Substitute, Sucker Punch, Sunny Day, Superpower, Surf, Swagger, Swallow, Swift, Tackle, Take Down, Teleport, Thief, Thrash, Thunder, Thunder Fang, ThunderPunch, ThunderShock, Thunderbolt, Torment, Toxic Spikes, Transform, Tri Attack, Trick Room, Triple Axel, Triple Kick, Trump Card, Twineedle, Twister, U-turn, Uproar, Vacuum Wave, ViceGrip, Vine Whip, Vital Throw, Volt Tackle, Wake-Up Slap, Water Ball, Water Gun, Water Pulse, Waterfall, Weather Ball, Whirlpool, Whirlwind, Wild Charge, Wing Attack, Wood Hammer, Worry Seed, Wrap, Wring Out, X-Scissor, Zap Cannon, Zen Headbutt
+
+
+## weather
+
+- 4 distinct scoring blocks (+ 462 moves with no applicable procedure) out of 466 moves
+
+
+### Shared by 1 move(s): Hail
+
+```
+If it is not the first turn of battle:
+
+No scoring change and terminate
+
+If the current weather is not hail:
+
+Score +1 and terminate
+```
+
+
+### Shared by 1 move(s): Rain Dance
+
+```
+If it is not the first turn of battle:
+
+No scoring change and terminate
+
+If the current weather is not rain:
+
+Score +1 and terminate
+```
+
+
+### Shared by 1 move(s): Sandstorm
+
+```
+If it is not the first turn of battle:
+
+No scoring change and terminate
+
+If the current weather is not sandstorm:
+
+Score +1 and terminate
+```
+
+
+### Shared by 1 move(s): Sunny Day
+
+```
+If it is not the first turn of battle:
+
+No scoring change and terminate
+
+If the current weather is not harsh sun:
+
+Score +1 and terminate
+```
+
+
+### No applicable AI procedure (462 moves)
+
+Absorb, Accelerock, Acid, Acid Armor, Acupressure, Aerial Ace, Aeroblast, Agility, Air Cutter, Air Slash, Amnesia, AncientPower, Aqua Cutter, Aqua Jet, Aqua Ring, Aqua Tail, Aromatherapy, Assist, Assurance, Astonish, Attack Order, Attract, Aura Sphere, Aurora Beam, Avalanche, Barrier, Baton Pass, Beat Up, Belly Drum, Bide, Bite, Blast Burn, Blaze Kick, Blizzard, Block, Body Slam, Bone Club, Bone Rush, Bonemerang, Bounce, Brave Bird, Brick Break, Brine, Bubble, BubbleBeam, Bug Bite, Bug Buzz, Bulk Up, Bulldoze, Bullet Punch, Bullet Seed, Calm Mind, Camouflage, Captivate, Charge, Charge Beam, Charm, Chatter, Clamp, Close Combat, Confuse Ray, Confusion, Constrict, Conversion 2, Copycat, Cosmic Power, Cotton Spore, Counter, Crabhammer, Cross Chop, Cross Poison, Crunch, Crush Claw, Crush Grip, Curse, Cut, Dark Pulse, Dark Void, Defend Order, Defog, Destiny Bond, Detect, Dig, Disable, Discharge, Dive, Dizzy Punch, Doom Desire, Double Hit, Double Kick, Double Team, Double-Edge, DoubleSlap, Draco Meteor, Dragon Claw, Dragon Dance, Dragon Pulse, Dragon Rage, Dragon Rush, DragonBreath, Drain Punch, Dream Eater, Drill Peck, Drill Run, DynamicPunch, Earth Power, Earthquake, Egg Bomb, Embargo, Ember, Encore, Endeavor, Endure, Energy Ball, Eruption, Explosion, Extrasensory, ExtremeSpeed, Facade, Faint Attack, Fake Out, Fake Tears, False Swipe, FeatherDance, Feint, Fire Ball, Fire Blast, Fire Fang, Fire Punch, Fire Spin, Fissure, Flail, Flame Wheel, Flamethrower, Flare Blitz, Flash, Flash Cannon, Flatter, Fling, Fly, Focus Blast, Focus Energy, Focus Punch, Follow Me, Force Palm, Foresight, Frenzy Plant, Frustration, Fury Attack, Fury Cutter, Fury Swipes, Future Sight, Gastro Acid, Giga Drain, Giga Impact, Glare, Grass Knot, GrassWhistle, Gravity, Growl, Growth, Grudge, Guard Swap, Guillotine, Gunk Shot, Gust, Gyro Ball, HP Dark, HP Electric, HP Fighting, HP Fire, HP Flying, HP Ghost, HP Grass, HP Ground, HP Ice, HP Psychic, HP Rock, HP Water, Hail Ball, Hammer Arm, Harden, Haze, Head Smash, Headbutt, Heal Bell, Heal Order, Heart Swap, Heat Wave, Helping Hand, Hi Jump Kick, Hidden Power, Horn Drill, Howl, Hurricane, Hydro Cannon, Hydro Pump, Hyper Beam, Hyper Fang, Hyper Voice, Hypnosis, Ice Ball, Ice Beam, Ice Fang, Ice Punch, Ice Shard, Icicle Spear, Icy Wind, Imprison, Ingrain, Iron Defense, Iron Head, Iron Tail, Judgment, Jump Kick, Karate Chop, Kinesis, Knock Off, Last Resort, Lava Plume, Leaf Blade, Leaf Storm, Leech Life, Leech Seed, Leer, Lick, Light Screen, Lock-On, Lovely Kiss, Low Kick, Lucky Chant, Lunar Dance, Luster Purge, Mach Punch, Magic Coat, Magical Leaf, Magma Storm, Magnet Bomb, Magnet Rise, Me First, Mean Look, Meditate, Mega Drain, Mega Kick, Mega Punch, Megahorn, Memento, Metal Burst, Metal Claw, Metal Sound, Meteor Mash, Metronome, Milk Drink, Mimic, Mind Reader, Minimize, Miracle Eye, Mirror Coat, Mirror Move, Mirror Shot, Mist, Mist Ball, Moonlight, Morning Sun, Mud Bomb, Mud Shot, Mud-Slap, Muddy Water, Mystical Fire, Nasty Plot, Natural Gift, Nature Power, Needle Arm, Night Shade, Night Slash, Octazooka, Odor Sleuth, Ominous Wind, Outrage, Overheat, Pain Split, Pay Day, Payback, Peck, Perish Song, Petal Dance, Pin Missile, Pluck, Poison Fang, Poison Gas, Poison Jab, Poison Sting, Poison Tail, PoisonPowder, Pound, Powder Snow, Power Gem, Power Swap, Power Trick, Power Whip, Present, Protect, Psybeam, Psych Up, Psychic, Psycho Boost, Psycho Cut, Psycho Shift, Punishment, Pursuit, Quick Attack, Rage, Razor Leaf, Razor Wind, Recover, Recycle, Reflect, Refresh, Rest, Return, Revenge, Reversal, Roar, Roar of Time, Rock Ball, Rock Blast, Rock Climb, Rock Polish, Rock Slide, Rock Smash, Rock Throw, Rock Tomb, Rock Wrecker, Role Play, Rolling Kick, Roost, Sacred Fire, Safeguard, Sand Tomb, Sand-Attack, Scald, Scary Face, Scratch, Screech, Secret Power, Seed Bomb, Seed Flare, Seismic Toss, Selfdestruct, Shadow Ball, Shadow Claw, Shadow Force, Shadow Punch, Shadow Sneak, Sharpen, Sheer Cold, Shock Wave, Signal Beam, Silver Wind, Sing, Sketch, Skill Swap, Sky Attack, Sky Uppercut, Slack Off, Slam, Slash, Sleep Powder, Sleep Talk, Sludge, Sludge Bomb, SmellingSalt, Smog, SmokeScreen, Snore, Softboiled, Solar-Beam, SolarBeam, SonicBoom, Spacial Rend, Spider Web, Spikes, Spite, Spore, Stealth Rock, Steel Wing, Stockpile, Stomp, Stone Edge, Strength, String Shot, Stun Spore, Submission, Substitute, Sucker Punch, Super Fang, Superpower, Supersonic, Surf, Swagger, Swallow, Sweet Kiss, Sweet Scent, Swift, Swords Dance, Synthesis, Tackle, Tail Glow, Tail Whip, Tailwind, Take Down, Teeter Dance, Teleport, Thief, Thrash, Thunder, Thunder Fang, Thunder Wave, ThunderPunch, ThunderShock, Thunderbolt, Tickle, Torment, Toxic, Toxic Spikes, Transform, Tri Attack, Trick Room, Triple Axel, Triple Kick, Trump Card, Twineedle, Twister, U-turn, Uproar, Vacuum Wave, ViceGrip, Vine Whip, Vital Throw, Volt Tackle, Wake-Up Slap, Water Ball, Water Gun, Water Pulse, Water Spout, Waterfall, Weather Ball, Whirlpool, Whirlwind, Wild Charge, Will-O-Wisp, Wing Attack, Wish, Withdraw, Wood Hammer, Worry Seed, Wrap, Wring Out, X-Scissor, Yawn, Zap Cannon, Zen Headbutt
+
+
+## harassment
+
+- 1 distinct scoring blocks (+ 413 moves with no applicable procedure) out of 466 moves
+
+
+### Shared by 53 move(s): Attract, Camouflage, Charm, Confuse Ray, Cotton Spore, Dark Void, Defog, Embargo, Encore, Fake Tears, FeatherDance, Flash, Flatter, Glare, GrassWhistle, Growl, Hypnosis, Imprison, Kinesis, Knock Off, Leech Seed, Leer, Lovely Kiss, Metal Sound, Nature Power, Poison Gas, PoisonPowder, Psycho Shift, Sand-Attack, Scary Face, Screech, Secret Power, Sing, Sleep Powder, SmokeScreen, Spikes, Spite, Spore, Stealth Rock, Stun Spore, Supersonic, Swagger, Sweet Kiss, Sweet Scent, Tail Whip, Teeter Dance, Thunder Wave, Tickle, Torment, Toxic, Toxic Spikes, Will-O-Wisp, Yawn
+
+```
+Unconditionally:
+
+50% (128/256) chance of score +2 and terminate
+```
+
+
+### No applicable AI procedure (413 moves)
+
+Absorb, Accelerock, Acid, Acid Armor, Acupressure, Aerial Ace, Aeroblast, Agility, Air Cutter, Air Slash, Amnesia, AncientPower, Aqua Cutter, Aqua Jet, Aqua Ring, Aqua Tail, Aromatherapy, Assist, Assurance, Astonish, Attack Order, Aura Sphere, Aurora Beam, Avalanche, Barrier, Baton Pass, Beat Up, Belly Drum, Bide, Bite, Blast Burn, Blaze Kick, Blizzard, Block, Body Slam, Bone Club, Bone Rush, Bonemerang, Bounce, Brave Bird, Brick Break, Brine, Bubble, BubbleBeam, Bug Bite, Bug Buzz, Bulk Up, Bulldoze, Bullet Punch, Bullet Seed, Calm Mind, Captivate, Charge, Charge Beam, Chatter, Clamp, Close Combat, Confusion, Constrict, Conversion 2, Copycat, Cosmic Power, Counter, Crabhammer, Cross Chop, Cross Poison, Crunch, Crush Claw, Crush Grip, Curse, Cut, Dark Pulse, Defend Order, Destiny Bond, Detect, Dig, Disable, Discharge, Dive, Dizzy Punch, Doom Desire, Double Hit, Double Kick, Double Team, Double-Edge, DoubleSlap, Draco Meteor, Dragon Claw, Dragon Dance, Dragon Pulse, Dragon Rage, Dragon Rush, DragonBreath, Drain Punch, Dream Eater, Drill Peck, Drill Run, DynamicPunch, Earth Power, Earthquake, Egg Bomb, Ember, Endeavor, Endure, Energy Ball, Eruption, Explosion, Extrasensory, ExtremeSpeed, Facade, Faint Attack, Fake Out, False Swipe, Feint, Fire Ball, Fire Blast, Fire Fang, Fire Punch, Fire Spin, Fissure, Flail, Flame Wheel, Flamethrower, Flare Blitz, Flash Cannon, Fling, Fly, Focus Blast, Focus Energy, Focus Punch, Follow Me, Force Palm, Foresight, Frenzy Plant, Frustration, Fury Attack, Fury Cutter, Fury Swipes, Future Sight, Gastro Acid, Giga Drain, Giga Impact, Grass Knot, Gravity, Growth, Grudge, Guard Swap, Guillotine, Gunk Shot, Gust, Gyro Ball, HP Dark, HP Electric, HP Fighting, HP Fire, HP Flying, HP Ghost, HP Grass, HP Ground, HP Ice, HP Psychic, HP Rock, HP Water, Hail, Hail Ball, Hammer Arm, Harden, Haze, Head Smash, Headbutt, Heal Bell, Heal Order, Heart Swap, Heat Wave, Helping Hand, Hi Jump Kick, Hidden Power, Horn Drill, Howl, Hurricane, Hydro Cannon, Hydro Pump, Hyper Beam, Hyper Fang, Hyper Voice, Ice Ball, Ice Beam, Ice Fang, Ice Punch, Ice Shard, Icicle Spear, Icy Wind, Ingrain, Iron Defense, Iron Head, Iron Tail, Judgment, Jump Kick, Karate Chop, Last Resort, Lava Plume, Leaf Blade, Leaf Storm, Leech Life, Lick, Light Screen, Lock-On, Low Kick, Lucky Chant, Lunar Dance, Luster Purge, Mach Punch, Magic Coat, Magical Leaf, Magma Storm, Magnet Bomb, Magnet Rise, Me First, Mean Look, Meditate, Mega Drain, Mega Kick, Mega Punch, Megahorn, Memento, Metal Burst, Metal Claw, Meteor Mash, Metronome, Milk Drink, Mimic, Mind Reader, Minimize, Miracle Eye, Mirror Coat, Mirror Move, Mirror Shot, Mist, Mist Ball, Moonlight, Morning Sun, Mud Bomb, Mud Shot, Mud-Slap, Muddy Water, Mystical Fire, Nasty Plot, Natural Gift, Needle Arm, Night Shade, Night Slash, Octazooka, Odor Sleuth, Ominous Wind, Outrage, Overheat, Pain Split, Pay Day, Payback, Peck, Perish Song, Petal Dance, Pin Missile, Pluck, Poison Fang, Poison Jab, Poison Sting, Poison Tail, Pound, Powder Snow, Power Gem, Power Swap, Power Trick, Power Whip, Present, Protect, Psybeam, Psych Up, Psychic, Psycho Boost, Psycho Cut, Punishment, Pursuit, Quick Attack, Rage, Rain Dance, Razor Leaf, Razor Wind, Recover, Recycle, Reflect, Refresh, Rest, Return, Revenge, Reversal, Roar, Roar of Time, Rock Ball, Rock Blast, Rock Climb, Rock Polish, Rock Slide, Rock Smash, Rock Throw, Rock Tomb, Rock Wrecker, Role Play, Rolling Kick, Roost, Sacred Fire, Safeguard, Sand Tomb, Sandstorm, Scald, Scratch, Seed Bomb, Seed Flare, Seismic Toss, Selfdestruct, Shadow Ball, Shadow Claw, Shadow Force, Shadow Punch, Shadow Sneak, Sharpen, Sheer Cold, Shock Wave, Signal Beam, Silver Wind, Sketch, Skill Swap, Sky Attack, Sky Uppercut, Slack Off, Slam, Slash, Sleep Talk, Sludge, Sludge Bomb, SmellingSalt, Smog, Snore, Softboiled, Solar-Beam, SolarBeam, SonicBoom, Spacial Rend, Spider Web, Steel Wing, Stockpile, Stomp, Stone Edge, Strength, String Shot, Submission, Substitute, Sucker Punch, Sunny Day, Super Fang, Superpower, Surf, Swallow, Swift, Swords Dance, Synthesis, Tackle, Tail Glow, Tailwind, Take Down, Teleport, Thief, Thrash, Thunder, Thunder Fang, ThunderPunch, ThunderShock, Thunderbolt, Transform, Tri Attack, Trick Room, Triple Axel, Triple Kick, Trump Card, Twineedle, Twister, U-turn, Uproar, Vacuum Wave, ViceGrip, Vine Whip, Vital Throw, Volt Tackle, Wake-Up Slap, Water Ball, Water Gun, Water Pulse, Water Spout, Waterfall, Weather Ball, Whirlpool, Whirlwind, Wild Charge, Wing Attack, Wish, Withdraw, Wood Hammer, Worry Seed, Wrap, Wring Out, X-Scissor, Zap Cannon, Zen Headbutt

@@ -33,5 +33,30 @@
     "distinct_scoring_blocks": 1,
     "moves_with_no_procedure": 405,
     "total_moves": 466
+  },
+  "tag_opponent": {
+    "distinct_scoring_blocks": 21,
+    "moves_with_no_procedure": 174,
+    "total_moves": 466
+  },
+  "tag_ally": {
+    "distinct_scoring_blocks": 12,
+    "moves_with_no_procedure": 0,
+    "total_moves": 466
+  },
+  "check_hp": {
+    "distinct_scoring_blocks": 18,
+    "moves_with_no_procedure": 356,
+    "total_moves": 466
+  },
+  "weather": {
+    "distinct_scoring_blocks": 4,
+    "moves_with_no_procedure": 462,
+    "total_moves": 466
+  },
+  "harassment": {
+    "distinct_scoring_blocks": 1,
+    "moves_with_no_procedure": 413,
+    "total_moves": 466
   }
 }

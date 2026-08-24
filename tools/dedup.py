@@ -9,7 +9,9 @@ from pathlib import Path
 REPO = Path("/Users/tylerli/Desktop/Projects/PK-AI/kaizo-ai-calc")
 OUT_DIR = REPO / "aicalc" / "flags" / "_scraped"
 
-FLAG_ORDER = ["basic", "evaluate_attacks", "expert", "prio_damage", "baton_pass", "setup_first_turn", "risky"]
+FLAG_ORDER = ["basic", "evaluate_attacks", "expert", "prio_damage",
+              "baton_pass", "setup_first_turn", "risky",
+              "tag_opponent", "tag_ally", "check_hp", "weather", "harassment"]
 
 
 def normalize(text: str) -> str:
