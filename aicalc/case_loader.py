@@ -137,7 +137,8 @@ def _pokemon(obj, where: str, *, moves_required: bool) -> Pokemon:
           required=("species", "level", "ability", "types", "stats", "max_hp"),
           optional=("moves", "item", "current_hp", "status", "boosts",
                     "last_move", "protect_streak", "gender", "volatiles",
-                    "turns_active", "moves_used", "consumed_item", "pp_left"))
+                    "turns_active", "moves_used", "consumed_item", "pp_left",
+                    "friendship", "weight_hg"))
     if moves_required and not obj.get("moves"):
         raise CaseError(f"{where}: 'moves' is required for the AI's Pokemon")
 
@@ -192,6 +193,11 @@ def _pokemon(obj, where: str, *, moves_required: bool) -> Pokemon:
 
     item = _item("item")
     consumed = _item("consumed_item")
+    friendship = obj.get("friendship")
+    if friendship is not None:
+        friendship = _int(friendship, f"{where}.friendship", minimum=0)
+        if friendship > 255:
+            raise CaseError(f"{where}.friendship: {friendship} exceeds 255")
     return Pokemon(
         species=_str(obj["species"], f"{where}.species"),
         level=_int(obj["level"], f"{where}.level", minimum=1),
@@ -218,6 +224,9 @@ def _pokemon(obj, where: str, *, moves_required: bool) -> Pokemon:
         pp_left={_move(m, f"{where}.pp_left"): _int(pp, f"{where}.pp_left[{m!r}]",
                                                     minimum=0)
                  for m, pp in pp_left.items()},
+        friendship=friendship,
+        weight_hg=(None if obj.get("weight_hg") is None
+                   else _int(obj["weight_hg"], f"{where}.weight_hg", minimum=1)),
     )
 
 

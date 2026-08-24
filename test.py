@@ -1509,6 +1509,27 @@ def test_serve_api_probabilities():
         raise AssertionError("expected CaseError")
 
 
+def test_serve_api_trainer_mon_roundtrip():
+    """The exact UI flow: a mon from /api/trainer, dropped verbatim into a
+    battle doc, must load and score -- every field the trainer endpoint
+    emits has to be accepted by the case schema."""
+    from aicalc.serve import api
+
+    idx = api.trainers()["trainers"]
+    gardenia = next(t for t in idx if t["name"] == "Leader Gardenia")
+    entry = api.trainer(gardenia["id"])["party"][0]
+
+    player = {"species": "Machop", "level": 16, "ability": "Guts",
+              "types": ["Fighting"],
+              "stats": {"atk": 33, "def": 25, "spa": 21, "spd": 21, "spe": 21},
+              "max_hp": 53, "moves": ["Karate Chop"]}
+    doc = {"flags": entry["ai_flags"],
+           "ai": {"pokemon": entry["pokemon"], "party_remaining": 5},
+           "player": {"pokemon": player, "party_remaining": 1}}
+    out = api.probabilities(doc)
+    assert sum(Fraction(a["pick"]["fraction"]) for a in out["actions"]) == 1
+
+
 def test_serve_api_trainer_and_tables():
     from aicalc.serve import api
 
@@ -1583,5 +1604,6 @@ if __name__ == "__main__":
     test_trainer_dataset()
     test_trainer_dataset_full_roundtrip()
     test_serve_api_probabilities()
+    test_serve_api_trainer_mon_roundtrip()
     test_serve_api_trainer_and_tables()
     print("all tests passed")
