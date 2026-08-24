@@ -370,3 +370,45 @@ guards; we get the same partition for free from the scrape's move→block mappin
 and it is **Kaizo-correct** where the vanilla tables are not — the vanilla setup
 table lists `BATTLE_EFFECT_CONVERSION`, and Conversion does not exist in Kaizo.
 So flag modules encode only the *conditional logic inside* a block.
+
+## Battle-script-layer item effects: real damage the AI cannot see
+
+The user reported Rindo Berry not reducing damage in the simulator. Root
+cause: type-resist berries and Life Orb are implemented in the **battle
+script layer**, not in `BattleSystem_CalcMoveDamage` — so the C-port of the
+formula never saw them, and neither does the game's own AI.
+
+- **Type-resist berries** (`HOLD_EFFECT_WEAKEN_SE_*`, `WEAKEN_NORMAL`):
+  `res/battle/scripts/subscripts/subscript_type_resist_berry.s` halves the
+  final pending damage (`DivideVarByValue` = `BattleSystem_Divide`, i.e.
+  min-1 division) when the move's **net** status flags carry
+  `MOVE_STATUS_SUPER_EFFECTIVE` and the (post-Normalize) move type matches
+  the berry's type. Chilan Berry (Normal) is checked *before* the
+  super-effective gate — it halves any Normal hit. The subscript bails on
+  `SYSCTL_IGNORE_TYPE_CHECKS|IGNORE_IMMUNITIES` (fixed-damage moves) and on
+  OHKO moves, and the berry is consumed on activation. Klutz/Embargo
+  suppress it at the `Battler_HeldItem` level (battle_lib.c:5352).
+- **Life Orb** (`HOLD_EFFECT_HP_DRAIN_ON_ATK`, param 30): applied in
+  `BtlCmd_CalcDamage` (battle_script.c:1346) as `damage * 130 / 100`
+  immediately after `CalcMoveDamage` and the crit multiplier — i.e.
+  **before** the 16-way variance and the type chart. (The items.py
+  docstring previously claimed Life Orb doesn't exist in Platinum — wrong,
+  it's a D/P item and sits in the item data; fixed.)
+- Also in that command but NOT modelled: the Metronome item's
+  consecutive-use boost (`HOLD_EFFECT_BOOST_REPEATED`, needs a
+  consecutive-use counter we don't track — first use is exactly 1.0x) and
+  Me First's 1.5x (volatile not modelled).
+
+**The AI is blind to all of these.** `TrainerAI_CalcDamage`
+(trainer_ai.c:2868) is `CalcMoveDamage → ApplyTypeChart → variance` with no
+battle-script layer — grep confirms `HP_DRAIN_ON_ATK`, `BOOST_REPEATED` and
+`WEAKEN` never appear in trainer_ai.c (the only AI-script use of the WEAKEN
+constants is Expert_Thief's "worth stealing" table). So `can_ko` can be
+genuinely true for the AI while the berry actually denies the KO, and a
+Life Orb AI mon underestimates its own damage. This is faithful, not a
+bug: `calc/battle_order.py` (display/recorder path) applies both;
+`calc/ai_damage.py` (scoring path) applies neither. A pre-existing smaller
+gap in the same family: our `damage.py` reads items via `hold_effect()`
+without the Klutz/Embargo suppression that `Battler_HeldItemEffect` has
+(affects Muscle Band-style boosts on a Klutz mon — vanishingly rare in
+trainer parties).

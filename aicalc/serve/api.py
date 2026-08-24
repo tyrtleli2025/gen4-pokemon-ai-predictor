@@ -107,7 +107,8 @@ def tables() -> dict:
             "abilities": [a for a in (row["Ability1"], row["Ability2"]) if a],
             "weight_hg": int(row["WeightHg"]),
         }
-    return {"moves": moves, "species": species}
+    from ..calc.items import all_items
+    return {"moves": moves, "species": species, "items": all_items()}
 
 
 def _dist_pairs(dist) -> list[list]:

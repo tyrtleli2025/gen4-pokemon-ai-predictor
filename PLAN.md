@@ -242,7 +242,14 @@ Each stage is only started once the stage before it is tested and stable.
           no variance; Bulldoze/Triple Axel list per-tier outcomes;
           Counter/OHKO/etc. show "n/a" with the reason; conditional-power
           effects (Brine, Payback, ...) show flat power with a visible
-          caveat. `critical_mul` still pending (lands with the recorder).
+          caveat. Battle-script-layer items are applied here and only here
+          (the game's AI is blind to them, see DECOMP_NOTES): type-resist
+          berries halve each final roll, Life Orb multiplies 1.3x before
+          the variance. UI copies the Showdown calculator's anatomy
+          (smogon/damage-calc): joined move-result button stacks, big
+          one-line result + collapsible roll list, select-based trait
+          editors, mirrored side-conditions table with segmented spikes.
+          `critical_mul` still pending (lands with the recorder).
     - [ ] **D — save-file import**: `aicalc/saveread.py`, pure stdlib —
           Platinum's dual-slot layout, PK4 decrypt/unshuffle/checksum, Kaizo
           ID remapping via `data/id_maps.json`. Verified with a synthetic

@@ -8,8 +8,13 @@ not damage-relevant (Focus Sash, Leftovers, ...) is a *correct* no-op --
 (None, 0) -- while an unrecognised item NAME is a loading error upstream
 (case_loader validates names against this table).
 
-Life Orb is a Gen 5 item and does not exist in Platinum's item data at all,
-so the earlier "deliberately absent" note is moot.
+Two effect families live OUTSIDE BattleSystem_CalcMoveDamage, in the battle
+script layer, so they only apply to battle-order damage (battle_order.py) and
+never to the AI's own damage view: Life Orb (HOLD_EFFECT_HP_DRAIN_ON_ATK,
++30% in BtlCmd_CalcDamage before the variance) and the type-resist berries
+(HOLD_EFFECT_WEAKEN_*, subscript_type_resist_berry halves the final damage).
+TrainerAI_CalcDamage contains neither -- verified by grep -- so the AI
+genuinely mis-estimates damage around them.
 """
 from __future__ import annotations
 
@@ -63,6 +68,20 @@ _SIMPLE_EFFECTS = {
     "HOLD_EFFECT_DIALGA_BOOST": "adamant_orb",
     "HOLD_EFFECT_PALKIA_BOOST": "lustrous_orb",
     "HOLD_EFFECT_GIRATINA_BOOST": "griseous_orb",
+    "HOLD_EFFECT_HP_DRAIN_ON_ATK": "life_orb",
+}
+
+#: HOLD_EFFECT_WEAKEN_SE_* -> the attacking type the berry halves.
+_WEAKEN_BERRIES = {
+    f"HOLD_EFFECT_WEAKEN_SE_{suffix}": type_name
+    for suffix, type_name in (
+        ("FIRE", "Fire"), ("WATER", "Water"), ("ELECTRIC", "Electric"),
+        ("GRASS", "Grass"), ("ICE", "Ice"), ("FIGHT", "Fighting"),
+        ("POISON", "Poison"), ("GROUND", "Ground"), ("FLYING", "Flying"),
+        ("PSYCHIC", "Psychic"), ("BUG", "Bug"), ("ROCK", "Rock"),
+        ("GHOST", "Ghost"), ("DRAGON", "Dragon"), ("DARK", "Dark"),
+        ("STEEL", "Steel"),
+    )
 }
 
 
@@ -92,6 +111,11 @@ def known_item(name: str) -> bool:
     return squash(name) in _table()
 
 
+def all_items() -> list[str]:
+    """Every canonical item name, sorted (for UI dropdowns)."""
+    return sorted(row["Name"] for row in _table().values())
+
+
 def hold_effect(item: str | None) -> tuple[str | None, int]:
     """(damage-relevant effect id, effect power). (None, 0) when the item is
     None or its hold effect does not touch the damage formula."""
@@ -109,6 +133,24 @@ def hold_effect(item: str | None) -> tuple[str | None, int]:
     if effect in _SIMPLE_EFFECTS:
         return (_SIMPLE_EFFECTS[effect], param)
     return (None, 0)
+
+
+def weaken_berry(item: str | None) -> tuple[str, bool] | None:
+    """(attacking type the berry halves, requires_super_effective), or None.
+
+    subscript_type_resist_berry: the typed berries (Occa...Babiri) halve the
+    final damage of a super-effective hit of their type; Chilan halves any
+    Normal hit, checked before the super-effective gate."""
+    if item is None:
+        return None
+    row = _table().get(squash(item))
+    if row is None:
+        return None
+    effect = row["Hold Effect"]
+    if effect == "HOLD_EFFECT_WEAKEN_NORMAL":
+        return ("Normal", False)
+    wtype = _WEAKEN_BERRIES.get(effect)
+    return (wtype, True) if wtype else None
 
 
 def plate_type(item: str | None) -> str | None:

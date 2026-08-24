@@ -15,13 +15,24 @@
   </div>
 </header>
 
-<!-- Damage strip: your moves left, the AI's right, headline underneath -->
+<!-- Showdown-calc-style results: each side's moves as a joined button stack,
+     the selected move's full line + roll list underneath -->
 <section id="damage-strip">
-  <div id="dmg-player" class="dmg-moves"></div>
-  <div id="dmg-vs">vs</div>
-  <div id="dmg-ai" class="dmg-moves right"></div>
+  <div class="move-result-subgroup">
+    <div class="result-header">Your Pokémon's moves <span class="dim">(select one for details)</span></div>
+    <div id="dmg-player" class="res-stack"></div>
+  </div>
+  <div class="move-result-subgroup right">
+    <div class="result-header">AI Pokémon's moves</div>
+    <div id="dmg-ai" class="res-stack"></div>
+  </div>
 </section>
-<div id="dmg-headline"></div>
+<div id="main-result">
+  <div id="main-result-text" class="big-text">Set both Pokémon to see damage.</div>
+  <details id="dmg-details"><summary>Possible damage amounts</summary>
+    <div id="dmg-rolls"></div>
+  </details>
+</div>
 
 <main>
   <!-- Player: left -->

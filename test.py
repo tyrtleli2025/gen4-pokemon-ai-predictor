@@ -1618,6 +1618,73 @@ def test_battle_order_rolls_match_hzla():
     assert pj[0] == 30 and pj[-1] == 36
 
 
+def test_battle_order_item_effects():
+    """Battle-script-layer items: the defender's type-resist berry halves
+    each final roll (game_divide), Chilan needs no super-effectiveness,
+    Klutz suppresses the berry, Life Orb multiplies the formula output by
+    1.3 before the variance -- and the AI's own damage view sees NONE of
+    these (TrainerAI_CalcDamage never runs the battle scripts)."""
+    from aicalc.calc.ai_damage import damage_outcomes
+    from aicalc.calc.battle_order import battle_damage_outcomes
+    from aicalc.calc.divmath import game_divide
+
+    def fixture(atk_item=None, def_item=None, def_ability="Swift Swim"):
+        ludicolo = Pokemon(
+            species="Ludicolo", level=24, ability=def_ability, item=def_item,
+            types=("Water", "Grass"),
+            stats={"atk": 45, "def": 45, "spa": 55, "spd": 60, "spe": 45},
+            max_hp=79, current_hp=79, moves=["Aqua Cutter"])
+        farfetchd = Pokemon(
+            species="Farfetch'd", level=20, ability="Keen Eye", item=atk_item,
+            types=("Normal", "Flying"),
+            stats={"atk": 46, "def": 43, "spa": 31, "spd": 40, "spe": 31},
+            max_hp=56, current_hp=56, moves=["Slash", "Poison Jab"])
+        return Battle(ai=Side(active=ludicolo, party_remaining=1),
+                      player=Side(active=farfetchd, party_remaining=1),
+                      field=Field(weather="rain"))
+
+    def rolls(battle, move):
+        out = battle_damage_outcomes(battle, move, battle.player.active,
+                                     battle.player, battle.ai.active,
+                                     battle.ai)
+        return out[0][2]
+
+    base_pj = rolls(fixture(), "Poison Jab")            # SE vs Grass: 30..36
+    assert base_pj[0] == 30 and base_pj[-1] == 36
+    base_slash = rolls(fixture(), "Slash")              # Normal STAB: 19..24
+    assert base_slash[0] == 19 and base_slash[-1] == 24
+
+    # Kebia Berry (weakens super-effective Poison) halves every final roll.
+    kebia = rolls(fixture(def_item="Kebia Berry"), "Poison Jab")
+    assert kebia == [game_divide(r, 2) for r in base_pj]
+    # ...but not a non-Poison move, and not a berry for the wrong type.
+    assert rolls(fixture(def_item="Kebia Berry"), "Slash") == base_slash
+    assert rolls(fixture(def_item="Occa Berry"), "Poison Jab") == base_pj
+    # Chilan halves Normal hits with no super-effective requirement.
+    chilan = rolls(fixture(def_item="Chilan Berry"), "Slash")
+    assert chilan == [game_divide(r, 2) for r in base_slash]
+    # Klutz suppresses the held berry entirely (Battler_HeldItem).
+    assert rolls(fixture(def_item="Kebia Berry", def_ability="Klutz"),
+                 "Poison Jab") == base_pj
+
+    # Life Orb: base 16 -> 16*130//100 = 20 before variance, STAB after.
+    orb = rolls(fixture(atk_item="Life Orb"), "Slash")
+    assert orb[0] == 25 and orb[-1] == 30
+
+    # The AI's own view is blind to both: max-roll Poison Jab stays 36
+    # against a Kebia holder, and Life Orb Slash stays the un-boosted 24.
+    berry_battle = fixture(def_item="Kebia Berry")
+    assert damage_outcomes(berry_battle, "Poison Jab",
+                           berry_battle.player.active, berry_battle.player,
+                           berry_battle.ai.active, berry_battle.ai) \
+        == [(Fraction(1), 36)]
+    orb_battle = fixture(atk_item="Life Orb")
+    assert damage_outcomes(orb_battle, "Slash",
+                           orb_battle.player.active, orb_battle.player,
+                           orb_battle.ai.active, orb_battle.ai) \
+        == [(Fraction(1), 24)]
+
+
 def test_serve_api_damage_panel():
     """api.damage on the pinned Ludicolo case reproduces the screenshot's
     panel numbers recorded in the case notes (Aqua Cutter 32.4-40.2% of 77,
@@ -1727,5 +1794,6 @@ if __name__ == "__main__":
     test_serve_api_trainer_mon_roundtrip()
     test_serve_api_trainer_and_tables()
     test_battle_order_rolls_match_hzla()
+    test_battle_order_item_effects()
     test_serve_api_damage_panel()
     print("all tests passed")

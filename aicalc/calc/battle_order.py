@@ -12,6 +12,17 @@ the base formula while STAB lands after the variance).
 Fixed-damage moves (Dragon Rage, Seismic Toss, Kaizo Triple Axel...) take no
 variance: all 16 "rolls" are the fixed value, zeroed on immunity.
 
+Two battle-script-layer item effects apply here and ONLY here (the AI's
+TrainerAI_CalcDamage contains neither, so the AI's own view stays blind to
+both): the attacker's Life Orb multiplies the formula output by 1.3 before
+the variance (BtlCmd_CalcDamage, battle_script.c:1346), and the defender's
+type-resist berry halves each final roll (subscript_type_resist_berry:
+game-divide by 2 on a super-effective hit of the berry's type -- Chilan on
+any Normal hit -- suppressed by the defender's Klutz or Embargo via
+Battler_HeldItem). Fixed-damage moves skip both, exactly as in the game:
+their scripts bypass BtlCmd_CalcDamage, and the berry subscript bails on
+SYSCTL_IGNORE_TYPE_CHECKS.
+
 No crit support yet -- these are the non-crit lists (crit lands with the
 turn recorder, Milestone C).
 """
@@ -19,11 +30,21 @@ from __future__ import annotations
 
 from fractions import Fraction
 
+from .. import movedata
 from ..state import Battle, Pokemon, Side
 from .ai_damage import _special_outcomes
 from .damage import calc_move_damage
-from .divmath import c_div
-from .type_chart import IMMUNE, apply_type_chart
+from .divmath import c_div, game_divide
+from .items import hold_effect, weaken_berry
+from .type_chart import IMMUNE, SUPER_EFFECTIVE, apply_type_chart
+
+
+def _active_weaken_berry(defender: Pokemon) -> tuple[str, bool] | None:
+    """The defender's resist berry, unless Klutz or Embargo suppress the
+    held item entirely (Battler_HeldItem, battle_lib.c:5352)."""
+    if defender.ability == "Klutz" or "embargo" in defender.volatiles:
+        return None
+    return weaken_berry(defender.item)
 
 
 def battle_damage_outcomes(
@@ -48,12 +69,30 @@ def battle_damage_outcomes(
             base = calc_move_damage(battle, move, attacker, defender,
                                     attacker_side, defender_side,
                                     power=power, move_type=mtype)
+            atk_effect, atk_item_power = hold_effect(attacker.item)
+            if (atk_effect == "life_orb" and attacker.ability != "Klutz"
+                    and "embargo" not in attacker.volatiles):
+                base = c_div(base * (100 + atk_item_power), 100)
+
+            berry = _active_weaken_berry(defender)
+            if attacker.ability == "Normalize":
+                resolved_type = "Normal"
+            else:
+                resolved_type = mtype or movedata.move_type(move)
+
             rolls = []
             for variance in range(85, 101):
                 dmg = c_div(base * variance, 100)
                 dmg, flags = apply_type_chart(battle, move, attacker,
                                               defender, dmg, move_type=mtype)
-                rolls.append(0 if flags & IMMUNE else dmg)
+                if flags & IMMUNE:
+                    dmg = 0
+                elif berry is not None:
+                    berry_type, needs_se = berry
+                    if (resolved_type == berry_type
+                            and (not needs_se or flags & SUPER_EFFECTIVE)):
+                        dmg = game_divide(dmg, 2)
+                rolls.append(dmg)
             desc = f"power {power}" if power else None
         outcomes.append((prob, desc, rolls))
 

@@ -1,8 +1,9 @@
 /* Kaizo AI Simulator — fully reactive: every input mutates the battle doc
-   and recomputes probabilities AND damage rolls immediately. Layout follows
-   the HZLA/Showdown calculator anatomy: damage strip on top (your moves
-   left, the AI's right, a headline with the exact roll list underneath),
-   then your Pokémon | field | AI Pokémon. */
+   and recomputes probabilities AND damage rolls immediately. Interface
+   follows the Showdown damage calculator's anatomy (smogon/damage-calc):
+   move results as joined button stacks with ranges beside them, a big
+   one-line result with a collapsible roll list, select-based trait editors,
+   and a mirrored side-conditions table of button toggles. */
 "use strict";
 
 const state = {
@@ -10,7 +11,7 @@ const state = {
   trainerParty: [],          // /api/trainer party entries
   activeAiIndex: null,
   damage: null,              // /api/damage response
-  sel: null,                 // {side: "player"|"ai", index} — headline move
+  sel: null,                 // {side: "player"|"ai", index} — selected result
   playerBuild: {             // build inputs that derive the player mon's stats
     nature: "Hardy",
     ivs: { hp: 31, atk: 31, def: 31, spa: 31, spd: 31, spe: 31 },
@@ -24,6 +25,10 @@ const state = {
 };
 
 const STATS = ["atk", "def", "spa", "spd", "spe"];
+const STAT_LABELS = { hp: "HP", atk: "Attack", def: "Defense",
+                      spa: "Sp. Atk", spd: "Sp. Def", spe: "Speed" };
+const HAZARD_LAYERS = { spikes: 3, toxic_spikes: 2, stealth_rock: 1 };
+
 const $ = (sel) => document.querySelector(sel);
 const el = (tag, attrs = {}, ...children) => {
   const node = document.createElement(tag);
@@ -35,6 +40,8 @@ const el = (tag, attrs = {}, ...children) => {
   node.append(...children);
   return node;
 };
+const option = (value, label, selected) =>
+  el("option", { value, selected: !!selected }, label ?? value);
 
 async function getJSON(url) {
   const resp = await fetch(url);
@@ -215,7 +222,7 @@ function renderPanel(which) {
   const side = state.battle[which];
   const isPlayer = which === "player";
 
-  // Species / level header
+  // Species / level / nature header
   const head = el("div", { class: "row" });
   if (isPlayer) {
     head.append(el("input", {
@@ -233,83 +240,116 @@ function renderPanel(which) {
   const mon = side.pokemon;
   if (isPlayer) {
     head.append(
-      el("label", {}, "Lv",
+      el("label", {}, "Level",
         el("input", { type: "number", value: mon.level, min: 1, max: 100, style: "width:4em",
           onchange: (e) => { mon.level = clampInt(e.target.value, 1, 100, 50);
                              recomputePlayerStats(mon); renderPanel("player"); refresh(); } })),
-      el("select", { onchange: (e) => { state.playerBuild.nature = e.target.value;
-                                        recomputePlayerStats(mon); renderPanel("player"); refresh(); } },
-        ...state.meta.natures.map((n) =>
-          el("option", { value: n, selected: state.playerBuild.nature === n }, n))),
+      el("label", {}, "Nature",
+        el("select", { onchange: (e) => { state.playerBuild.nature = e.target.value;
+                                          recomputePlayerStats(mon); renderPanel("player"); refresh(); } },
+          ...state.meta.natures.map((n) =>
+            option(n, natureLabel(n), state.playerBuild.nature === n)))),
     );
   } else {
     head.append(el("span", { class: "big-name" }, mon.species),
                 el("span", { class: "dim" }, ` Lv ${mon.level}`));
   }
   panel.append(head);
-  panel.append(el("div", { class: "type-row" },
-    ...mon.types.map((t) => el("span", { class: `type-chip t-${t}` }, t))));
 
-  // Ability / item / status
-  const idRow = el("div", { class: "row mini" });
-  idRow.append(
+  // Type (two selects, Showdown-style) + gender
+  const typeRow = el("div", { class: "row mini" },
+    el("label", {}, "Type", typeSelect(mon, 0), typeSelect(mon, 1)),
+    el("label", {}, "Gender",
+      el("select", { onchange: (e) => { mon.gender = e.target.value || null; refresh(); } },
+        option("", "—", !mon.gender),
+        ...state.meta.genders.map((g) => option(g, g, mon.gender === g)))),
+  );
+  panel.append(typeRow);
+
+  // Ability / item / status selects
+  const sp = state.tables.species[mon.species];
+  const abilities = [...new Set([...(sp?.abilities || []),
+                                 ...(mon.ability ? [mon.ability] : [])])];
+  panel.append(el("div", { class: "row mini" },
     el("label", {}, "Ability",
-      el("input", { value: mon.ability || "", style: "width:8.5em",
-        onchange: (e) => { mon.ability = e.target.value.trim(); refresh(); } })),
+      el("select", { onchange: (e) => { mon.ability = e.target.value; refresh(); } },
+        ...abilities.map((a) => option(a, a, mon.ability === a)))),
     el("label", {}, "Item",
-      el("input", { value: mon.item || "", placeholder: "(none)", style: "width:8em",
-        onchange: (e) => { mon.item = e.target.value.trim() || null; refresh(); } })),
+      el("select", { class: "item-select",
+                     onchange: (e) => { mon.item = e.target.value || null; refresh(); } },
+        option("", "(none)", !mon.item),
+        ...state.tables.items.map((it) => option(it, it, mon.item === it)))),
+  ));
+  panel.append(el("div", { class: "row mini" },
     el("label", {}, "Status",
       el("select", { onchange: (e) => { mon.status = e.target.value || null; refresh(); } },
-        el("option", { value: "" }, "healthy"),
-        ...state.meta.statuses.map((s) =>
-          el("option", { value: s, selected: mon.status === s }, s)))),
-  );
-  panel.append(idRow);
+        option("", "Healthy", !mon.status),
+        ...state.meta.statuses.map((s) => option(s, s, mon.status === s)))),
+    el("label", {}, "turns out",
+      el("input", { type: "number", value: mon.turns_active ?? 1, min: 1, style: "width:3.5em",
+        onchange: (e) => { mon.turns_active = clampInt(e.target.value, 1, 999, 1); refresh(); } })),
+    el("label", {}, "protect streak",
+      el("input", { type: "number", value: mon.protect_streak ?? 0, min: 0, style: "width:3.5em",
+        onchange: (e) => { mon.protect_streak = clampInt(e.target.value, 0, 99, 0); refresh(); } })),
+  ));
 
-  // HP
+  // Stat table: Showdown's Base | IVs | total | boost anatomy
+  const table = el("table", { class: "stat-table" });
+  const headRow = el("tr", {}, el("th", {}));
+  if (isPlayer) headRow.append(el("th", {}, "Base"), el("th", {}, "IVs"));
+  headRow.append(el("th", {}, isPlayer ? "" : "Stat"), el("th", {}, ""));
+  table.append(headRow);
+
+  if (isPlayer) {
+    const hpRow = el("tr", {},
+      el("th", {}, STAT_LABELS.hp),
+      el("td", { class: "dim" }, String(sp?.base.hp ?? "—")),
+      el("td", {}, ivInput(mon, "hp")),
+      el("td", { class: "total" }, String(mon.max_hp)),
+      el("td", {}));
+    table.append(hpRow);
+  }
+  for (const s of STATS) {
+    const row = el("tr", {}, el("th", {}, STAT_LABELS[s]));
+    if (isPlayer) {
+      row.append(el("td", { class: "dim" }, String(sp?.base[s] ?? "—")),
+                 el("td", {}, ivInput(mon, s)),
+                 el("td", { class: "total" }, String(mon.stats[s])));
+    } else {
+      row.append(el("td", {},
+        el("input", { type: "number", value: mon.stats[s], min: 1, class: "stat-edit",
+          onchange: (e) => { mon.stats[s] = clampInt(e.target.value, 1, 9999, mon.stats[s]); refresh(); } })));
+    }
+    row.append(el("td", {}, boostSelect(mon, s)));
+    table.append(row);
+  }
+  const accRow = el("tr", {}, el("th", {}, "Acc"));
+  const evaRow = el("tr", {}, el("th", {}, "Eva"));
+  const pad = isPlayer ? 3 : 1;
+  for (let i = 0; i < pad; i++) { accRow.append(el("td", {})); evaRow.append(el("td", {})); }
+  accRow.append(el("td", {}, boostSelect(mon, "acc")));
+  evaRow.append(el("td", {}, boostSelect(mon, "eva")));
+  table.append(accRow, evaRow);
+  panel.append(table);
+
+  // Current HP: value + percent + bar (Showdown's Current HP row)
   const hp = mon.current_hp ?? mon.max_hp;
   const pct = Math.max(0, Math.min(100, Math.round(100 * hp / mon.max_hp)));
   panel.append(el("div", { class: "hp-row" },
-    "HP",
+    el("span", { class: "dim mini" }, "Current HP"),
     el("input", { type: "number", value: hp, min: 0, max: mon.max_hp,
       onchange: (e) => { mon.current_hp = clampInt(e.target.value, 0, mon.max_hp, mon.max_hp);
                          renderPanel(which); refresh(); } }),
-    `/${mon.max_hp}`,
+    `/${mon.max_hp} (`,
+    el("input", { type: "number", value: pct, min: 0, max: 100, style: "width:3.6em",
+      onchange: (e) => { const p = clampInt(e.target.value, 0, 100, 100);
+                         mon.current_hp = Math.max(p > 0 ? 1 : 0,
+                                                   Math.floor(mon.max_hp * p / 100));
+                         renderPanel(which); refresh(); } }),
+    "%)",
     el("div", { class: "hp-bar" },
       el("div", { style: `width:${pct}%; background:${pct > 50 ? "var(--good)" : pct > 20 ? "var(--warn)" : "var(--bad)"}` })),
-    el("span", { class: "dim mini" }, `${pct}%`),
   ));
-
-  // Stat rows with inline boosts (calc-style)
-  const grid = el("div", { class: "stat-grid" });
-  grid.append(el("span", { class: "dim" }, ""), el("span", { class: "dim" }, "stat"),
-              el("span", { class: "dim" }, "boost"));
-  for (const s of STATS) {
-    grid.append(
-      el("span", { class: "stat-name" }, s.toUpperCase()),
-      isPlayer
-        ? el("span", {}, String(mon.stats[s]))
-        : el("input", { type: "number", value: mon.stats[s], min: 1, class: "stat-edit",
-            onchange: (e) => { mon.stats[s] = clampInt(e.target.value, 1, 9999, mon.stats[s]); refresh(); } }),
-      boostSelect(mon, s),
-    );
-  }
-  grid.append(el("span", { class: "stat-name" }, "ACC"), el("span", {}, "—"), boostSelect(mon, "acc"));
-  grid.append(el("span", { class: "stat-name" }, "EVA"), el("span", {}, "—"), boostSelect(mon, "eva"));
-  panel.append(grid);
-
-  // Player IVs (compact, under stats)
-  if (isPlayer) {
-    const ivRow = el("div", { class: "row mini" }, "IVs ");
-    for (const s of ["hp", ...STATS]) {
-      ivRow.append(el("label", {}, s,
-        el("input", { type: "number", value: state.playerBuild.ivs[s], min: 0, max: 31, style: "width:3.6em",
-          onchange: (e) => { state.playerBuild.ivs[s] = clampInt(e.target.value, 0, 31, 31);
-                             recomputePlayerStats(mon); renderPanel("player"); refresh(); } })));
-    }
-    panel.append(ivRow);
-  }
 
   // Moves ×4, one per row with power/type readout
   const mv = el("div", { class: "moves-list" });
@@ -329,17 +369,10 @@ function renderPanel(which) {
   }
   panel.append(mv);
 
-  // Battle-history extras
   panel.append(el("div", { class: "row mini" },
     el("label", {}, "last move",
-      el("input", { list: "move-list", value: mon.last_move || "", style: "width:8.5em",
+      el("input", { list: "move-list", value: mon.last_move || "", style: "width:9em",
         onchange: (e) => { mon.last_move = e.target.value.trim() || null; refresh(); } })),
-    el("label", {}, "turns out",
-      el("input", { type: "number", value: mon.turns_active ?? 1, min: 1, style: "width:3.5em",
-        onchange: (e) => { mon.turns_active = clampInt(e.target.value, 1, 999, 1); refresh(); } })),
-    el("label", {}, "protect streak",
-      el("input", { type: "number", value: mon.protect_streak ?? 0, min: 0, style: "width:3.5em",
-        onchange: (e) => { mon.protect_streak = clampInt(e.target.value, 0, 99, 0); refresh(); } })),
   ));
 
   const vols = el("div", { class: "vol-grid" });
@@ -356,13 +389,39 @@ function renderPanel(which) {
   panel.append(el("details", {}, el("summary", {}, "volatiles"), vols));
 }
 
+function natureLabel(n) {
+  const [up, down] = state.meta.nature_effects[n];
+  if (!up || up === down) return n;
+  return `${n} (+${up.toUpperCase()}, -${down.toUpperCase()})`;
+}
+
+function typeSelect(mon, slot) {
+  return el("select", { onchange: (e) => {
+    const types = [...mon.types];
+    if (slot === 0) types[0] = e.target.value;
+    else if (e.target.value) types[1] = e.target.value;
+    else types.length = 1;
+    mon.types = [...new Set(types)];
+    refresh();
+  } },
+    ...(slot === 1 ? [option("", "—", !mon.types[1])] : []),
+    ...state.meta.types.map((t) => option(t, t, mon.types[slot] === t)));
+}
+
+function ivInput(mon, s) {
+  return el("input", { type: "number", value: state.playerBuild.ivs[s],
+    min: 0, max: 31, class: "iv-edit",
+    onchange: (e) => { state.playerBuild.ivs[s] = clampInt(e.target.value, 0, 31, 31);
+                       recomputePlayerStats(mon); renderPanel("player"); refresh(); } });
+}
+
 function boostSelect(mon, stat) {
   const sel = el("select", { class: "boost-select",
     onchange: (e) => { mon.boosts = mon.boosts || {};
                        mon.boosts[stat] = parseInt(e.target.value, 10); refresh(); } });
   for (let b = 6; b >= -6; b--) {
-    sel.append(el("option", { value: b, selected: ((mon.boosts || {})[stat] || 0) === b },
-      b > 0 ? `+${b}` : String(b)));
+    sel.append(option(String(b), b > 0 ? `+${b}` : b === 0 ? "--" : String(b),
+                      ((mon.boosts || {})[stat] || 0) === b));
   }
   return sel;
 }
@@ -375,21 +434,29 @@ function clampInt(value, min, max, fallback) {
 
 /* ---------------- field + side conditions ---------------- */
 
+function segGroup(labels, current, onpick, mirror = false) {
+  const group = el("div", { class: "seg-row" + (mirror ? " mirror" : "") });
+  labels.forEach((label, i) => {
+    group.append(el("button", {
+      class: "seg" + (current === i ? " on" : ""),
+      onclick: () => onpick(i),
+    }, label));
+  });
+  return group;
+}
+
 function renderField() {
   const panel = $("#field-controls");
   panel.replaceChildren();
   const field = state.battle.field;
 
-  const weatherRow = el("div", { class: "seg-row" });
-  for (const w of [null, ...state.meta.weathers]) {
-    weatherRow.append(el("button", {
-      class: "seg" + (field.weather === w ? " on" : ""),
-      onclick: () => { field.weather = w; renderField(); refresh(); },
-    }, w || "none"));
-  }
-  panel.append(weatherRow);
+  const weathers = [null, ...state.meta.weathers];
+  panel.append(el("div", { class: "center" },
+    segGroup(weathers.map((w) => w || "None"),
+             weathers.indexOf(field.weather),
+             (i) => { field.weather = weathers[i]; renderField(); refresh(); })));
 
-  panel.append(el("div", { class: "row" },
+  panel.append(el("div", { class: "row center" },
     el("label", {}, "turn",
       el("input", { type: "number", value: field.turn, min: 1, style: "width:4em",
         onchange: (e) => { field.turn = clampInt(e.target.value, 1, 999, 1); refresh(); } })),
@@ -402,42 +469,57 @@ function renderField() {
   ));
 }
 
+function condToggle(side, flag, label) {
+  return el("button", { class: "toggle mini" + (side[flag] ? " on" : ""),
+    onclick: (e) => { side[flag] = !side[flag];
+                      e.target.classList.toggle("on"); refresh(); } }, label);
+}
+
 function renderSideConditions() {
   const box = $("#side-conditions");
   box.replaceChildren();
-  const grid = el("div", { class: "cond-grid" });
-  for (const which of ["player", "ai"]) {
-    const side = state.battle[which];
-    const cell = el("div", { class: "cond-cell" });
-    cell.append(el("div", { class: "cond-title" },
-      which === "player" ? "Your side" : "AI side"));
-    if (!side) {
-      cell.append(el("div", { class: "dim mini" }, "—"));
-      grid.append(cell);
-      continue;
+  const sides = { player: state.battle.player, ai: state.battle.ai };
+  if (!sides.player && !sides.ai) return;
+
+  const table = el("table", { class: "cond-table" });
+  table.append(el("tr", {},
+    el("th", {}, "Your side"), el("th", {}, "AI side")));
+
+  const row = (build) => {
+    const tr = el("tr", {});
+    for (const which of ["player", "ai"]) {
+      const cell = el("td", { class: which === "player" ? "left" : "right" });
+      if (sides[which]) cell.append(build(sides[which], which === "ai"));
+      else cell.append(el("span", { class: "dim mini" }, "—"));
+      tr.append(cell);
     }
-    const chips = el("div", { class: "chip-row" });
-    for (const flag of ["reflect", "light_screen", "tailwind", "safeguard", "mist", "lucky_chant"]) {
-      chips.append(el("button", { class: "toggle mini" + (side[flag] ? " on" : ""),
-        onclick: (e) => { side[flag] = !side[flag];
-                          e.target.classList.toggle("on"); refresh(); } },
-        flag.replace("_", " ")));
-    }
-    cell.append(chips);
-    const hz = el("div", { class: "row mini" });
-    for (const h of state.meta.hazards) {
-      hz.append(el("label", {}, h.replace(/_/g, " "),
-        el("input", { type: "number", value: side.hazards[h] || 0, min: 0, max: 3, style: "width:3em",
-          onchange: (e) => { side.hazards[h] = clampInt(e.target.value, 0, 3, 0); refresh(); } })));
-    }
-    cell.append(hz);
-    cell.append(el("div", { class: "row mini" },
-      el("label", {}, "bench alive",
-        el("input", { type: "number", value: side.party_remaining, min: 0, max: 5,
-          onchange: (e) => { side.party_remaining = clampInt(e.target.value, 0, 5, 1); refresh(); } }))));
-    grid.append(cell);
-  }
-  box.append(grid);
+    return tr;
+  };
+
+  table.append(row((side) => condToggle(side, "reflect", "Reflect")));
+  table.append(row((side) => condToggle(side, "light_screen", "Light Screen")));
+  table.append(row((side, mirror) => {
+    const max = HAZARD_LAYERS.stealth_rock;
+    return segGroup(["Stealth Rock"], (side.hazards.stealth_rock || 0) === 1 ? 0 : -1,
+      () => { side.hazards.stealth_rock = side.hazards.stealth_rock ? 0 : max;
+              renderSideConditions(); refresh(); }, mirror);
+  }));
+  table.append(row((side, mirror) =>
+    segGroup(["0", "1", "2", "3 Spikes"], side.hazards.spikes || 0,
+      (i) => { side.hazards.spikes = i; renderSideConditions(); refresh(); }, mirror)));
+  table.append(row((side, mirror) =>
+    segGroup(["0", "1", "2 T. Spikes"], side.hazards.toxic_spikes || 0,
+      (i) => { side.hazards.toxic_spikes = i; renderSideConditions(); refresh(); }, mirror)));
+  table.append(row((side) => el("span", {},
+    condToggle(side, "tailwind", "Tailwind"), " ",
+    condToggle(side, "safeguard", "Safeguard"))));
+  table.append(row((side) => el("span", {},
+    condToggle(side, "mist", "Mist"), " ",
+    condToggle(side, "lucky_chant", "Lucky Chant"))));
+  table.append(row((side) => el("label", { class: "mini" }, "bench alive ",
+    el("input", { type: "number", value: side.party_remaining, min: 0, max: 5,
+      onchange: (e) => { side.party_remaining = clampInt(e.target.value, 0, 5, 1); refresh(); } }))));
+  box.append(table);
 }
 
 /* ---------------- live results (probabilities + damage) ---------------- */
@@ -502,54 +584,59 @@ function renderDamageStrip() {
     if (!d) continue;
     (d[side] || []).forEach((e, i) => {
       const selected = state.sel && state.sel.side === side && state.sel.index === i;
-      const row = el("div", {
-        class: "dmg-row" + (selected ? " sel" : "") + (e.kind !== "damage" ? " inert" : ""),
+      let range;
+      if (e.kind === "damage") range = e.max === 0 ? "immune" : `${e.min_pct} - ${e.max_pct}%`;
+      else if (e.kind === "status") range = "—";
+      else range = "n/a";
+      const btn = el("button", {
+        class: "res-move" + (selected ? " on" : "") + (e.kind !== "damage" ? " inert" : ""),
+        title: e.kind === "unmodelled" ? e.reason : "",
         onclick: () => {
           if (e.kind !== "damage") return;
           state.sel = { side, index: i };
           renderDamageStrip();
         },
-      });
-      let range;
-      if (e.kind === "damage") range = e.max === 0 ? "immune" : `${e.min_pct} - ${e.max_pct}%`;
-      else if (e.kind === "status") range = "—";
-      else { range = "n/a"; row.title = e.reason; }
-      const name = el("span", { class: "dmg-name" }, e.move);
-      const pct = el("span", { class: "dmg-range" }, range);
-      if (side === "player") row.append(name, pct);
-      else row.append(pct, name);
-      box.append(row);
+      }, e.move);
+      const span = el("span", { class: "res-range" }, range);
+      const rowEl = el("div", { class: "res-row" });
+      if (side === "player") rowEl.append(btn, span);
+      else rowEl.append(span, btn);
+      box.append(rowEl);
     });
   }
-  renderHeadline();
+  renderMainResult();
 }
 
-function renderHeadline() {
-  const bar = $("#dmg-headline");
-  bar.replaceChildren();
+function renderMainResult() {
+  const text = $("#main-result-text");
+  const rollsBox = $("#dmg-rolls");
+  const details = $("#dmg-details");
+  rollsBox.replaceChildren();
   const d = state.damage, sel = state.sel;
   if (!d || !sel) {
-    bar.append(el("span", { class: "dim mini" }, "Set both Pokémon to see damage rolls."));
+    text.textContent = "Set both Pokémon to see damage.";
+    details.style.display = "none";
     return;
   }
   const e = d[sel.side][sel.index];
   const atk = (sel.side === "player" ? state.battle.player : state.battle.ai).pokemon;
   const tgt = (sel.side === "player" ? state.battle.ai : state.battle.player).pokemon;
   const item = atk.item ? `${atk.item} ` : "";
-  let text = `Lv${atk.level} ${item}${atk.species} ${e.move} vs. Lv${tgt.level} ${tgt.species}: `;
-  text += e.max === 0 ? "no damage (immune)"
+  let line = `Lv${atk.level} ${item}${atk.species} ${e.move} vs. Lv${tgt.level} ${tgt.species}: `;
+  line += e.max === 0 ? "no damage (immune)"
         : `${e.min}-${e.max} (${e.min_pct} - ${e.max_pct}%) — ${e.ko}`;
-  bar.append(el("div", { class: "headline-main" }, text));
-  if (e.caveat) bar.append(el("div", { class: "headline-caveat" }, `⚠ ${e.caveat}`));
-  if (e.max > 0) {
-    if (e.outcomes.length === 1) {
-      bar.append(el("div", { class: "headline-rolls" },
-        `Rolls: (${e.outcomes[0].rolls.join(", ")})`));
-    } else {
-      for (const o of e.outcomes) {   // Bulldoze tiers, Triple Axel values
-        bar.append(el("div", { class: "headline-rolls" },
-          `${o.desc} (${fracPct(o.chance)}): ${o.min}-${o.max} (${o.min_pct} - ${o.max_pct}%)`));
-      }
+  if (e.caveat) line += ` ⚠ ${e.caveat}`;
+  text.textContent = line;
+
+  if (e.max === 0) { details.style.display = "none"; return; }
+  details.style.display = "";
+  if (e.outcomes.length === 1) {
+    rollsBox.append(el("div", { class: "rolls-line" },
+      `(${e.outcomes[0].rolls.join(", ")})`));
+  } else {
+    for (const o of e.outcomes) {   // Bulldoze tiers, Triple Axel values
+      rollsBox.append(el("div", { class: "rolls-line" },
+        `${o.desc} (${fracPct(o.chance)}): ${o.min}-${o.max} — (${o.rolls.join(", ")})`));
     }
   }
 }
