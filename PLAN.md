@@ -185,9 +185,64 @@ Each stage is only started once the stage before it is tested and stable.
       save-state resampling to validate the transcribed scripts themselves.
 - [ ] **Doubles support**: extend `legal_actions`, add the `Doubles` flag
       scripts, extend tie-breaking beyond 4 actions.
-- [ ] **UI**: a calculator-style front end (in the spirit of the existing
-      HZLA damage calculator) that lets a user set up a battle and see the
-      resulting move/target probability tables.
+- [ ] **UI — battle simulator** (supersedes the earlier one-line "calculator
+      front end" idea): the HZLA calculator can't express most AI-relevant
+      context, and per-condition buttons for everything would be endless.
+      Instead, a local recorder — load your party and the opponent's, click
+      start, record what happens turn by turn (with RNG outcomes *chosen* by
+      the user: crit or not, secondary proc or not, which damage roll landed)
+      — so all AI-relevant state (turn count, last moves, boosts, HP,
+      screens, hazards, turns-active, protect streaks) accrues implicitly,
+      with exact AI move probabilities live at every position. Local Python
+      server + our own vanilla-JS UI; the engine stays authoritative in
+      Python and we vendor HZLA's *data*, never their code. Player party via
+      save-file import (.sav/.dsv), picking from boxes. Milestone plan:
+    - [x] **A — vendor the dataset**: `tools/gen_trainers.py` reads the HZLA
+          `pk.js` backup (927 trainers / 3066 party members, each mon's real
+          AI flag bitmask) and the pokeplatinum decomp, emitting
+          `data/species.csv` (505 species: Kaizo base stats/types/abilities +
+          weight/gender/exp), `data/trainers.json`, `data/id_maps.json` (for
+          the save reader), and `data/move_effects.csv` (move → Kaizo
+          `BATTLE_EFFECT_*` via the dataset's effect index). `aicalc/stats.py`
+          (Gen 4 stat formulas, natures, exp curves) and `aicalc/trainers.py`
+          (trainer loading, `build_pokemon`, `decode_ai_flags`). Validated:
+          every pinned case's AI mon rebuilds from data alone with the exact
+          hand-transcribed stats *and* flags; all ~3000 party members
+          round-trip.
+    - [x] **B — server + API + read-only probability UI**: `python3 -m
+          aicalc.serve [--port 8573] [--open]`, a localhost-only stdlib
+          `ThreadingHTTPServer`. `aicalc/serve/api.py` is pure dict-in/dict-out
+          (testable without sockets): `meta`, `trainers`/`trainer`, `tables`,
+          and `probabilities` (the core endpoint — case-format doc in, exact
+          per-flag/final/pick distributions out as fraction strings). HTTP
+          error contract matches the engine's loud-failure rules:
+          `CaseError`/`UnknownName` → 400 with did-you-mean text;
+          `NeedsManualFact`/`UnsupportedFlags` → 422 with a hint naming the
+          override to add. Framework-free single-page UI
+          (`aicalc/serve/static/`): trainer picker with live AI-flag badges,
+          player-mon builder (species/level/nature/IVs → computed stats),
+          every case-schema field editable inline, live-recomputing
+          probability panel, case JSON load/export. Tests confirm the API
+          reproduces all four pinned cases' exact fractions.
+    - [ ] **C — turn recorder**: battle-order damage rolls (variance before
+          the type chart, `critical_mul` support) in `calc/battle_order.py`;
+          effect application keyed by the vendored `BATTLE_EFFECT_*` names in
+          `aicalc/effects.py` (unmapped effect → warn, never silently guess);
+          the doc→doc transition function in `aicalc/recorder.py`
+          (`apply_turn`, re-validated through `load_case_dict` every time);
+          damage-roll picker + crit/secondary/miss choices in the UI; a
+          timeline of snapshots with undo (linear v1, no branch tree).
+    - [ ] **D — save-file import**: `aicalc/saveread.py`, pure stdlib —
+          Platinum's dual-slot layout, PK4 decrypt/unshuffle/checksum, Kaizo
+          ID remapping via `data/id_maps.json`. Verified with a synthetic
+          fixture (no real save committed).
+    - [ ] **E — polish**: "pin as regression case" export (the sim becomes
+          the case-authoring tool, replacing hand transcription from
+          screenshots); battle-line save/replay.
+    - Explicitly not in v1: doubles, an auto battle engine (no auto
+          accuracy/speed/AI-switch resolution — the user records what
+          happened), the four unencoded flags (stay loud + badged), a branch
+          tree, non-localhost hosting.
 
 ## Explicitly out of scope for now
 
@@ -197,6 +252,15 @@ know about the player's team.
 
 ## Repo
 
-`aicalc/` (package) · `cases/` (saved battle scenarios, JSON) · `test.py`
-(test suite, built up section by section) · `README.md` · `spec.md` (detailed
-section-by-section design notes).
+`aicalc/` (package, incl. `calc/` the damage port and `serve/` the simulator
+server+UI) · `cases/` (saved battle scenarios, JSON, each with its source
+screenshot) · `data/` (vendored Kaizo game data: moves, items, abilities,
+species, trainers — see `data/README.md`) · `tools/` (the `gen_*.py`
+generators that produce `data/` from the scrape and the HZLA/decomp sources)
+· `test.py` (test suite, built up section by section) · `README.md` ·
+`spec.md` (detailed section-by-section design notes).
+
+Detailed, in-progress implementation plans for the current milestone live
+outside this file, in Claude Code's plan-mode scratch directory
+(`~/.claude/plans/`) — not versioned. This file is the durable record: once a
+milestone ships, its outcome is folded back in here.
